@@ -12,14 +12,14 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../fyp2020-username/'))
+sys.path.insert(0, os.path.abspath('../../'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'fyp2020-username'
-copyright = '2021, <Full name>'
-author = '<Full name>'
+project = 'fyp2020-am9717'
+copyright = '2021, Agrim Manchanda'
+author = 'Agrim Manchanda'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
