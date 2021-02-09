@@ -1,4 +1,4 @@
-Welcome to fyp2020-username's documentation!
+Welcome to fyp2020-am9717's documentation!
 ============================================
 
 .. toctree::
@@ -19,6 +19,7 @@ Welcome to fyp2020-username's documentation!
    :hidden:
 
    _examples/tutorial/index
+   _examples/load_dataset/index
 
 Indices and tables
 ==================

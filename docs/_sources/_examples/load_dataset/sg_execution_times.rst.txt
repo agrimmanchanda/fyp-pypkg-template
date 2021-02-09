@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr__examples_load_dataset_sg_execution_times:
+
+Computation times
+=================
+**00:15.235** total execution time for **_examples_load_dataset** files:
+
++----------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr__examples_load_dataset_plot_dataset_dist.py` (``plot_dataset_dist.py``) | 00:15.235 | 0.0 MB |
++----------------------------------------------------------------------------------------+-----------+--------+
