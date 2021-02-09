@@ -67,9 +67,11 @@ from sphinx_gallery.sorting import FileNameSortKey
 # Configuration for sphinx_gallery
 sphinx_gallery_conf = {
     # path to your example scripts
-    'examples_dirs': ['../../examples/tutorial'],
+    'examples_dirs': ['../../examples/tutorial',
+                    '../../examples/load_dataset'],
     # path to where to save gallery generated output
-    'gallery_dirs': ['../source/_examples/tutorial'],
+    'gallery_dirs': ['../source/_examples/tutorial',
+                    '../source/_examples/load_dataset'],
     # Other
     'line_numbers': True,
     'download_all_examples': False,
