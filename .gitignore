@@ -23,7 +23,7 @@ docs/build
 docs/source/_*
 
 # Folders with sensitive data
-
+examples/load_dataset/datasets/*
 # -------------------------------------------------
 
 # Byte-compiled / optimized / DLL files
