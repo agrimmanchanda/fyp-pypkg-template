@@ -1,6 +1,6 @@
 """
 Plotting an interesting graph from data set
-==============================
+===========================================
 
 Example ``seaborn`` to visualise missing values per variable
 

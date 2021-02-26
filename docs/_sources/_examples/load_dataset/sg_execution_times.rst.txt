@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:15.235** total execution time for **_examples_load_dataset** files:
+**00:16.368** total execution time for **_examples_load_dataset** files:
 
 +----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_dataset_dist.py` (``plot_dataset_dist.py``) | 00:15.235 | 0.0 MB |
+| :ref:`sphx_glr__examples_load_dataset_plot_dataset_dist.py` (``plot_dataset_dist.py``) | 00:16.368 | 0.0 MB |
 +----------------------------------------------------------------------------------------+-----------+--------+

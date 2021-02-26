@@ -19,7 +19,7 @@
 
 
 Plotting an interesting graph from data set
-==============================
+===========================================
 
 Example ``seaborn`` to visualise missing values per variable
 
@@ -136,14 +136,14 @@ Plot a seaborn heatmap visualising the missing values
  .. code-block:: none
 
 
-    <matplotlib.axes._subplots.AxesSubplot object at 0x000001F84627FAC8>
+    <matplotlib.axes._subplots.AxesSubplot object at 0x000001C35AE051C8>
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  15.235 seconds)
+   **Total running time of the script:** ( 0 minutes  16.368 seconds)
 
 
 .. _sphx_glr_download__examples_load_dataset_plot_dataset_dist.py:
