@@ -24,6 +24,7 @@ docs/source/_*
 
 # Folders with sensitive data
 examples/load_dataset/datasets/*
+examples/widgets/*.csv
 # -------------------------------------------------
 
 # Byte-compiled / optimized / DLL files
