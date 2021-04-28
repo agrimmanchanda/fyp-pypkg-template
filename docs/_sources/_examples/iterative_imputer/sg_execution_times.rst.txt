@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr__examples_iterative_imputer_sg_execution_times:
+
+Computation times
+=================
+**04:19.755** total execution time for **_examples_iterative_imputer** files:
+
++-----------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_simple.py` (``plot_iter_imputer_simple.py``) | 04:19.755 | 0.0 MB |
++-----------------------------------------------------------------------------------------------------------+-----------+--------+
