@@ -12,6 +12,27 @@ This section will be used to visualise interesting results from the (raw) data s
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Using networkx library to visualise biomarker correlations">
+
+.. only:: html
+
+ .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_corr_networks_thumb.png
+     :alt: Network graphs to visualise correlations
+
+     :ref:`sphx_glr__examples_load_dataset_plot_corr_networks.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/load_dataset/plot_corr_networks
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Example seaborn to visualise missing values per variable">
 
 .. only:: html
