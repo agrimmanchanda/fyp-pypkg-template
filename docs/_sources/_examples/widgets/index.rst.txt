@@ -12,6 +12,27 @@ Below is a gallery of examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Pathology Data">
+
+.. only:: html
+
+ .. figure:: /_examples/widgets/images/thumb/sphx_glr_plot_path_data_thumb.png
+     :alt: Pathology Data
+
+     :ref:`sphx_glr__examples_widgets_plot_path_data.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/widgets/plot_path_data
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="TidyWidget">
 
 .. only:: html
