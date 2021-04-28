@@ -69,11 +69,13 @@ sphinx_gallery_conf = {
     # path to your example scripts
     'examples_dirs': ['../../examples/tutorial',
                       '../../examples/widgets',
-                    '../../examples/load_dataset'],
+                    '../../examples/load_dataset',
+                    '../../examples/iterative_imputer'],
     # path to where to save gallery generated output
     'gallery_dirs': ['../source/_examples/tutorial',
                      '../source/_examples/widgets',
-                    '../source/_examples/load_dataset'],
+                    '../source/_examples/load_dataset',
+                    '../source/_examples/iterative_imputer'],
     # Other
     'line_numbers': True,
     'download_all_examples': False,

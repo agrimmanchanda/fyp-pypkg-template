@@ -20,6 +20,7 @@ Welcome to fyp2020-am9717's documentation!
 
    _examples/tutorial/index
    _examples/load_dataset/index
+   _examples/iterative_imputer/index
    _examples/widgets/index
 
 Indices and tables
