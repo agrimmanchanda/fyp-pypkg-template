@@ -5,3 +5,4 @@ sphinx-gallery
 matplotlib
 pandas
 seaborn
+networkx
