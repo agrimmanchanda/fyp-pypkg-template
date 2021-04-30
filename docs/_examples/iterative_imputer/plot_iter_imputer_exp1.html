@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Simple Iterative Imputer Example &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  <title>Iterative Imputer Experiment I &mdash; fyp2020-am9717 0.0.1 documentation</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The Widgets’ gallery" href="../widgets/index.html" />
-    <link rel="prev" title="Iterative Imputer Experiment I" href="plot_iter_imputer_exp1.html" /> 
+    <link rel="next" title="Simple Iterative Imputer Example" href="plot_iter_imputer_simple.html" />
+    <link rel="prev" title="Iterative Imputer" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,8 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">The tutorial gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Loading the data set</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Iterative Imputer</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1.html">Iterative Imputer Experiment I</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Simple Iterative Imputer Example</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Iterative Imputer Experiment I</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#data-handling">Data handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#transform-data-using-tidywidget">Transform data using TidyWidget</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#split-data-into-input-and-output">Split data into input and output</a></li>
@@ -107,6 +106,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#plotting-mse-scores">Plotting MSE Scores</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_simple.html">Simple Iterative Imputer Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
@@ -160,13 +160,13 @@
         
           <li><a href="index.html">Iterative Imputer</a> &raquo;</li>
         
-      <li>Simple Iterative Imputer Example</li>
+      <li>Iterative Imputer Experiment I</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_simple.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_exp1.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -181,12 +181,12 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-simple-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="simple-iterative-imputer-example">
-<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-simple-py"></span><h1>Simple Iterative Imputer Example<a class="headerlink" href="#simple-iterative-imputer-example" title="Permalink to this headline">¶</a></h1>
-<p>Using <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> to present a simple iterative imputer example.</p>
+<div class="sphx-glr-example-title section" id="iterative-imputer-experiment-i">
+<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp1-py"></span><h1>Iterative Imputer Experiment I<a class="headerlink" href="#iterative-imputer-experiment-i" title="Permalink to this headline">¶</a></h1>
+<p>Single biomarker removal experiment.</p>
 <p>Import the relevant libraries first</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>10
 11
@@ -197,9 +197,11 @@ to download the full example code</p>
 16
 17
 18
-19</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
  <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
  <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+ <span class="kn">import</span> <span class="nn">itertools</span>
  <span class="kn">from</span> <span class="nn">sklearn.experimental</span> <span class="kn">import</span> <span class="n">enable_iterative_imputer</span>
  <span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">IterativeImputer</span>
  <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
@@ -212,13 +214,13 @@ to download the full example code</p>
 <div class="section" id="data-handling">
 <h2>Data handling<a class="headerlink" href="#data-handling" title="Permalink to this headline">¶</a></h2>
 <p>First, let’s define the data set path and relevant variables of interest</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
-28
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
 32
-33</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;../load_dataset/datasets/pathology-sample-march-may.csv&#39;</span>
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;../load_dataset/datasets/pathology-sample-march-may.csv&#39;</span>
 
  <span class="n">FBC_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;MONO&quot;</span><span class="p">,</span> <span class="s2">&quot;BASO&quot;</span><span class="p">,</span> <span class="s2">&quot;NEUT&quot;</span><span class="p">,</span> <span class="s2">&quot;RBC&quot;</span><span class="p">,</span> <span class="s2">&quot;WBC&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;MCHC&quot;</span><span class="p">,</span> <span class="s2">&quot;MCV&quot;</span><span class="p">,</span> <span class="s2">&quot;LY&quot;</span><span class="p">,</span> <span class="s2">&quot;HCT&quot;</span><span class="p">,</span> <span class="s2">&quot;RDW&quot;</span><span class="p">,</span> <span class="s2">&quot;HGB&quot;</span><span class="p">,</span>
@@ -228,8 +230,7 @@ to download the full example code</p>
 </pre></div>
 </td></tr></table></div>
 <p>Next, import only variables of interest and FBC panel results</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>39
-40
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>40
 41
 42
 43
@@ -249,7 +250,20 @@ to download the full example code</p>
 57
 58
 59
-60</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_data</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">INTEREST_cols</span><span class="p">)</span>
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_data</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">INTEREST_cols</span><span class="p">)</span>
 
  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;orderCode&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">FBC_codes</span><span class="p">)]</span>
 
@@ -271,31 +285,43 @@ to download the full example code</p>
      <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateResult&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
      <span class="k">return</span> <span class="n">df</span>
+
+ <span class="c1"># Function to get highest correlation pairs</span>
+
+ <span class="k">def</span> <span class="nf">corr_pairs</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+     <span class="c1"># Code adapted from:</span>
+     <span class="c1"># https://stackoverflow.com/questions/17778394/list-highest-correlation-pairs-from-a-large-correlation-matrix-in-pandas</span>
+     <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="mi">2</span><span class="p">))],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2&#39;</span><span class="p">,</span><span class="s1">&#39;corr&#39;</span><span class="p">])</span>
+
+     <span class="n">pairs</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;corr&#39;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+     <span class="k">return</span> <span class="n">pairs</span>
 </pre></div>
 </td></tr></table></div>
 </div>
 <div class="section" id="transform-data-using-tidywidget">
 <h2>Transform data using TidyWidget<a class="headerlink" href="#transform-data-using-tidywidget" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>80
 81
 82
 83
 84
 85
-86</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Parameters</span>
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Parameters</span>
  <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_uid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateResult&#39;</span><span class="p">,</span> <span class="s1">&#39;orderCode&#39;</span><span class="p">]</span>
  <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;result&#39;</span>
 
@@ -320,80 +346,122 @@ to download the full example code</p>
 </div>
 <div class="section" id="split-data-into-input-and-output">
 <h2>Split data into input and output<a class="headerlink" href="#split-data-into-input-and-output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>93
-94
-95
-96
-97</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame only</span>
- <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">transform_fmt</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
- <span class="n">biomarkers_original_df_copy</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
- <span class="n">biomarkers_data</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="preprocessing-step-normalise">
-<h2>Preprocessing step: normalise<a class="headerlink" href="#preprocessing-step-normalise" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>104
-105
-106
-107</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">min_max_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
- <span class="n">val_scaled</span> <span class="o">=</span> <span class="n">min_max_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">biomarkers_data</span><span class="p">)</span>
- <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">val_scaled</span><span class="p">)</span>
- <span class="n">biomarkers_copy_df</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="iterative-imputer">
-<h2>Iterative Imputer<a class="headerlink" href="#iterative-imputer" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>114
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>106
+107
+108
+109
+110
+111
+112
+113
+114
 115
 116
 117
 118
 119
-120
-121
-122
-123
-124
-125
-126
-127
+120</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame only</span>
+ <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">transform_fmt</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+ <span class="n">biomarkers_original_df_copy</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+ <span class="n">biomarkers_data</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">values</span>
+
+ <span class="c1"># Obtain highest correlation pairs Pearson Correlation Coefficient</span>
+ <span class="n">biomarkers_highest_corr</span> <span class="o">=</span> <span class="n">corr_pairs</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">)</span>
+
+ <span class="c1"># Find biomarkers that are to be dropped from the dataset</span>
+ <span class="n">biomarkers_to_drop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">biomarkers_highest_corr</span><span class="p">[[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Biomarkers with high correlations: &quot;</span><span class="p">,</span> <span class="n">biomarkers_to_drop</span><span class="p">)</span>
+
+ <span class="c1"># TODO: should biomarkers be completely discarded from dataset?</span>
+</pre></div>
+</td></tr></table></div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Biomarkers with high correlations:  [&#39;HCT&#39; &#39;HGB&#39; &#39;MCH&#39; &#39;MCV&#39; &#39;NEUT&#39; &#39;RBC&#39; &#39;WBC&#39;]
+</pre></div>
+</div>
+</div>
+<div class="section" id="preprocessing-step-normalise">
+<h2>Preprocessing step: normalise<a class="headerlink" href="#preprocessing-step-normalise" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>127
 128
 129
 130
-131
-132
-133
-134
-135
-136
-137
-138
+131</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Define min-max scaler and normalise dataset</span>
+ <span class="n">min_max_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
+ <span class="n">val_scaled</span> <span class="o">=</span> <span class="n">min_max_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">biomarkers_data</span><span class="p">)</span>
+ <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">val_scaled</span><span class="p">)</span>
+ <span class="n">biomarkers_copy_df</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="iterative-imputer">
+<h2>Iterative Imputer<a class="headerlink" href="#iterative-imputer" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>138
 139
 140
-141</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># dictionary to store mse scores for each biomarker</span>
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># dictionary to store mse scores for each biomarker</span>
  <span class="n">mse_scores</span> <span class="o">=</span> <span class="p">{}</span>
 
  <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
 
+     <span class="c1"># Use a clean copy of the normalised data set</span>
+     <span class="n">bm_copy_df</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
      <span class="c1"># Randomly remove 50% of values and set to NaN</span>
-     <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomarkers_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">biomarker</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+     <span class="c1">#bm_copy_df.loc[bm_copy_df.sample(frac=0.5).index, biomarker] = np.nan</span>
+
+     <span class="c1"># Strictly set every second value of the biomarker to NaN</span>
+     <span class="n">col_pos</span> <span class="o">=</span> <span class="n">bm_copy_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="n">biomarker</span><span class="p">)</span>
+     <span class="n">bm_copy_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="n">col_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
      <span class="c1"># Define imputer</span>
      <span class="n">imputer</span> <span class="o">=</span> <span class="n">IterativeImputer</span><span class="p">()</span>
 
      <span class="c1"># Fit on the dataset</span>
-     <span class="n">biomarker_tansformed_data</span> <span class="o">=</span> <span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">)</span>
+     <span class="n">biomarker_tansformed_data</span> <span class="o">=</span> <span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">bm_copy_df</span><span class="p">)</span>
 
      <span class="c1"># Make dataframe of imputed data</span>
      <span class="n">imputed_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">biomarker_tansformed_data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">biomarker_tansformed_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
 
+     <span class="c1"># Compute true and obtain real value</span>
      <span class="n">val_pred</span> <span class="o">=</span> <span class="n">imputed_data</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
      <span class="n">val_true</span> <span class="o">=</span> <span class="n">biomarkers_copy_df</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-     <span class="c1"># Calculate MSE score every imputed biomarker variable</span>
+     <span class="c1"># Calculate MSE scores from the true and predicted values</span>
      <span class="n">mse_score</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">val_true</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">)</span>
 
      <span class="c1"># Store it in the mse_scores dict</span>
@@ -406,31 +474,29 @@ to download the full example code</p>
 </div>
 <div class="section" id="plotting-mse-scores">
 <h2>Plotting MSE Scores<a class="headerlink" href="#plotting-mse-scores" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>148
-149
-150
-151
-152
-153</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">biomarkers_original_df_copy</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>179
+180
+181
+182
+183
+184
+185</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">biomarkers_original_df_copy</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
  <span class="n">ax</span> <span class="o">=</span> <span class="n">mse_df</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Biomarker&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MSE Score&#39;</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
  <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MSE Scores for 50 percent missing biomarkers&#39;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fontsize&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;fontweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">})</span>
  <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;MSE Score&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
  <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Biomarker&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
  <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">45</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </td></tr></table></div>
-<img alt="MSE Scores for 50 percent missing biomarkers" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_iter_imputer_simple_001.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[Text(0, 0, &#39;BASO&#39;), Text(1, 0, &#39;EOS&#39;), Text(2, 0, &#39;HCT&#39;), Text(3, 0, &#39;HGB&#39;), Text(4, 0, &#39;LY&#39;), Text(5, 0, &#39;MCH&#39;), Text(6, 0, &#39;MCHC&#39;), Text(7, 0, &#39;MCV&#39;), Text(8, 0, &#39;MONO&#39;), Text(9, 0, &#39;MPV&#39;), Text(10, 0, &#39;NEUT&#39;), Text(11, 0, &#39;NRBCA&#39;), Text(12, 0, &#39;PLT&#39;), Text(13, 0, &#39;RBC&#39;), Text(14, 0, &#39;RDW&#39;), Text(15, 0, &#39;WBC&#39;)]
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 4 minutes  19.755 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-simple-py">
+<img alt="MSE Scores for 50 percent missing biomarkers" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_001.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  33.854 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/d57874c6042345985410641986452709/plot_iter_imputer_simple.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_simple.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/2a01ce5b96ea580daad5e568559ad093/plot_iter_imputer_exp1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/b0843294f688c419af24bbb89337311b/plot_iter_imputer_simple.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_simple.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/cb52c19e22fe57562a3a3fdb5f4a42d2/plot_iter_imputer_exp1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_exp1.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -443,8 +509,8 @@ to download the full example code</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../widgets/index.html" class="btn btn-neutral float-right" title="The Widgets’ gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="plot_iter_imputer_exp1.html" class="btn btn-neutral float-left" title="Iterative Imputer Experiment I" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_iter_imputer_simple.html" class="btn btn-neutral float-right" title="Simple Iterative Imputer Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Iterative Imputer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
