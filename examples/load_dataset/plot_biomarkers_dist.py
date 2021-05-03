@@ -74,22 +74,24 @@ for col in biomarkers_df_copy.columns:
 # Remove data outliers based on absolute Z-Score value < 3
 #biomarkers_df[(np.abs(stats.zscore(biomarkers_df)) < 3).all(axis=1)]
 
-# Remove values based on Q(1/3) +- 1.5 * IQR method
+# Remove values based on Q(1/3) -+ 1.5 * IQR method
 q1, q3 = biomarkers_df.quantile(0.25), biomarkers_df.quantile(0.75)
 IQR = q3 - q1
+lower_bound = q1 - (1.5 * IQR)
+upper_bound = q3 + (1.5 * IQR)
 
-# New dataframe with outlier values removed
-new_biomarkers_df = biomarkers_df[~((biomarkers_df < (q1 - 1.5 * IQR)) | 
-(biomarkers_df > (q3 + 1.5 * IQR))).any(axis=1)]
+# New biomarkers dataframe with outlier values removed
+biomarkers_df_wo_outliers = biomarkers_df[~((biomarkers_df < lower_bound) | 
+(biomarkers_df > upper_bound)).any(axis=1)]
 
 # Plot distribution and boxplots 
-for col in biomarkers_df_copy.columns:
+for col in biomarkers_df_wo_outliers.columns:
     plt.figure(figsize=(20,10))
     plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
     fontweight='bold', fontsize=25)
     
     plt.subplot(1,2,1)
-    sns.distplot(new_biomarkers_df[col].values, bins=50, 
+    sns.distplot(biomarkers_df_wo_outliers[col].values, bins=50, 
     kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
     plt.xlabel(f'{col}', fontsize=18)
     plt.ylabel('Density', fontsize=18)
@@ -97,7 +99,7 @@ for col in biomarkers_df_copy.columns:
     plt.yticks(fontsize=18)
     
     plt.subplot(1,2,2)
-    sns.boxplot(x=new_biomarkers_df[col])
+    sns.boxplot(x=biomarkers_df_wo_outliers[col])
     plt.xlabel(f'{col}', fontsize=18)
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
