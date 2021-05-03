@@ -23,6 +23,7 @@ docs/build
 docs/source/_*
 
 # Folders with sensitive data
+examples/iterative_imputer/datasets/*
 examples/load_dataset/datasets/*
 examples/widgets/*.csv
 # -------------------------------------------------
