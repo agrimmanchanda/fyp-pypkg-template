@@ -138,7 +138,7 @@ class TidyWidget:
         aux = aux.set_index(self.index)
 
         # Replace errors
-        #aux.result = aux.result.replace(self.errors)
+        aux.result = aux.result.replace(self.errors)
 
         # Look for index duplicates
         duplicated = \

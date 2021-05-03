@@ -18,81 +18,35 @@ from pkgname.utils.widgets import TidyWidget
 
 #######################################
 # -------------------------------------
-# Data handling
+# Data import 
 # -------------------------------------
-# First, let's define the data set path and relevant variables of interest
 
-path_data = 'datasets/pathology-sample-march-may.csv'
+# Set relative data path and set FBC panel list
+path_data = 'datasets/Transformed_First_FBC_dataset.csv'
 
-FBC_codes = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
+FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                 "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
                 "MCH", "PLT", "MPV", "NRBCA"]
 
-INTEREST_cols = ["_uid", "orderCode", "result", "dateResult"]
-
-#############################
-
-#######################################
-# Next, import only variables of interest and FBC panel results
-df = pd.read_csv(path_data, usecols=INTEREST_cols)
-
-df = df.loc[df['orderCode'].isin(FBC_codes)]
-
-df = df.dropna() # drop records of patients with NaN _uid
+# Read data and drop Nan _uid records
+df = pd.read_csv(path_data).dropna(subset=['pid'])
 
 df.reset_index(drop=True, inplace=True)
 
-# Define function to set pid (patient ID) sorted by datetime
-
-def change_pid_datetime_format(df):
-    df['pid'] = df['_uid'].str.extract('(\d+)').astype(int)
-
-    pid_col = df.pop('pid')
-
-    df.insert(0, 'pid', pid_col)
-
-    df.drop('_uid', inplace=True, axis=1)
-
-    df.sort_values(by=['pid', 'dateResult'], inplace=True)
-
-    return df
-
 #######################################
 # -------------------------------------
-# Transform data using TidyWidget
-# -------------------------------------
-
-# Parameters
-index = ['_uid', 'dateResult', 'orderCode']
-value = 'result'
-
-# Create widget
-widget = TidyWidget(index=index, value=value)
-
-# Transform (keep all)
-transform, duplicated = \
-    widget.transform(df, report_duplicated=True)
-
-# Set pid for each patient and sort accordingly
-transform_fmt = change_pid_datetime_format(transform)
-
-# Transform (keep first)
-transform_first = \
-    widget.transform(df, keep='first')
-
-# Set pid for each patient and sort accordingly
-transform_first_fmt = change_pid_datetime_format(transform_first)
-
-#######################################
-# -------------------------------------
-# Correlation matrix
+# Split data into input and output
 # -------------------------------------
 
 # Obtain the biomarkers DataFrame only
-biomarkers_df = transform_fmt.iloc[:,2:]
+biomarkers_df = df[FBC_CODES].dropna(subset=FBC_CODES)
+
+biomarkers_original_df_copy = biomarkers_df.copy(deep=True)
+
+biomarkers_data = biomarkers_df.values
 
 # Calculate correlation matrix using Pearson Correlation Coefficient
-corr_mat = biomarkers_df.dropna().corr()
+corr_mat = biomarkers_df.dropna().corr(method='pearson')
 
 # Plot seaborn heatmap, histogram and PDF of correlation values.
 
