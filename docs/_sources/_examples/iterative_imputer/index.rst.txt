@@ -12,7 +12,7 @@ This section will include different experiments with sklearn's IterativeImputer
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Single biomarker removal experiment.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Single biomarker removal experiment with K-Fold Cross Validation.">
 
 .. only:: html
 
@@ -30,27 +30,6 @@ This section will include different experiments with sklearn's IterativeImputer
    :hidden:
 
    /_examples/iterative_imputer/plot_iter_imputer_exp1
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Using sklearn to present a simple iterative imputer example.">
-
-.. only:: html
-
- .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_simple_thumb.png
-     :alt: Simple Iterative Imputer Example
-
-     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_simple.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /_examples/iterative_imputer/plot_iter_imputer_simple
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

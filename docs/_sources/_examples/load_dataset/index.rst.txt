@@ -51,27 +51,6 @@ This section will be used to visualise interesting results from the (raw) data s
    :hidden:
 
    /_examples/load_dataset/plot_corr_networks
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Example seaborn to visualise missing values per variable">
-
-.. only:: html
-
- .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_dataset_dist_thumb.png
-     :alt: Plotting an interesting graph from data set
-
-     :ref:`sphx_glr__examples_load_dataset_plot_dataset_dist.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /_examples/load_dataset/plot_dataset_dist
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

@@ -5,12 +5,10 @@
 
 Computation times
 =================
-**00:27.416** total execution time for **_examples_load_dataset** files:
+**00:02.771** total execution time for **_examples_load_dataset** files:
 
 +----------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_biomarkers_dist.py` (``plot_biomarkers_dist.py``) | 00:27.416 | 0.0 MB |
+| :ref:`sphx_glr__examples_load_dataset_plot_corr_networks.py` (``plot_corr_networks.py``)     | 00:02.771 | 0.0 MB |
 +----------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_corr_networks.py` (``plot_corr_networks.py``)     | 00:00.000 | 0.0 MB |
-+----------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_dataset_dist.py` (``plot_dataset_dist.py``)       | 00:00.000 | 0.0 MB |
+| :ref:`sphx_glr__examples_load_dataset_plot_biomarkers_dist.py` (``plot_biomarkers_dist.py``) | 00:00.000 | 0.0 MB |
 +----------------------------------------------------------------------------------------------+-----------+--------+

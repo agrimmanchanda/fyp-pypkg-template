@@ -27,7 +27,7 @@ Using ``seaborn`` library to visualise biomarker distributions
 
 Import the relevant libraries first
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-19
+.. GENERATED FROM PYTHON SOURCE LINES 10-18
 
 .. code-block:: default
    :lineno-start: 10
@@ -36,10 +36,9 @@ Import the relevant libraries first
     import pandas as pd
     import matplotlib.pyplot as plt
     import seaborn as sns
-    from sklearn import preprocessing
+    from scipy import stats
     import warnings
     warnings.filterwarnings("ignore")
-    from pkgname.utils.widgets import TidyWidget
 
 
 
@@ -48,65 +47,30 @@ Import the relevant libraries first
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 19-22
 
 -------------------------------------
-Data handling
+Data import 
 -------------------------------------
-First, let's define the data set path and relevant variables of interest
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-33
+.. GENERATED FROM PYTHON SOURCE LINES 22-35
 
 .. code-block:: default
-   :lineno-start: 25
+   :lineno-start: 23
 
 
-    path_data = 'datasets/pathology-sample-march-may.csv'
+    # Set relative data path and set FBC panel list
+    path_data = 'datasets/Transformed_First_FBC_dataset.csv'
 
-    FBC_codes = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
+    FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                     "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
                     "MCH", "PLT", "MPV", "NRBCA"]
 
-    INTEREST_cols = ["_uid", "orderCode", "result", "dateResult"]
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
-
-Next, import only variables of interest and FBC panel results
-
-.. GENERATED FROM PYTHON SOURCE LINES 37-60
-
-.. code-block:: default
-   :lineno-start: 37
-
-    df = pd.read_csv(path_data, usecols=INTEREST_cols)
-
-    df = df.loc[df['orderCode'].isin(FBC_codes)]
-
-    df = df.dropna() # drop records of patients with NaN _uid
+    # Read data and drop Nan _uid records
+    df = pd.read_csv(path_data).dropna(subset=['pid'])
 
     df.reset_index(drop=True, inplace=True)
 
-    # Define function to set pid (patient ID) sorted by datetime
-
-    def change_pid_datetime_format(df):
-        df['pid'] = df['_uid'].str.extract('(\d+)').astype(int)
-
-        pid_col = df.pop('pid')
-
-        df.insert(0, 'pid', pid_col)
-
-        df.drop('_uid', inplace=True, axis=1)
-
-        df.sort_values(by=['pid', 'dateResult'], inplace=True)
-
-        return df
 
 
 
@@ -114,71 +78,23 @@ Next, import only variables of interest and FBC panel results
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 61-64
+.. GENERATED FROM PYTHON SOURCE LINES 36-39
 
 -------------------------------------
-Transform data using TidyWidget
+Preprocessing step: obtain FBC panel
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-86
+.. GENERATED FROM PYTHON SOURCE LINES 39-45
 
 .. code-block:: default
-   :lineno-start: 65
-
-
-    # Parameters
-    index = ['_uid', 'dateResult', 'orderCode']
-    value = 'result'
-
-    # Create widget
-    widget = TidyWidget(index=index, value=value)
-
-    # Transform (keep all)
-    transform, duplicated = \
-        widget.transform(df, report_duplicated=True)
-
-    # Set pid for each patient and sort accordingly
-    transform_fmt = change_pid_datetime_format(transform)
-
-    # Transform (keep first)
-    transform_first = \
-        widget.transform(df, keep='first')
-
-    # Set pid for each patient and sort accordingly
-    transform_first_fmt = change_pid_datetime_format(transform_first)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 87-90
-
--------------------------------------
-Preprocessing step: normalise
--------------------------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 90-104
-
-.. code-block:: default
-   :lineno-start: 91
+   :lineno-start: 40
 
 
     # Obtain the biomarkers DataFrame only
-    biomarkers_df = transform_fmt.iloc[:,2:].dropna()
+    biomarkers_df = df[FBC_CODES].dropna(subset=FBC_CODES)
     biomarkers_df_copy = biomarkers_df.copy(deep=True)
     biomarkers_data = biomarkers_df.values
 
-    # Normalise using minmax scaler
-    min_max_scaler = preprocessing.MinMaxScaler()
-    val_scaled = min_max_scaler.fit_transform(biomarkers_data)
-    biomarkers_df = pd.DataFrame(val_scaled, columns=[col for col in biomarkers_df_copy.columns])
-
-    # Can use df.melt() method
-    # biomarkers_dfm = biomarkers_df.melt(var_name='biomarkers')
 
 
 
@@ -186,28 +102,37 @@ Preprocessing step: normalise
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 46-49
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-108
+----------------------------------------------------
+Plot distributions and histograms for each biomarker
+----------------------------------------------------
 
--------------------------------------
-Plot histograms for each biomarker
--------------------------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 108-118
+.. GENERATED FROM PYTHON SOURCE LINES 49-69
 
 .. code-block:: default
-   :lineno-start: 109
+   :lineno-start: 50
 
 
     for col in biomarkers_df_copy.columns:
-        plt.figure(figsize=(15,10))
-        plt.title(f'Histogram for biomarker: {col}', fontweight='bold', fontsize=20)
-        plt.xlabel('Normalised value', fontsize=16)
-        plt.ylabel('Density', fontsize=16)
-        plt.xticks(fontsize=16)
-        plt.yticks(fontsize=16)
-        hist = biomarkers_df_copy[col].hist(bins=50)
-        hist.plot(grid=True, figsize=(15,10))
+        plt.figure(figsize=(20,10))
+        plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
+        fontweight='bold', fontsize=25)
+    
+        plt.subplot(1,2,1)
+        sns.distplot(biomarkers_df[col].values, bins=50, 
+        kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
+        plt.xlabel(f'{col}', fontsize=18)
+        plt.ylabel('Density', fontsize=18)
+        plt.xticks(fontsize=18)
+        plt.yticks(fontsize=18)
+    
+        plt.subplot(1,2,2)
+        sns.boxplot(x=biomarkers_df[col])
+        plt.xlabel(f'{col}', fontsize=18)
+        plt.xticks(fontsize=18)
+        plt.yticks(fontsize=18)
+
 
 
 
@@ -217,97 +142,247 @@ Plot histograms for each biomarker
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_001.png
-          :alt: Histogram for biomarker: BASO
+          :alt: Distribution and boxplot for biomarker: EOS
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_002.png
-          :alt: Histogram for biomarker: EOS
+          :alt: Distribution and boxplot for biomarker: MONO
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_003.png
-          :alt: Histogram for biomarker: HCT
+          :alt: Distribution and boxplot for biomarker: BASO
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_004.png
-          :alt: Histogram for biomarker: HGB
+          :alt: Distribution and boxplot for biomarker: NEUT
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_005.png
-          :alt: Histogram for biomarker: LY
+          :alt: Distribution and boxplot for biomarker: RBC
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_006.png
-          :alt: Histogram for biomarker: MCH
+          :alt: Distribution and boxplot for biomarker: WBC
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_007.png
-          :alt: Histogram for biomarker: MCHC
+          :alt: Distribution and boxplot for biomarker: MCHC
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_008.png
-          :alt: Histogram for biomarker: MCV
+          :alt: Distribution and boxplot for biomarker: MCV
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_009.png
-          :alt: Histogram for biomarker: MONO
+          :alt: Distribution and boxplot for biomarker: LY
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_010.png
-          :alt: Histogram for biomarker: MPV
+          :alt: Distribution and boxplot for biomarker: HCT
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_011.png
-          :alt: Histogram for biomarker: NEUT
+          :alt: Distribution and boxplot for biomarker: RDW
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_012.png
-          :alt: Histogram for biomarker: NRBCA
+          :alt: Distribution and boxplot for biomarker: HGB
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_013.png
-          :alt: Histogram for biomarker: PLT
+          :alt: Distribution and boxplot for biomarker: MCH
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_014.png
-          :alt: Histogram for biomarker: RBC
+          :alt: Distribution and boxplot for biomarker: PLT
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_015.png
-          :alt: Histogram for biomarker: RDW
+          :alt: Distribution and boxplot for biomarker: MPV
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_016.png
-          :alt: Histogram for biomarker: WBC
+          :alt: Distribution and boxplot for biomarker: NRBCA
+          :class: sphx-glr-multi-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 70-73
+
+-------------------------------------
+Plot same histograms without outliers
+-------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 73-106
+
+.. code-block:: default
+   :lineno-start: 74
+
+
+    # Remove data outliers based on absolute Z-Score value < 3
+    #biomarkers_df[(np.abs(stats.zscore(biomarkers_df)) < 3).all(axis=1)]
+
+    # Remove values based on Q(1/3) -+ 1.5 * IQR method
+    q1, q3 = biomarkers_df.quantile(0.25), biomarkers_df.quantile(0.75)
+    IQR = q3 - q1
+    lower_bound = q1 - (1.5 * IQR)
+    upper_bound = q3 + (1.5 * IQR)
+
+    # New biomarkers dataframe with outlier values removed
+    biomarkers_df_wo_outliers = biomarkers_df[~((biomarkers_df < lower_bound) | 
+    (biomarkers_df > upper_bound)).any(axis=1)]
+
+    # Plot distribution and boxplots 
+    for col in biomarkers_df_wo_outliers.columns:
+        plt.figure(figsize=(20,10))
+        plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
+        fontweight='bold', fontsize=25)
+    
+        plt.subplot(1,2,1)
+        sns.distplot(biomarkers_df_wo_outliers[col].values, bins=50, 
+        kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
+        plt.xlabel(f'{col}', fontsize=18)
+        plt.ylabel('Density', fontsize=18)
+        plt.xticks(fontsize=18)
+        plt.yticks(fontsize=18)
+    
+        plt.subplot(1,2,2)
+        sns.boxplot(x=biomarkers_df_wo_outliers[col])
+        plt.xlabel(f'{col}', fontsize=18)
+        plt.xticks(fontsize=18)
+        plt.yticks(fontsize=18)
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_017.png
+          :alt: Distribution and boxplot for biomarker: EOS
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_018.png
+          :alt: Distribution and boxplot for biomarker: MONO
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_019.png
+          :alt: Distribution and boxplot for biomarker: BASO
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_020.png
+          :alt: Distribution and boxplot for biomarker: NEUT
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_021.png
+          :alt: Distribution and boxplot for biomarker: RBC
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_022.png
+          :alt: Distribution and boxplot for biomarker: WBC
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_023.png
+          :alt: Distribution and boxplot for biomarker: MCHC
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_024.png
+          :alt: Distribution and boxplot for biomarker: MCV
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_025.png
+          :alt: Distribution and boxplot for biomarker: LY
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_026.png
+          :alt: Distribution and boxplot for biomarker: HCT
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_027.png
+          :alt: Distribution and boxplot for biomarker: RDW
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_028.png
+          :alt: Distribution and boxplot for biomarker: HGB
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_029.png
+          :alt: Distribution and boxplot for biomarker: MCH
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_030.png
+          :alt: Distribution and boxplot for biomarker: PLT
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_031.png
+          :alt: Distribution and boxplot for biomarker: MPV
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /_examples/load_dataset/images/sphx_glr_plot_biomarkers_dist_032.png
+          :alt: Distribution and boxplot for biomarker: NRBCA
           :class: sphx-glr-multi-img
 
 
@@ -317,7 +392,7 @@ Plot histograms for each biomarker
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  27.416 seconds)
+   **Total running time of the script:** ( 0 minutes  21.676 seconds)
 
 
 .. _sphx_glr_download__examples_load_dataset_plot_biomarkers_dist.py:

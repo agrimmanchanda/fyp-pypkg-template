@@ -11,107 +11,95 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn import preprocessing
+from scipy import stats
 import warnings
 warnings.filterwarnings("ignore")
-from pkgname.utils.widgets import TidyWidget
 
 #######################################
 # -------------------------------------
-# Data handling
+# Data import 
 # -------------------------------------
-# First, let's define the data set path and relevant variables of interest
 
-path_data = 'datasets/pathology-sample-march-may.csv'
+# Set relative data path and set FBC panel list
+path_data = 'datasets/Transformed_First_FBC_dataset.csv'
 
-FBC_codes = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
+FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                 "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
                 "MCH", "PLT", "MPV", "NRBCA"]
 
-INTEREST_cols = ["_uid", "orderCode", "result", "dateResult"]
-
-#############################
-
-#######################################
-# Next, import only variables of interest and FBC panel results
-df = pd.read_csv(path_data, usecols=INTEREST_cols)
-
-df = df.loc[df['orderCode'].isin(FBC_codes)]
-
-df = df.dropna() # drop records of patients with NaN _uid
+# Read data and drop Nan _uid records
+df = pd.read_csv(path_data).dropna(subset=['pid'])
 
 df.reset_index(drop=True, inplace=True)
 
-# Define function to set pid (patient ID) sorted by datetime
-
-def change_pid_datetime_format(df):
-    df['pid'] = df['_uid'].str.extract('(\d+)').astype(int)
-
-    pid_col = df.pop('pid')
-
-    df.insert(0, 'pid', pid_col)
-
-    df.drop('_uid', inplace=True, axis=1)
-
-    df.sort_values(by=['pid', 'dateResult'], inplace=True)
-
-    return df
-
 #######################################
 # -------------------------------------
-# Transform data using TidyWidget
-# -------------------------------------
-
-# Parameters
-index = ['_uid', 'dateResult', 'orderCode']
-value = 'result'
-
-# Create widget
-widget = TidyWidget(index=index, value=value)
-
-# Transform (keep all)
-transform, duplicated = \
-    widget.transform(df, report_duplicated=True)
-
-# Set pid for each patient and sort accordingly
-transform_fmt = change_pid_datetime_format(transform)
-
-# Transform (keep first)
-transform_first = \
-    widget.transform(df, keep='first')
-
-# Set pid for each patient and sort accordingly
-transform_first_fmt = change_pid_datetime_format(transform_first)
-
-#######################################
-# -------------------------------------
-# Preprocessing step: normalise
+# Preprocessing step: obtain FBC panel
 # -------------------------------------
 
 # Obtain the biomarkers DataFrame only
-biomarkers_df = transform_fmt.iloc[:,2:].dropna()
+biomarkers_df = df[FBC_CODES].dropna(subset=FBC_CODES)
 biomarkers_df_copy = biomarkers_df.copy(deep=True)
 biomarkers_data = biomarkers_df.values
 
-# Normalise using minmax scaler
-min_max_scaler = preprocessing.MinMaxScaler()
-val_scaled = min_max_scaler.fit_transform(biomarkers_data)
-biomarkers_df = pd.DataFrame(val_scaled, columns=[col for col in biomarkers_df_copy.columns])
+######################################################
+# ----------------------------------------------------
+# Plot distributions and histograms for each biomarker
+# ----------------------------------------------------
 
-# Can use df.melt() method
-# biomarkers_dfm = biomarkers_df.melt(var_name='biomarkers')
+for col in biomarkers_df_copy.columns:
+    plt.figure(figsize=(20,10))
+    plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
+    fontweight='bold', fontsize=25)
+    
+    plt.subplot(1,2,1)
+    sns.distplot(biomarkers_df[col].values, bins=50, 
+    kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
+    plt.xlabel(f'{col}', fontsize=18)
+    plt.ylabel('Density', fontsize=18)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
+    
+    plt.subplot(1,2,2)
+    sns.boxplot(x=biomarkers_df[col])
+    plt.xlabel(f'{col}', fontsize=18)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
 
 #######################################
 # -------------------------------------
-# Plot histograms for each biomarker
+# Plot same histograms without outliers
 # -------------------------------------
 
-for col in biomarkers_df_copy.columns:
-    plt.figure(figsize=(15,10))
-    plt.title(f'Histogram for biomarker: {col}', fontweight='bold', fontsize=20)
-    plt.xlabel('Normalised value', fontsize=16)
-    plt.ylabel('Density', fontsize=16)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    hist = biomarkers_df_copy[col].hist(bins=50)
-    hist.plot(grid=True, figsize=(15,10))
+# Remove data outliers based on absolute Z-Score value < 3
+#biomarkers_df[(np.abs(stats.zscore(biomarkers_df)) < 3).all(axis=1)]
+
+# Remove values based on Q(1/3) -+ 1.5 * IQR method
+q1, q3 = biomarkers_df.quantile(0.25), biomarkers_df.quantile(0.75)
+IQR = q3 - q1
+lower_bound = q1 - (1.5 * IQR)
+upper_bound = q3 + (1.5 * IQR)
+
+# New biomarkers dataframe with outlier values removed
+biomarkers_df_wo_outliers = biomarkers_df[~((biomarkers_df < lower_bound) | 
+(biomarkers_df > upper_bound)).any(axis=1)]
+
+# Plot distribution and boxplots 
+for col in biomarkers_df_wo_outliers.columns:
+    plt.figure(figsize=(20,10))
+    plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
+    fontweight='bold', fontsize=25)
+    
+    plt.subplot(1,2,1)
+    sns.distplot(biomarkers_df_wo_outliers[col].values, bins=50, 
+    kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
+    plt.xlabel(f'{col}', fontsize=18)
+    plt.ylabel('Density', fontsize=18)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
+    
+    plt.subplot(1,2,2)
+    sns.boxplot(x=biomarkers_df_wo_outliers[col])
+    plt.xlabel(f'{col}', fontsize=18)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
