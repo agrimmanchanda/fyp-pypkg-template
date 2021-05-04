@@ -48,6 +48,9 @@ biomarkers_data = biomarkers_df.values
 # Calculate correlation matrix using Pearson Correlation Coefficient
 corr_mat = biomarkers_df.dropna().corr(method='pearson')
 
+# Create a mask
+corr_mask = np.triu(np.ones_like(corr_mat, dtype=bool))
+
 # Plot seaborn heatmap, histogram and PDF of correlation values.
 
 plt.figure(figsize=(20,8))
@@ -56,7 +59,8 @@ plt.title('Correlation Matrix for FBC panel', fontweight='bold', fontsize=15)
 
 min_v = corr_mat.values.min()
 ax = sns.heatmap(
-    corr_mat, 
+    corr_mat,
+    mask=corr_mask, 
     vmin=min_v, vmax=1, center=0,
     cmap=sns.diverging_palette(20, 220, n=200),
     square=True,
@@ -108,19 +112,24 @@ for threshold in thresholds:
     links.columns = ['var1', 'var2', 'value']
     
     # Keep only correlation over a threshold and remove self correlation (cor(A,A)=1)
-    links_filtered=links.loc[ (links['value'] > threshold) & (links['var1'] != links['var2']) ]
+    idx1 = links['value'] > threshold # above threshold 
+    idx2 = links['var1'] != links['var2'] # self correlation
+    links_filtered=links[idx1 & idx2]
     
     # Build graph
     G=nx.from_pandas_edgelist(links_filtered, 'var1', 'var2', 'value')
 
+    # Adjust position for spring layout
     pos = nx.spring_layout(G, k=0.45, iterations=20)
 
+    # Set plot parameters and draw networks
     plt.figure(figsize=(15,5))
     plt.title(f'Graph with Weight Threshold: {threshold}', fontweight='bold', fontsize=16)
-    # Plot the network:
     nx.draw(G, with_labels=True,pos=pos, node_color='orange', node_size=1500, linewidths=2, font_size=12, edge_color='black', edgecolors='black')
     plt.axis('off')
     axis = plt.gca()
     axis.set_xlim([1.2*x for x in axis.get_xlim()])
     axis.set_ylim([1.2*y for y in axis.get_ylim()])
+    
+    # Show
     plt.show()
