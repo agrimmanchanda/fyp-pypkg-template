@@ -103,7 +103,8 @@ temp_rmse_score_df = rmse_score_df.copy(deep=True)
 estimators = {
     'Bayesian Ridge': BayesianRidge(),
     'Decision Tree': DecisionTreeRegressor(),
-    # 'Random Forest': ExtraTreesRegressor(),
+    'Random Forest': ExtraTreesRegressor(),
+    'K-Nearest Neighbour': KNeighborsRegressor(weights='distance'),
     'Simple Median': SimpleImputer(strategy='median'),
 }
 
