@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**01:48.021** total execution time for **_examples_iterative_imputer** files:
+**65:40.116** total execution time for **_examples_iterative_imputer** files:
 
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1.py` (``plot_iter_imputer_exp1.py``) | 01:48.021 | 0.0 MB |
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1.py` (``plot_iter_imputer_exp1.py``) | 65:40.116 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+

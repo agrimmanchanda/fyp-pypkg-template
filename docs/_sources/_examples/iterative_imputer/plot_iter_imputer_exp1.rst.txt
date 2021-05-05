@@ -198,7 +198,7 @@ K-Fold Cross Validation (K = 5)
 Define estimators 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-110
+.. GENERATED FROM PYTHON SOURCE LINES 102-111
 
 .. code-block:: default
    :lineno-start: 103
@@ -207,7 +207,8 @@ Define estimators
     estimators = {
         'Bayesian Ridge': BayesianRidge(),
         'Decision Tree': DecisionTreeRegressor(),
-        # 'Random Forest': ExtraTreesRegressor(),
+        'Random Forest': ExtraTreesRegressor(),
+        'K-Nearest Neighbour': KNeighborsRegressor(weights='distance'),
         'Simple Median': SimpleImputer(strategy='median'),
     }
 
@@ -218,16 +219,16 @@ Define estimators
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-114
+.. GENERATED FROM PYTHON SOURCE LINES 112-115
 
 -------------------------------------
 Predict values using imputer 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-179
+.. GENERATED FROM PYTHON SOURCE LINES 115-180
 
 .. code-block:: default
-   :lineno-start: 115
+   :lineno-start: 116
 
 
     # Run 5-fold CV for each estimator method
@@ -301,16 +302,16 @@ Predict values using imputer
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-183
+.. GENERATED FROM PYTHON SOURCE LINES 181-184
 
 -------------------------------------
 Table of results
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-186
+.. GENERATED FROM PYTHON SOURCE LINES 184-187
 
 .. code-block:: default
-   :lineno-start: 184
+   :lineno-start: 185
 
 
     rmse_score_df
@@ -343,10 +344,14 @@ Table of results
           <th></th>
           <th>Bayesian Ridge</th>
           <th>Decision Tree</th>
+          <th>Random Forest</th>
+          <th>K-Nearest Neighbour</th>
           <th>Simple Median</th>
         </tr>
         <tr>
           <th>Biomarker</th>
+          <th></th>
+          <th></th>
           <th></th>
           <th></th>
           <th></th>
@@ -356,97 +361,129 @@ Table of results
         <tr>
           <th>EOS</th>
           <td>0.092396</td>
-          <td>0.315870</td>
+          <td>0.323441</td>
+          <td>0.261619</td>
+          <td>0.290253</td>
           <td>0.304076</td>
         </tr>
         <tr>
           <th>MONO</th>
           <td>0.092678</td>
-          <td>0.347838</td>
+          <td>0.337952</td>
+          <td>0.240171</td>
+          <td>0.346198</td>
           <td>0.439067</td>
         </tr>
         <tr>
           <th>BASO</th>
           <td>0.055639</td>
-          <td>0.069726</td>
+          <td>0.069847</td>
+          <td>0.053167</td>
+          <td>0.056040</td>
           <td>0.059771</td>
         </tr>
         <tr>
           <th>NEUT</th>
           <td>0.093414</td>
-          <td>1.779967</td>
+          <td>1.879716</td>
+          <td>1.835058</td>
+          <td>1.981843</td>
           <td>4.670707</td>
         </tr>
         <tr>
           <th>RBC</th>
           <td>0.103283</td>
-          <td>0.051146</td>
+          <td>0.052259</td>
+          <td>0.027304</td>
+          <td>0.196921</td>
           <td>0.942473</td>
         </tr>
         <tr>
           <th>WBC</th>
           <td>0.093716</td>
-          <td>1.851352</td>
+          <td>1.844479</td>
+          <td>1.555787</td>
+          <td>2.068664</td>
           <td>5.568637</td>
         </tr>
         <tr>
           <th>MCHC</th>
           <td>7.525346</td>
-          <td>3.814143</td>
+          <td>4.020811</td>
+          <td>2.887126</td>
+          <td>8.168671</td>
           <td>40.415635</td>
         </tr>
         <tr>
           <th>MCV</th>
           <td>1.614973</td>
-          <td>0.614615</td>
+          <td>0.655929</td>
+          <td>0.515910</td>
+          <td>2.495352</td>
           <td>13.382875</td>
         </tr>
         <tr>
           <th>LY</th>
           <td>0.093729</td>
-          <td>1.595311</td>
+          <td>1.779513</td>
+          <td>1.240297</td>
+          <td>0.956618</td>
           <td>2.212157</td>
         </tr>
         <tr>
           <th>HCT</th>
           <td>0.004903</td>
-          <td>0.004126</td>
+          <td>0.004062</td>
+          <td>0.002688</td>
+          <td>0.017404</td>
           <td>0.083004</td>
         </tr>
         <tr>
           <th>RDW</th>
           <td>2.034001</td>
-          <td>2.626564</td>
+          <td>2.632582</td>
+          <td>1.854820</td>
+          <td>2.024440</td>
           <td>2.990355</td>
         </tr>
         <tr>
           <th>HGB</th>
           <td>2.012952</td>
-          <td>1.453014</td>
+          <td>1.455673</td>
+          <td>1.013879</td>
+          <td>5.549782</td>
           <td>27.205640</td>
         </tr>
         <tr>
           <th>MCH</th>
           <td>0.458002</td>
-          <td>0.416401</td>
+          <td>0.418151</td>
+          <td>0.296619</td>
+          <td>0.860093</td>
           <td>4.472741</td>
         </tr>
         <tr>
           <th>PLT</th>
           <td>104.011264</td>
-          <td>133.128196</td>
+          <td>133.332170</td>
+          <td>93.281916</td>
+          <td>102.594410</td>
           <td>118.180194</td>
         </tr>
         <tr>
           <th>MPV</th>
           <td>1.159402</td>
-          <td>1.568432</td>
+          <td>1.589642</td>
+          <td>1.100864</td>
+          <td>1.195906</td>
           <td>1.599621</td>
         </tr>
         <tr>
           <th>NRBCA</th>
           <td>0.116486</td>
-          <td>0.181283</td>
+          <td>0.167886</td>
+          <td>0.116369</td>
+          <td>0.117208</td>
           <td>0.114509</td>
         </tr>
       </tbody>
@@ -456,16 +493,16 @@ Table of results
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-190
+.. GENERATED FROM PYTHON SOURCE LINES 188-191
 
 -------------------------------------
 Combined RMSE Plot for each biomarker
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-198
+.. GENERATED FROM PYTHON SOURCE LINES 191-199
 
 .. code-block:: default
-   :lineno-start: 191
+   :lineno-start: 192
 
 
     # Plot horizontal bar graph 
@@ -584,7 +621,7 @@ Combined RMSE Plot for each biomarker
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  48.021 seconds)
+   **Total running time of the script:** ( 65 minutes  40.116 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp1.py:
