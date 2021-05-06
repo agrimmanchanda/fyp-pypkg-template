@@ -14,17 +14,19 @@ K-Fold Cross Validation.
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, RepeatedStratifiedKFold
 from sklearn.linear_model import BayesianRidge
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import SGDRegressor
+from sklearn.neural_network import MLPRegressor
+from xgboost import XGBRegressor
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn.impute import SimpleImputer
 from sklearn import preprocessing
-from sklearn.metrics import mean_squared_error
 import warnings
 warnings.filterwarnings("ignore")
 from pkgname.utils.iter_imp import *
@@ -79,6 +81,7 @@ print("\nBiomarkers with high correlations: ", biomarkers_to_drop)
 # DataFrame to store all experiment MSE scores
 rmse_score_df = pd.DataFrame(index=biomarkers_df.columns)
 rmse_score_df.index.names = ['Biomarker']
+rmsle_score_df = rmse_score_df.copy(deep=True)
 
 #######################################
 # -------------------------------------
@@ -86,13 +89,16 @@ rmse_score_df.index.names = ['Biomarker']
 # -------------------------------------
 
 # Define min-max scaler and normalise dataset
-min_max_scaler = preprocessing.RobustScaler()
+min_max_scaler = preprocessing.StandardScaler()
 
 # Initialise 5-Fold cross validation
 kf5 = KFold(n_splits=5, shuffle=False, random_state=None)
 
+kf = RepeatedStratifiedKFold(n_splits=5, n_repeats=2)
+
 # Temporary mse_score_df to store mse score for each fold
 temp_rmse_score_df = rmse_score_df.copy(deep=True)
+temp_rmsle_score_df = rmse_score_df.copy(deep=True)
 
 
 #######################################
@@ -104,7 +110,15 @@ estimators = {
     'Bayesian Ridge': BayesianRidge(),
     'Decision Tree': DecisionTreeRegressor(),
     'Random Forest': ExtraTreesRegressor(),
-    'K-Nearest Neighbour': KNeighborsRegressor(weights='distance'),
+    'XGBoost': XGBRegressor(),
+    'K-NN': KNeighborsRegressor(weights='distance'),
+    'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
+    early_stopping=True),
+    'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
+    'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
+    early_stopping=True),
+    'MLP': MLPRegressor(hidden_layer_sizes=32, 
+    early_stopping=True, max_iter=100),
     'Simple Median': SimpleImputer(strategy='median'),
 }
 
@@ -158,7 +172,7 @@ for method, imputer_estimator in estimators.items():
             columns=test_scaled_df.columns)
 
             # Inverse transform the scaled values
-            test_og_data = val_scaled.inverse_transform(imputed_data)
+            test_og_data = abs(val_scaled.inverse_transform(imputed_data))
 
             imputed_data_og = pd.DataFrame(data=test_og_data,
             index=[i for i in range(test_transformed_data.shape[0])], 
@@ -169,20 +183,30 @@ for method, imputer_estimator in estimators.items():
             val_true = test_df[biomarker].values
 
             # Calculate MSE scores from the true and predicted values
-            rmse_score = mean_squared_error(val_true, val_pred, squared=False)
+            rmse_score = get_metric_scores(val_true, val_pred, 'RMSE')
+            rmsle_score = get_metric_scores(val_true, val_pred, 'RMSLE')
 
-            # Store in temp_mse_score_df 
+            # Store in temp_mse_score_df and temp_rmsle_score_df 
             temp_rmse_score_df.loc[temp_rmse_score_df.index[biomarker], f'K-Fold: {k+1}'] = rmse_score
+            temp_rmsle_score_df.loc[temp_rmsle_score_df.index[biomarker], f'K-Fold: {k+1}'] = rmsle_score
     
     # Calculate mean MSE score for each biomarker across the 5-folds
     rmse_score_df[f'{method}'] = temp_rmse_score_df.mean(axis=1)
+    rmsle_score_df[f'{method}'] = temp_rmsle_score_df.mean(axis=1)
 
 #######################################
 # -------------------------------------
-# Table of results
+# Table of Results: RMSE
 # -------------------------------------
 
 rmse_score_df
+
+#######################################
+# -------------------------------------
+# Table of Results: RMSlE
+# -------------------------------------
+
+rmsle_score_df
 
 #######################################
 # -------------------------------------
@@ -193,7 +217,9 @@ rmse_score_df
 for biomarker, scores in rmse_score_df.iterrows():
     plt.figure(figsize=(20,15))
     plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
-    scores.plot.barh(grid=True)
+    cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
+    scores.plot.barh(grid=True, color=cmap)
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
     plt.xlabel('RMSE Score', fontsize=18)
+    plt.show()

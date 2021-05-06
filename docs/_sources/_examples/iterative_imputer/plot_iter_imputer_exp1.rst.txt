@@ -30,7 +30,7 @@ K-Fold Cross Validation.
 Libraries import 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-32
+.. GENERATED FROM PYTHON SOURCE LINES 13-34
 
 .. code-block:: default
    :lineno-start: 14
@@ -39,17 +39,19 @@ Libraries import
     import numpy as np 
     import pandas as pd
     import matplotlib.pyplot as plt
-    from sklearn.model_selection import KFold
+    from sklearn.model_selection import KFold, RepeatedStratifiedKFold
     from sklearn.linear_model import BayesianRidge
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.ensemble import ExtraTreesRegressor
     from sklearn.neighbors import KNeighborsRegressor
     from sklearn.ensemble import RandomForestRegressor
+    from sklearn.linear_model import SGDRegressor
+    from sklearn.neural_network import MLPRegressor
+    from xgboost import XGBRegressor
     from sklearn.experimental import enable_iterative_imputer
     from sklearn.impute import IterativeImputer
     from sklearn.impute import SimpleImputer
     from sklearn import preprocessing
-    from sklearn.metrics import mean_squared_error
     import warnings
     warnings.filterwarnings("ignore")
     from pkgname.utils.iter_imp import *
@@ -61,16 +63,16 @@ Libraries import
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-36
+.. GENERATED FROM PYTHON SOURCE LINES 35-38
 
 -------------------------------------
 Data import 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-49
+.. GENERATED FROM PYTHON SOURCE LINES 38-51
 
 .. code-block:: default
-   :lineno-start: 37
+   :lineno-start: 39
 
 
     # Set relative data path and set FBC panel list
@@ -92,16 +94,16 @@ Data import
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-53
+.. GENERATED FROM PYTHON SOURCE LINES 52-55
 
 -------------------------------------
 Remove outliers from dataset
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-66
+.. GENERATED FROM PYTHON SOURCE LINES 55-68
 
 .. code-block:: default
-   :lineno-start: 54
+   :lineno-start: 56
 
 
     # Obtain the biomarkers DataFrame with outliers
@@ -123,16 +125,16 @@ Remove outliers from dataset
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-70
+.. GENERATED FROM PYTHON SOURCE LINES 69-72
 
 -------------------------------------
 Biomarker correlations
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-83
+.. GENERATED FROM PYTHON SOURCE LINES 72-86
 
 .. code-block:: default
-   :lineno-start: 71
+   :lineno-start: 73
 
 
     # Obtain highest correlation pairs Pearson Correlation Coefficient
@@ -146,6 +148,7 @@ Biomarker correlations
     # DataFrame to store all experiment MSE scores
     rmse_score_df = pd.DataFrame(index=biomarkers_df.columns)
     rmse_score_df.index.names = ['Biomarker']
+    rmsle_score_df = rmse_score_df.copy(deep=True)
 
 
 
@@ -163,26 +166,29 @@ Biomarker correlations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-87
+.. GENERATED FROM PYTHON SOURCE LINES 87-90
 
 -------------------------------------
 K-Fold Cross Validation (K = 5)
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-98
+.. GENERATED FROM PYTHON SOURCE LINES 90-104
 
 .. code-block:: default
-   :lineno-start: 88
+   :lineno-start: 91
 
 
     # Define min-max scaler and normalise dataset
-    min_max_scaler = preprocessing.RobustScaler()
+    min_max_scaler = preprocessing.StandardScaler()
 
     # Initialise 5-Fold cross validation
     kf5 = KFold(n_splits=5, shuffle=False, random_state=None)
 
+    kf = RepeatedStratifiedKFold(n_splits=5, n_repeats=2)
+
     # Temporary mse_score_df to store mse score for each fold
     temp_rmse_score_df = rmse_score_df.copy(deep=True)
+    temp_rmsle_score_df = rmse_score_df.copy(deep=True)
 
 
 
@@ -192,23 +198,31 @@ K-Fold Cross Validation (K = 5)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-102
+.. GENERATED FROM PYTHON SOURCE LINES 105-108
 
 -------------------------------------
 Define estimators 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-111
+.. GENERATED FROM PYTHON SOURCE LINES 108-125
 
 .. code-block:: default
-   :lineno-start: 103
+   :lineno-start: 109
 
 
     estimators = {
         'Bayesian Ridge': BayesianRidge(),
         'Decision Tree': DecisionTreeRegressor(),
         'Random Forest': ExtraTreesRegressor(),
-        'K-Nearest Neighbour': KNeighborsRegressor(weights='distance'),
+        'XGBoost': XGBRegressor(),
+        'K-NN': KNeighborsRegressor(weights='distance'),
+        'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
+        early_stopping=True),
+        'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
+        'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
+        early_stopping=True),
+        'MLP': MLPRegressor(hidden_layer_sizes=32, 
+        early_stopping=True, max_iter=100),
         'Simple Median': SimpleImputer(strategy='median'),
     }
 
@@ -219,16 +233,16 @@ Define estimators
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-115
+.. GENERATED FROM PYTHON SOURCE LINES 126-129
 
 -------------------------------------
 Predict values using imputer 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-180
+.. GENERATED FROM PYTHON SOURCE LINES 129-197
 
 .. code-block:: default
-   :lineno-start: 116
+   :lineno-start: 130
 
 
     # Run 5-fold CV for each estimator method
@@ -276,7 +290,7 @@ Predict values using imputer
                 columns=test_scaled_df.columns)
 
                 # Inverse transform the scaled values
-                test_og_data = val_scaled.inverse_transform(imputed_data)
+                test_og_data = abs(val_scaled.inverse_transform(imputed_data))
 
                 imputed_data_og = pd.DataFrame(data=test_og_data,
                 index=[i for i in range(test_transformed_data.shape[0])], 
@@ -287,13 +301,16 @@ Predict values using imputer
                 val_true = test_df[biomarker].values
 
                 # Calculate MSE scores from the true and predicted values
-                rmse_score = mean_squared_error(val_true, val_pred, squared=False)
+                rmse_score = get_metric_scores(val_true, val_pred, 'RMSE')
+                rmsle_score = get_metric_scores(val_true, val_pred, 'RMSLE')
 
-                # Store in temp_mse_score_df 
+                # Store in temp_mse_score_df and temp_rmsle_score_df 
                 temp_rmse_score_df.loc[temp_rmse_score_df.index[biomarker], f'K-Fold: {k+1}'] = rmse_score
+                temp_rmsle_score_df.loc[temp_rmsle_score_df.index[biomarker], f'K-Fold: {k+1}'] = rmsle_score
     
         # Calculate mean MSE score for each biomarker across the 5-folds
         rmse_score_df[f'{method}'] = temp_rmse_score_df.mean(axis=1)
+        rmsle_score_df[f'{method}'] = temp_rmsle_score_df.mean(axis=1)
 
 
 
@@ -302,16 +319,16 @@ Predict values using imputer
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-184
+.. GENERATED FROM PYTHON SOURCE LINES 198-201
 
 -------------------------------------
-Table of results
+Table of Results: RMSE
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-187
+.. GENERATED FROM PYTHON SOURCE LINES 201-204
 
 .. code-block:: default
-   :lineno-start: 185
+   :lineno-start: 202
 
 
     rmse_score_df
@@ -345,11 +362,21 @@ Table of results
           <th>Bayesian Ridge</th>
           <th>Decision Tree</th>
           <th>Random Forest</th>
-          <th>K-Nearest Neighbour</th>
+          <th>XGBoost</th>
+          <th>K-NN</th>
+          <th>Least Squares (SGD)</th>
+          <th>Huber (SGD)</th>
+          <th>Support Vector (SGD)</th>
+          <th>MLP</th>
           <th>Simple Median</th>
         </tr>
         <tr>
           <th>Biomarker</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
           <th></th>
           <th></th>
           <th></th>
@@ -360,130 +387,210 @@ Table of results
       <tbody>
         <tr>
           <th>EOS</th>
-          <td>0.092396</td>
-          <td>0.323441</td>
-          <td>0.261619</td>
-          <td>0.290253</td>
+          <td>0.090416</td>
+          <td>0.316736</td>
+          <td>0.262062</td>
+          <td>0.188981</td>
+          <td>0.292814</td>
+          <td>0.226901</td>
+          <td>0.286211</td>
+          <td>0.248529</td>
+          <td>0.087169</td>
           <td>0.304076</td>
         </tr>
         <tr>
           <th>MONO</th>
-          <td>0.092678</td>
-          <td>0.337952</td>
-          <td>0.240171</td>
-          <td>0.346198</td>
+          <td>0.092176</td>
+          <td>0.349263</td>
+          <td>0.240919</td>
+          <td>0.245073</td>
+          <td>0.345562</td>
+          <td>0.324183</td>
+          <td>0.284972</td>
+          <td>0.127404</td>
+          <td>0.104717</td>
           <td>0.439067</td>
         </tr>
         <tr>
           <th>BASO</th>
-          <td>0.055639</td>
-          <td>0.069847</td>
-          <td>0.053167</td>
-          <td>0.056040</td>
+          <td>0.055443</td>
+          <td>0.075616</td>
+          <td>0.052818</td>
+          <td>0.052892</td>
+          <td>0.056045</td>
+          <td>0.053650</td>
+          <td>0.058583</td>
+          <td>0.057554</td>
+          <td>0.051385</td>
           <td>0.059771</td>
         </tr>
         <tr>
           <th>NEUT</th>
-          <td>0.093414</td>
-          <td>1.879716</td>
-          <td>1.835058</td>
-          <td>1.981843</td>
+          <td>0.093367</td>
+          <td>1.413755</td>
+          <td>1.710850</td>
+          <td>1.979962</td>
+          <td>2.271098</td>
+          <td>0.091169</td>
+          <td>0.090850</td>
+          <td>0.136810</td>
+          <td>0.190751</td>
           <td>4.670707</td>
         </tr>
         <tr>
           <th>RBC</th>
-          <td>0.103283</td>
-          <td>0.052259</td>
-          <td>0.027304</td>
-          <td>0.196921</td>
+          <td>0.097375</td>
+          <td>0.052399</td>
+          <td>0.027009</td>
+          <td>0.034837</td>
+          <td>0.162829</td>
+          <td>0.095802</td>
+          <td>0.090752</td>
+          <td>0.092293</td>
+          <td>0.041983</td>
           <td>0.942473</td>
         </tr>
         <tr>
           <th>WBC</th>
-          <td>0.093716</td>
-          <td>1.844479</td>
-          <td>1.555787</td>
-          <td>2.068664</td>
+          <td>0.093700</td>
+          <td>2.713580</td>
+          <td>1.584137</td>
+          <td>1.509240</td>
+          <td>2.275588</td>
+          <td>0.090784</td>
+          <td>0.090507</td>
+          <td>0.132445</td>
+          <td>0.125025</td>
           <td>5.568637</td>
         </tr>
         <tr>
           <th>MCHC</th>
-          <td>7.525346</td>
-          <td>4.020811</td>
-          <td>2.887126</td>
-          <td>8.168671</td>
+          <td>7.525320</td>
+          <td>3.426758</td>
+          <td>2.867055</td>
+          <td>2.889057</td>
+          <td>8.857723</td>
+          <td>7.564157</td>
+          <td>15.594677</td>
+          <td>8.300887</td>
+          <td>2.630203</td>
           <td>40.415635</td>
         </tr>
         <tr>
           <th>MCV</th>
-          <td>1.614973</td>
-          <td>0.655929</td>
-          <td>0.515910</td>
-          <td>2.495352</td>
+          <td>1.556525</td>
+          <td>0.592158</td>
+          <td>0.515689</td>
+          <td>0.495091</td>
+          <td>3.084425</td>
+          <td>1.557881</td>
+          <td>1.712384</td>
+          <td>1.593002</td>
+          <td>0.636125</td>
           <td>13.382875</td>
         </tr>
         <tr>
           <th>LY</th>
-          <td>0.093729</td>
-          <td>1.779513</td>
-          <td>1.240297</td>
-          <td>0.956618</td>
+          <td>0.093676</td>
+          <td>1.693167</td>
+          <td>1.192450</td>
+          <td>1.210287</td>
+          <td>1.002147</td>
+          <td>0.091983</td>
+          <td>0.107710</td>
+          <td>0.099669</td>
+          <td>0.105042</td>
           <td>2.212157</td>
         </tr>
         <tr>
           <th>HCT</th>
           <td>0.004903</td>
-          <td>0.004062</td>
-          <td>0.002688</td>
-          <td>0.017404</td>
+          <td>0.004032</td>
+          <td>0.002675</td>
+          <td>0.003267</td>
+          <td>0.014641</td>
+          <td>0.004999</td>
+          <td>0.004973</td>
+          <td>0.004849</td>
+          <td>0.003684</td>
           <td>0.083004</td>
         </tr>
         <tr>
           <th>RDW</th>
-          <td>2.034001</td>
-          <td>2.632582</td>
-          <td>1.854820</td>
-          <td>2.024440</td>
+          <td>2.013908</td>
+          <td>2.635298</td>
+          <td>1.853369</td>
+          <td>1.843018</td>
+          <td>2.022970</td>
+          <td>2.026043</td>
+          <td>2.086871</td>
+          <td>2.051470</td>
+          <td>1.834897</td>
           <td>2.990355</td>
         </tr>
         <tr>
           <th>HGB</th>
-          <td>2.012952</td>
-          <td>1.455673</td>
-          <td>1.013879</td>
-          <td>5.549782</td>
+          <td>1.907417</td>
+          <td>1.499354</td>
+          <td>1.005796</td>
+          <td>0.896534</td>
+          <td>4.664416</td>
+          <td>1.941220</td>
+          <td>2.075393</td>
+          <td>2.018520</td>
+          <td>0.823284</td>
           <td>27.205640</td>
         </tr>
         <tr>
           <th>MCH</th>
           <td>0.458002</td>
-          <td>0.418151</td>
-          <td>0.296619</td>
-          <td>0.860093</td>
+          <td>0.363731</td>
+          <td>0.283294</td>
+          <td>0.280138</td>
+          <td>1.073319</td>
+          <td>0.466990</td>
+          <td>0.468502</td>
+          <td>0.467235</td>
+          <td>0.404124</td>
           <td>4.472741</td>
         </tr>
         <tr>
           <th>PLT</th>
-          <td>104.011264</td>
-          <td>133.332170</td>
-          <td>93.281916</td>
-          <td>102.594410</td>
+          <td>103.674672</td>
+          <td>133.848496</td>
+          <td>93.302222</td>
+          <td>93.715864</td>
+          <td>102.295967</td>
+          <td>104.120599</td>
+          <td>107.168541</td>
+          <td>105.866907</td>
+          <td>93.789112</td>
           <td>118.180194</td>
         </tr>
         <tr>
           <th>MPV</th>
-          <td>1.159402</td>
-          <td>1.589642</td>
-          <td>1.100864</td>
-          <td>1.195906</td>
+          <td>1.155187</td>
+          <td>1.582493</td>
+          <td>1.099952</td>
+          <td>1.101872</td>
+          <td>1.208614</td>
+          <td>1.154824</td>
+          <td>1.172495</td>
+          <td>1.158720</td>
+          <td>1.090806</td>
           <td>1.599621</td>
         </tr>
         <tr>
           <th>NRBCA</th>
-          <td>0.116486</td>
-          <td>0.167886</td>
-          <td>0.116369</td>
-          <td>0.117208</td>
+          <td>0.116010</td>
+          <td>0.168825</td>
+          <td>0.115812</td>
+          <td>0.125474</td>
+          <td>0.119666</td>
+          <td>0.113544</td>
+          <td>0.114299</td>
+          <td>0.114056</td>
+          <td>0.114012</td>
           <td>0.114509</td>
         </tr>
       </tbody>
@@ -493,26 +600,309 @@ Table of results
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-191
+.. GENERATED FROM PYTHON SOURCE LINES 205-208
+
+-------------------------------------
+Table of Results: RMSlE
+-------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 208-211
+
+.. code-block:: default
+   :lineno-start: 209
+
+
+    rmsle_score_df
+
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>Bayesian Ridge</th>
+          <th>Decision Tree</th>
+          <th>Random Forest</th>
+          <th>XGBoost</th>
+          <th>K-NN</th>
+          <th>Least Squares (SGD)</th>
+          <th>Huber (SGD)</th>
+          <th>Support Vector (SGD)</th>
+          <th>MLP</th>
+          <th>Simple Median</th>
+        </tr>
+        <tr>
+          <th>Biomarker</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>EOS</th>
+          <td>0.058023</td>
+          <td>0.164620</td>
+          <td>0.129544</td>
+          <td>0.099190</td>
+          <td>0.155680</td>
+          <td>0.121122</td>
+          <td>0.145660</td>
+          <td>0.120376</td>
+          <td>0.056623</td>
+          <td>0.163007</td>
+        </tr>
+        <tr>
+          <th>MONO</th>
+          <td>0.044494</td>
+          <td>0.135138</td>
+          <td>0.089955</td>
+          <td>0.091249</td>
+          <td>0.161771</td>
+          <td>0.134815</td>
+          <td>0.124418</td>
+          <td>0.058184</td>
+          <td>0.043776</td>
+          <td>0.205536</td>
+        </tr>
+        <tr>
+          <th>BASO</th>
+          <td>0.040649</td>
+          <td>0.058441</td>
+          <td>0.041228</td>
+          <td>0.040908</td>
+          <td>0.044210</td>
+          <td>0.041364</td>
+          <td>0.046122</td>
+          <td>0.045002</td>
+          <td>0.040000</td>
+          <td>0.047335</td>
+        </tr>
+        <tr>
+          <th>NEUT</th>
+          <td>0.017721</td>
+          <td>0.065634</td>
+          <td>0.057685</td>
+          <td>0.048669</td>
+          <td>0.204093</td>
+          <td>0.017831</td>
+          <td>0.017424</td>
+          <td>0.034659</td>
+          <td>0.025279</td>
+          <td>0.539328</td>
+        </tr>
+        <tr>
+          <th>RBC</th>
+          <td>0.022307</td>
+          <td>0.012126</td>
+          <td>0.006778</td>
+          <td>0.008195</td>
+          <td>0.034709</td>
+          <td>0.021595</td>
+          <td>0.019688</td>
+          <td>0.020273</td>
+          <td>0.013060</td>
+          <td>0.255991</td>
+        </tr>
+        <tr>
+          <th>WBC</th>
+          <td>0.011853</td>
+          <td>0.040860</td>
+          <td>0.024163</td>
+          <td>0.022305</td>
+          <td>0.122869</td>
+          <td>0.011950</td>
+          <td>0.011719</td>
+          <td>0.036123</td>
+          <td>0.015282</td>
+          <td>0.482568</td>
+        </tr>
+        <tr>
+          <th>MCHC</th>
+          <td>0.267574</td>
+          <td>0.040950</td>
+          <td>0.040635</td>
+          <td>0.034636</td>
+          <td>0.048739</td>
+          <td>0.243603</td>
+          <td>0.574843</td>
+          <td>0.183557</td>
+          <td>0.055969</td>
+          <td>0.694707</td>
+        </tr>
+        <tr>
+          <th>MCV</th>
+          <td>0.087924</td>
+          <td>0.019364</td>
+          <td>0.020366</td>
+          <td>0.018692</td>
+          <td>0.039063</td>
+          <td>0.082503</td>
+          <td>0.077991</td>
+          <td>0.073007</td>
+          <td>0.020072</td>
+          <td>0.548657</td>
+        </tr>
+        <tr>
+          <th>LY</th>
+          <td>0.031921</td>
+          <td>0.148682</td>
+          <td>0.093582</td>
+          <td>0.073448</td>
+          <td>0.268356</td>
+          <td>0.031736</td>
+          <td>0.031160</td>
+          <td>0.036124</td>
+          <td>0.038336</td>
+          <td>0.367702</td>
+        </tr>
+        <tr>
+          <th>HCT</th>
+          <td>0.003684</td>
+          <td>0.002984</td>
+          <td>0.001969</td>
+          <td>0.002423</td>
+          <td>0.010828</td>
+          <td>0.003765</td>
+          <td>0.003730</td>
+          <td>0.003683</td>
+          <td>0.002743</td>
+          <td>0.064013</td>
+        </tr>
+        <tr>
+          <th>RDW</th>
+          <td>0.128437</td>
+          <td>0.159248</td>
+          <td>0.113383</td>
+          <td>0.112437</td>
+          <td>0.124416</td>
+          <td>0.138129</td>
+          <td>0.127627</td>
+          <td>0.127972</td>
+          <td>0.113397</td>
+          <td>0.353209</td>
+        </tr>
+        <tr>
+          <th>HGB</th>
+          <td>0.075476</td>
+          <td>0.024724</td>
+          <td>0.013566</td>
+          <td>0.012813</td>
+          <td>0.046228</td>
+          <td>0.088905</td>
+          <td>0.026897</td>
+          <td>0.114574</td>
+          <td>0.026389</td>
+          <td>0.609722</td>
+        </tr>
+        <tr>
+          <th>MCH</th>
+          <td>0.027191</td>
+          <td>0.022030</td>
+          <td>0.017068</td>
+          <td>0.018589</td>
+          <td>0.037760</td>
+          <td>0.030663</td>
+          <td>0.025827</td>
+          <td>0.041433</td>
+          <td>0.022972</td>
+          <td>0.420535</td>
+        </tr>
+        <tr>
+          <th>PLT</th>
+          <td>0.547767</td>
+          <td>0.586334</td>
+          <td>0.424793</td>
+          <td>0.423706</td>
+          <td>0.451022</td>
+          <td>0.526026</td>
+          <td>0.485499</td>
+          <td>0.508431</td>
+          <td>0.503021</td>
+          <td>0.827330</td>
+        </tr>
+        <tr>
+          <th>MPV</th>
+          <td>0.123007</td>
+          <td>0.165551</td>
+          <td>0.116126</td>
+          <td>0.116135</td>
+          <td>0.127330</td>
+          <td>0.123558</td>
+          <td>0.123720</td>
+          <td>0.122405</td>
+          <td>0.116113</td>
+          <td>0.295575</td>
+        </tr>
+        <tr>
+          <th>NRBCA</th>
+          <td>0.065651</td>
+          <td>0.087115</td>
+          <td>0.064428</td>
+          <td>0.068236</td>
+          <td>0.066385</td>
+          <td>0.062092</td>
+          <td>0.062206</td>
+          <td>0.062087</td>
+          <td>0.063142</td>
+          <td>0.062462</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 212-215
 
 -------------------------------------
 Combined RMSE Plot for each biomarker
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-199
+.. GENERATED FROM PYTHON SOURCE LINES 215-225
 
 .. code-block:: default
-   :lineno-start: 192
+   :lineno-start: 216
 
 
     # Plot horizontal bar graph 
     for biomarker, scores in rmse_score_df.iterrows():
         plt.figure(figsize=(20,15))
         plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
-        scores.plot.barh(grid=True)
+        cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
+        scores.plot.barh(grid=True, color=cmap)
         plt.xticks(fontsize=18)
         plt.yticks(fontsize=18)
         plt.xlabel('RMSE Score', fontsize=18)
+        plt.show()
 
 
 .. rst-class:: sphx-glr-horizontal
@@ -621,7 +1011,7 @@ Combined RMSE Plot for each biomarker
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 65 minutes  40.116 seconds)
+   **Total running time of the script:** ( 120 minutes  3.986 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp1.py:
