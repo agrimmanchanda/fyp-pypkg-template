@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Iterative Imputer Experiment I &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  <title>Iterative Imputer Experiment I.I &mdash; fyp2020-am9717 0.0.1 documentation</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Iterative Imputer Experiment I.I" href="plot_iter_imputer_exp1_1.html" />
-    <link rel="prev" title="Iterative Imputer" href="index.html" /> 
+    <link rel="next" title="The Widgets’ gallery" href="../widgets/index.html" />
+    <link rel="prev" title="Iterative Imputer Experiment I" href="plot_iter_imputer_exp1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,7 +97,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">The tutorial gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Loading the data set</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Iterative Imputer</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Iterative Imputer Experiment I</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1.html">Iterative Imputer Experiment I</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Iterative Imputer Experiment I.I</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#libraries-import">Libraries import</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#remove-outliers-from-dataset">Remove outliers from dataset</a></li>
@@ -110,7 +111,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#combined-rmse-plot-for-each-biomarker">Combined RMSE Plot for each biomarker</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_1.html">Iterative Imputer Experiment I.I</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
@@ -164,13 +164,13 @@
         
           <li><a href="index.html">Iterative Imputer</a> &raquo;</li>
         
-      <li>Iterative Imputer Experiment I</li>
+      <li>Iterative Imputer Experiment I.I</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_exp1.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_exp1_1.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -185,13 +185,13 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-1-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="iterative-imputer-experiment-i">
-<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp1-py"></span><h1>Iterative Imputer Experiment I<a class="headerlink" href="#iterative-imputer-experiment-i" title="Permalink to this headline">¶</a></h1>
+<div class="sphx-glr-example-title section" id="iterative-imputer-experiment-i-i">
+<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp1-1-py"></span><h1>Iterative Imputer Experiment I.I<a class="headerlink" href="#iterative-imputer-experiment-i-i" title="Permalink to this headline">¶</a></h1>
 <p>Single biomarker removal experiment with
-K-Fold Cross Validation.</p>
+K-Fold Cross Validation without outliers.</p>
 <div class="section" id="libraries-import">
 <h2>Libraries import<a class="headerlink" href="#libraries-import" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>14
@@ -272,8 +272,30 @@ K-Fold Cross Validation.</p>
 63
 64
 65
-66</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame with outliers</span>
- <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame with outliers</span>
+ <span class="n">biomarkers_raw</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
+
+
+ <span class="c1"># Remove values based on Q(1/3) -+ 1.5 * IQR method</span>
+ <span class="n">q1</span><span class="p">,</span> <span class="n">q3</span> <span class="o">=</span> <span class="n">biomarkers_raw</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span> <span class="n">biomarkers_raw</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+ <span class="n">IQR</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">-</span> <span class="n">q1</span>
+ <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span>
+ <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span>
+
+ <span class="c1"># New biomarkers dataframe with outlier values removed</span>
+ <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">biomarkers_raw</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">biomarkers_raw</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span>
+ <span class="p">(</span><span class="n">biomarkers_raw</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
 
  <span class="c1"># Make dataset copy</span>
  <span class="n">biomarkers_original_df_copy</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -288,18 +310,18 @@ K-Fold Cross Validation.</p>
 </div>
 <div class="section" id="biomarker-correlations">
 <h2>Biomarker correlations<a class="headerlink" href="#biomarker-correlations" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain highest correlation pairs Pearson Correlation Coefficient</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain highest correlation pairs Pearson Correlation Coefficient</span>
  <span class="n">biomarkers_highest_corr</span> <span class="o">=</span> <span class="n">corr_pairs</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">)</span>
 
  <span class="c1"># Find biomarkers that are to be dropped from the dataset</span>
@@ -320,15 +342,15 @@ K-Fold Cross Validation.</p>
 </div>
 <div class="section" id="k-fold-cross-validation-k-5">
 <h2>K-Fold Cross Validation (K = 5)<a class="headerlink" href="#k-fold-cross-validation-k-5" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>91
-92
-93
-94
-95
-96
-97
-98
-99</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Define min-max scaler and normalise dataset</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>102
+103
+104
+105
+106
+107
+108
+109
+110</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Define min-max scaler and normalise dataset</span>
  <span class="n">min_max_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
 
  <span class="c1"># Initialise 5-Fold cross validation</span>
@@ -342,21 +364,21 @@ K-Fold Cross Validation.</p>
 </div>
 <div class="section" id="define-estimators">
 <h2>Define estimators<a class="headerlink" href="#define-estimators" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>118
 119
 120
-121</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">estimators</span> <span class="o">=</span> <span class="p">{</span>
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">estimators</span> <span class="o">=</span> <span class="p">{</span>
      <span class="s1">&#39;Bayesian Ridge&#39;</span><span class="p">:</span> <span class="n">BayesianRidge</span><span class="p">(),</span>
      <span class="s1">&#39;Decision Tree&#39;</span><span class="p">:</span> <span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
      <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">ExtraTreesRegressor</span><span class="p">(),</span>
@@ -376,18 +398,7 @@ K-Fold Cross Validation.</p>
 </div>
 <div class="section" id="predict-values-using-imputer">
 <h2>Predict values using imputer<a class="headerlink" href="#predict-values-using-imputer" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>139
 140
 141
 142
@@ -441,7 +452,18 @@ K-Fold Cross Validation.</p>
 190
 191
 192
-193</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Run 5-fold CV for each estimator method</span>
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Run 5-fold CV for each estimator method</span>
  <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">imputer_estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
      <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kf5</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">biomarkers_data</span><span class="p">)):</span>
 
@@ -512,7 +534,7 @@ K-Fold Cross Validation.</p>
 </div>
 <div class="section" id="table-of-results-rmse">
 <h2>Table of Results: RMSE<a class="headerlink" href="#table-of-results-rmse" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>200</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">rmse_score_df</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>211</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">rmse_score_df</span>
 </pre></div>
 </td></tr></table></div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -562,211 +584,211 @@ K-Fold Cross Validation.</p>
   <tbody>
     <tr>
       <th>EOS</th>
-      <td>0.090416</td>
-      <td>0.305212</td>
-      <td>0.260839</td>
-      <td>0.188981</td>
-      <td>0.292814</td>
-      <td>0.219964</td>
-      <td>0.285558</td>
-      <td>0.239270</td>
-      <td>0.098864</td>
-      <td>0.304076</td>
+      <td>0.058294</td>
+      <td>0.137839</td>
+      <td>0.095585</td>
+      <td>8.566184e-02</td>
+      <td>0.116909</td>
+      <td>0.094871</td>
+      <td>0.109400</td>
+      <td>0.099160</td>
+      <td>0.057668</td>
+      <td>0.116911</td>
     </tr>
     <tr>
       <th>MONO</th>
-      <td>0.092176</td>
-      <td>0.342353</td>
-      <td>0.240731</td>
-      <td>0.245073</td>
-      <td>0.345562</td>
-      <td>0.198444</td>
-      <td>0.294941</td>
-      <td>0.124932</td>
-      <td>0.109288</td>
-      <td>0.439067</td>
+      <td>0.063966</td>
+      <td>0.172678</td>
+      <td>0.111622</td>
+      <td>1.016483e-01</td>
+      <td>0.219023</td>
+      <td>0.078710</td>
+      <td>0.161495</td>
+      <td>0.071990</td>
+      <td>0.063801</td>
+      <td>0.260395</td>
     </tr>
     <tr>
       <th>BASO</th>
-      <td>0.055443</td>
-      <td>0.079977</td>
-      <td>0.053054</td>
-      <td>0.052892</td>
-      <td>0.056045</td>
-      <td>0.084843</td>
-      <td>0.058567</td>
-      <td>0.057632</td>
-      <td>0.052064</td>
-      <td>0.059771</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.618776e-16</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.150705</td>
+      <td>0.000000</td>
     </tr>
     <tr>
       <th>NEUT</th>
-      <td>0.093367</td>
-      <td>1.431575</td>
-      <td>1.772878</td>
-      <td>1.979962</td>
-      <td>2.271098</td>
-      <td>0.091764</td>
-      <td>0.091504</td>
-      <td>0.154498</td>
-      <td>0.124754</td>
-      <td>4.670707</td>
+      <td>0.066157</td>
+      <td>0.192284</td>
+      <td>0.098201</td>
+      <td>9.317628e-02</td>
+      <td>0.768844</td>
+      <td>0.066237</td>
+      <td>0.066270</td>
+      <td>0.074788</td>
+      <td>0.072393</td>
+      <td>2.602406</td>
     </tr>
     <tr>
       <th>RBC</th>
-      <td>0.097375</td>
-      <td>0.052049</td>
-      <td>0.027155</td>
-      <td>0.034837</td>
-      <td>0.162829</td>
-      <td>0.096685</td>
-      <td>0.090866</td>
-      <td>0.091816</td>
-      <td>0.039636</td>
-      <td>0.942473</td>
+      <td>0.051247</td>
+      <td>0.043273</td>
+      <td>0.019184</td>
+      <td>2.442371e-02</td>
+      <td>0.147038</td>
+      <td>0.051536</td>
+      <td>0.051620</td>
+      <td>0.053178</td>
+      <td>0.015003</td>
+      <td>0.751817</td>
     </tr>
     <tr>
       <th>WBC</th>
-      <td>0.093700</td>
-      <td>2.584008</td>
-      <td>1.576014</td>
-      <td>1.509240</td>
-      <td>2.275588</td>
-      <td>0.104852</td>
-      <td>0.091263</td>
-      <td>0.177722</td>
-      <td>0.148315</td>
-      <td>5.568637</td>
+      <td>0.066188</td>
+      <td>0.194278</td>
+      <td>0.096936</td>
+      <td>9.484127e-02</td>
+      <td>0.715558</td>
+      <td>0.066322</td>
+      <td>0.066296</td>
+      <td>0.077568</td>
+      <td>0.071578</td>
+      <td>2.768599</td>
     </tr>
     <tr>
       <th>MCHC</th>
-      <td>7.525320</td>
-      <td>3.755485</td>
-      <td>2.963261</td>
-      <td>2.889057</td>
-      <td>8.857723</td>
-      <td>7.689674</td>
-      <td>15.853726</td>
-      <td>8.378374</td>
-      <td>2.728102</td>
-      <td>40.415635</td>
+      <td>0.804123</td>
+      <td>0.884185</td>
+      <td>0.596445</td>
+      <td>6.799949e-01</td>
+      <td>6.937810</td>
+      <td>0.822634</td>
+      <td>0.827447</td>
+      <td>0.829683</td>
+      <td>0.537913</td>
+      <td>9.788781</td>
     </tr>
     <tr>
       <th>MCV</th>
-      <td>1.556525</td>
-      <td>0.625746</td>
-      <td>0.515977</td>
-      <td>0.495091</td>
-      <td>3.084425</td>
-      <td>1.609849</td>
-      <td>1.710076</td>
-      <td>1.619074</td>
-      <td>0.666546</td>
-      <td>13.382875</td>
+      <td>0.231830</td>
+      <td>0.251600</td>
+      <td>0.168982</td>
+      <td>1.944491e-01</td>
+      <td>1.892155</td>
+      <td>0.236988</td>
+      <td>0.237999</td>
+      <td>0.239545</td>
+      <td>0.171166</td>
+      <td>5.900812</td>
     </tr>
     <tr>
       <th>LY</th>
-      <td>0.093676</td>
-      <td>1.603439</td>
-      <td>1.209676</td>
-      <td>1.210287</td>
-      <td>1.002147</td>
-      <td>0.098778</td>
-      <td>0.107657</td>
-      <td>0.096887</td>
-      <td>0.129428</td>
-      <td>2.212157</td>
+      <td>0.065642</td>
+      <td>0.270326</td>
+      <td>0.193146</td>
+      <td>1.187148e-01</td>
+      <td>0.583804</td>
+      <td>0.065936</td>
+      <td>0.068249</td>
+      <td>0.066744</td>
+      <td>0.066344</td>
+      <td>0.753773</td>
     </tr>
     <tr>
       <th>HCT</th>
-      <td>0.004903</td>
-      <td>0.004083</td>
-      <td>0.002688</td>
-      <td>0.003267</td>
-      <td>0.014641</td>
-      <td>0.004953</td>
-      <td>0.004967</td>
-      <td>0.004853</td>
-      <td>0.003506</td>
-      <td>0.083004</td>
+      <td>0.003551</td>
+      <td>0.003726</td>
+      <td>0.002514</td>
+      <td>3.080910e-03</td>
+      <td>0.013621</td>
+      <td>0.003662</td>
+      <td>0.003699</td>
+      <td>0.003597</td>
+      <td>0.003121</td>
+      <td>0.065571</td>
     </tr>
     <tr>
       <th>RDW</th>
-      <td>2.013908</td>
-      <td>2.648567</td>
-      <td>1.852919</td>
-      <td>1.843018</td>
-      <td>2.022970</td>
-      <td>2.078274</td>
-      <td>2.084273</td>
-      <td>2.042091</td>
-      <td>1.834157</td>
-      <td>2.990355</td>
+      <td>1.451846</td>
+      <td>1.994501</td>
+      <td>1.414516</td>
+      <td>1.417188e+00</td>
+      <td>1.532347</td>
+      <td>1.453734</td>
+      <td>1.476640</td>
+      <td>1.478366</td>
+      <td>1.386422</td>
+      <td>1.879196</td>
     </tr>
     <tr>
       <th>HGB</th>
-      <td>1.907417</td>
-      <td>1.488119</td>
-      <td>1.009686</td>
-      <td>0.896534</td>
-      <td>4.664416</td>
-      <td>1.893824</td>
-      <td>2.078309</td>
-      <td>2.023520</td>
-      <td>0.837621</td>
-      <td>27.205640</td>
+      <td>1.046061</td>
+      <td>1.382246</td>
+      <td>0.887322</td>
+      <td>7.598997e-01</td>
+      <td>4.304529</td>
+      <td>1.058549</td>
+      <td>1.067277</td>
+      <td>1.065919</td>
+      <td>0.562459</td>
+      <td>21.515179</td>
     </tr>
     <tr>
       <th>MCH</th>
-      <td>0.458002</td>
-      <td>0.367536</td>
-      <td>0.280342</td>
-      <td>0.280138</td>
-      <td>1.073319</td>
-      <td>0.475640</td>
-      <td>0.467966</td>
-      <td>0.469498</td>
-      <td>0.411149</td>
-      <td>4.472741</td>
+      <td>0.075980</td>
+      <td>0.084027</td>
+      <td>0.055909</td>
+      <td>6.333524e-02</td>
+      <td>0.564793</td>
+      <td>0.078050</td>
+      <td>0.078470</td>
+      <td>0.079521</td>
+      <td>0.055048</td>
+      <td>2.081556</td>
     </tr>
     <tr>
       <th>PLT</th>
-      <td>103.674672</td>
-      <td>134.178854</td>
-      <td>93.289505</td>
-      <td>93.715864</td>
-      <td>102.295967</td>
-      <td>113.965805</td>
-      <td>107.444244</td>
-      <td>105.965451</td>
-      <td>95.717171</td>
-      <td>118.180194</td>
+      <td>68.079544</td>
+      <td>95.969037</td>
+      <td>67.718888</td>
+      <td>6.810031e+01</td>
+      <td>73.655717</td>
+      <td>68.146017</td>
+      <td>68.499864</td>
+      <td>68.466659</td>
+      <td>66.572377</td>
+      <td>80.604096</td>
     </tr>
     <tr>
       <th>MPV</th>
-      <td>1.155187</td>
-      <td>1.569796</td>
-      <td>1.101126</td>
-      <td>1.101872</td>
-      <td>1.208614</td>
-      <td>1.156252</td>
-      <td>1.175385</td>
-      <td>1.153285</td>
-      <td>1.088252</td>
-      <td>1.599621</td>
+      <td>1.009359</td>
+      <td>1.432508</td>
+      <td>1.010391</td>
+      <td>1.015090e+00</td>
+      <td>1.097861</td>
+      <td>1.012768</td>
+      <td>1.011129</td>
+      <td>1.012702</td>
+      <td>0.994313</td>
+      <td>1.137396</td>
     </tr>
     <tr>
       <th>NRBCA</th>
-      <td>0.116010</td>
-      <td>0.160225</td>
-      <td>0.115469</td>
-      <td>0.125474</td>
-      <td>0.119666</td>
-      <td>0.119678</td>
-      <td>0.114297</td>
-      <td>0.113981</td>
-      <td>0.114189</td>
-      <td>0.114509</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.618776e-16</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.145408</td>
+      <td>0.000000</td>
     </tr>
   </tbody>
 </table>
@@ -776,7 +798,7 @@ K-Fold Cross Validation.</p>
 <br /></div>
 <div class="section" id="table-of-results-rmsle">
 <h2>Table of Results: RMSlE<a class="headerlink" href="#table-of-results-rmsle" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>207</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">rmsle_score_df</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>218</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">rmsle_score_df</span>
 </pre></div>
 </td></tr></table></div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -826,211 +848,211 @@ K-Fold Cross Validation.</p>
   <tbody>
     <tr>
       <th>EOS</th>
-      <td>0.058023</td>
-      <td>0.164637</td>
-      <td>0.129298</td>
-      <td>0.099190</td>
-      <td>0.155680</td>
-      <td>0.115297</td>
-      <td>0.145054</td>
-      <td>0.115400</td>
-      <td>0.058588</td>
-      <td>0.163007</td>
+      <td>0.051316</td>
+      <td>0.117546</td>
+      <td>0.081766</td>
+      <td>7.333371e-02</td>
+      <td>0.100107</td>
+      <td>0.080654</td>
+      <td>0.092399</td>
+      <td>0.083458</td>
+      <td>0.050641</td>
+      <td>0.099355</td>
     </tr>
     <tr>
       <th>MONO</th>
-      <td>0.044494</td>
-      <td>0.134862</td>
-      <td>0.090082</td>
-      <td>0.091249</td>
-      <td>0.161771</td>
-      <td>0.093436</td>
-      <td>0.128629</td>
-      <td>0.058195</td>
-      <td>0.045382</td>
-      <td>0.205536</td>
+      <td>0.041347</td>
+      <td>0.107250</td>
+      <td>0.069200</td>
+      <td>6.339200e-02</td>
+      <td>0.135614</td>
+      <td>0.049725</td>
+      <td>0.099329</td>
+      <td>0.045747</td>
+      <td>0.041108</td>
+      <td>0.159436</td>
     </tr>
     <tr>
       <th>BASO</th>
-      <td>0.040649</td>
-      <td>0.058906</td>
-      <td>0.041344</td>
-      <td>0.040908</td>
-      <td>0.044210</td>
-      <td>0.061600</td>
-      <td>0.046107</td>
-      <td>0.045070</td>
-      <td>0.040214</td>
-      <td>0.047335</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.618776e-16</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.134487</td>
+      <td>0.000000</td>
     </tr>
     <tr>
       <th>NEUT</th>
-      <td>0.017721</td>
-      <td>0.068216</td>
-      <td>0.059436</td>
-      <td>0.048669</td>
-      <td>0.204093</td>
-      <td>0.018508</td>
-      <td>0.017512</td>
-      <td>0.033333</td>
-      <td>0.026127</td>
-      <td>0.539328</td>
+      <td>0.014814</td>
+      <td>0.042423</td>
+      <td>0.023945</td>
+      <td>2.050577e-02</td>
+      <td>0.162473</td>
+      <td>0.014817</td>
+      <td>0.014829</td>
+      <td>0.016844</td>
+      <td>0.016650</td>
+      <td>0.438348</td>
     </tr>
     <tr>
       <th>RBC</th>
-      <td>0.022307</td>
-      <td>0.011307</td>
-      <td>0.006865</td>
-      <td>0.008195</td>
-      <td>0.034709</td>
-      <td>0.022423</td>
-      <td>0.019750</td>
-      <td>0.020735</td>
-      <td>0.011351</td>
-      <td>0.255991</td>
+      <td>0.011103</td>
+      <td>0.008705</td>
+      <td>0.003854</td>
+      <td>4.926293e-03</td>
+      <td>0.030538</td>
+      <td>0.011221</td>
+      <td>0.011184</td>
+      <td>0.011246</td>
+      <td>0.003033</td>
+      <td>0.153451</td>
     </tr>
     <tr>
       <th>WBC</th>
-      <td>0.011853</td>
-      <td>0.039574</td>
-      <td>0.024181</td>
-      <td>0.022305</td>
-      <td>0.122869</td>
-      <td>0.014022</td>
-      <td>0.011857</td>
-      <td>0.031302</td>
-      <td>0.021956</td>
-      <td>0.482568</td>
+      <td>0.009682</td>
+      <td>0.027850</td>
+      <td>0.014193</td>
+      <td>1.372673e-02</td>
+      <td>0.103951</td>
+      <td>0.009714</td>
+      <td>0.009699</td>
+      <td>0.012347</td>
+      <td>0.010696</td>
+      <td>0.352867</td>
     </tr>
     <tr>
       <th>MCHC</th>
-      <td>0.267574</td>
-      <td>0.048668</td>
-      <td>0.041745</td>
-      <td>0.034636</td>
-      <td>0.048739</td>
-      <td>0.260958</td>
-      <td>0.574340</td>
-      <td>0.217727</td>
-      <td>0.068937</td>
-      <td>0.694707</td>
+      <td>0.002466</td>
+      <td>0.002711</td>
+      <td>0.001830</td>
+      <td>2.083470e-03</td>
+      <td>0.021233</td>
+      <td>0.002521</td>
+      <td>0.002535</td>
+      <td>0.002546</td>
+      <td>0.001650</td>
+      <td>0.029928</td>
     </tr>
     <tr>
       <th>MCV</th>
-      <td>0.087924</td>
-      <td>0.022012</td>
-      <td>0.020925</td>
-      <td>0.018692</td>
-      <td>0.039063</td>
-      <td>0.140228</td>
-      <td>0.071851</td>
-      <td>0.085923</td>
-      <td>0.024786</td>
-      <td>0.548657</td>
+      <td>0.002508</td>
+      <td>0.002662</td>
+      <td>0.001784</td>
+      <td>2.065222e-03</td>
+      <td>0.020456</td>
+      <td>0.002567</td>
+      <td>0.002577</td>
+      <td>0.002592</td>
+      <td>0.001808</td>
+      <td>0.064287</td>
     </tr>
     <tr>
       <th>LY</th>
-      <td>0.031921</td>
-      <td>0.150554</td>
-      <td>0.095274</td>
-      <td>0.073448</td>
-      <td>0.268356</td>
-      <td>0.034517</td>
-      <td>0.031124</td>
-      <td>0.034812</td>
-      <td>0.043957</td>
-      <td>0.367702</td>
+      <td>0.029220</td>
+      <td>0.125513</td>
+      <td>0.090610</td>
+      <td>5.380307e-02</td>
+      <td>0.237171</td>
+      <td>0.029294</td>
+      <td>0.030162</td>
+      <td>0.029809</td>
+      <td>0.029584</td>
+      <td>0.310500</td>
     </tr>
     <tr>
       <th>HCT</th>
-      <td>0.003684</td>
-      <td>0.003005</td>
-      <td>0.001982</td>
-      <td>0.002423</td>
-      <td>0.010828</td>
-      <td>0.003699</td>
-      <td>0.003720</td>
-      <td>0.003697</td>
-      <td>0.002598</td>
-      <td>0.064013</td>
+      <td>0.002601</td>
+      <td>0.002710</td>
+      <td>0.001830</td>
+      <td>2.244560e-03</td>
+      <td>0.010012</td>
+      <td>0.002684</td>
+      <td>0.002713</td>
+      <td>0.002631</td>
+      <td>0.002275</td>
+      <td>0.048126</td>
     </tr>
     <tr>
       <th>RDW</th>
-      <td>0.128437</td>
-      <td>0.159858</td>
-      <td>0.113408</td>
-      <td>0.112437</td>
-      <td>0.124416</td>
-      <td>0.140932</td>
-      <td>0.127645</td>
-      <td>0.127599</td>
-      <td>0.113046</td>
-      <td>0.353209</td>
+      <td>0.098402</td>
+      <td>0.134229</td>
+      <td>0.095462</td>
+      <td>9.546735e-02</td>
+      <td>0.103352</td>
+      <td>0.098452</td>
+      <td>0.099232</td>
+      <td>0.099410</td>
+      <td>0.093456</td>
+      <td>0.126245</td>
     </tr>
     <tr>
       <th>HGB</th>
-      <td>0.075476</td>
-      <td>0.022233</td>
-      <td>0.012644</td>
-      <td>0.012813</td>
-      <td>0.046228</td>
-      <td>0.087693</td>
-      <td>0.034279</td>
-      <td>0.101344</td>
-      <td>0.054876</td>
-      <td>0.609722</td>
+      <td>0.009455</td>
+      <td>0.011717</td>
+      <td>0.007565</td>
+      <td>6.563935e-03</td>
+      <td>0.038579</td>
+      <td>0.009634</td>
+      <td>0.009743</td>
+      <td>0.009473</td>
+      <td>0.004893</td>
+      <td>0.184858</td>
     </tr>
     <tr>
       <th>MCH</th>
-      <td>0.027191</td>
-      <td>0.023294</td>
-      <td>0.017023</td>
-      <td>0.018589</td>
-      <td>0.037760</td>
-      <td>0.031595</td>
-      <td>0.025874</td>
-      <td>0.042257</td>
-      <td>0.030058</td>
-      <td>0.420535</td>
+      <td>0.002468</td>
+      <td>0.002705</td>
+      <td>0.001773</td>
+      <td>2.032023e-03</td>
+      <td>0.018344</td>
+      <td>0.002545</td>
+      <td>0.002551</td>
+      <td>0.002587</td>
+      <td>0.001763</td>
+      <td>0.068246</td>
     </tr>
     <tr>
       <th>PLT</th>
-      <td>0.547767</td>
-      <td>0.588677</td>
-      <td>0.425115</td>
-      <td>0.423706</td>
-      <td>0.451022</td>
-      <td>0.591132</td>
-      <td>0.496879</td>
-      <td>0.484414</td>
-      <td>0.499812</td>
-      <td>0.827330</td>
+      <td>0.362331</td>
+      <td>0.480989</td>
+      <td>0.350403</td>
+      <td>3.512794e-01</td>
+      <td>0.375210</td>
+      <td>0.362645</td>
+      <td>0.361707</td>
+      <td>0.360641</td>
+      <td>0.346085</td>
+      <td>0.422514</td>
     </tr>
     <tr>
       <th>MPV</th>
-      <td>0.123007</td>
-      <td>0.166073</td>
-      <td>0.116171</td>
-      <td>0.116135</td>
-      <td>0.127330</td>
-      <td>0.124521</td>
-      <td>0.123933</td>
-      <td>0.121831</td>
-      <td>0.115579</td>
-      <td>0.295575</td>
+      <td>0.109901</td>
+      <td>0.155733</td>
+      <td>0.110008</td>
+      <td>1.105440e-01</td>
+      <td>0.119425</td>
+      <td>0.110195</td>
+      <td>0.109861</td>
+      <td>0.110064</td>
+      <td>0.108188</td>
+      <td>0.123139</td>
     </tr>
     <tr>
       <th>NRBCA</th>
-      <td>0.065651</td>
-      <td>0.086275</td>
-      <td>0.064277</td>
-      <td>0.068236</td>
-      <td>0.066385</td>
-      <td>0.071158</td>
-      <td>0.062206</td>
-      <td>0.061966</td>
-      <td>0.063214</td>
-      <td>0.062462</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.618776e-16</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.130317</td>
+      <td>0.000000</td>
     </tr>
   </tbody>
 </table>
@@ -1040,16 +1062,16 @@ K-Fold Cross Validation.</p>
 <br /></div>
 <div class="section" id="combined-rmse-plot-for-each-biomarker">
 <h2>Combined RMSE Plot for each biomarker<a class="headerlink" href="#combined-rmse-plot-for-each-biomarker" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>214
-215
-216
-217
-218
-219
-220
-221
-222
-223</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Plot horizontal bar graph</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>225
+226
+227
+228
+229
+230
+231
+232
+233
+234</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Plot horizontal bar graph</span>
  <span class="k">for</span> <span class="n">biomarker</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">rmse_score_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
      <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
      <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMSE Scores for Biomarker: </span><span class="si">{biomarker}</span><span class="s1"> with Different Iterative Imputation Methods&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
@@ -1062,46 +1084,46 @@ K-Fold Cross Validation.</p>
 </pre></div>
 </td></tr></table></div>
 <ul class="sphx-glr-horizontal">
-<li><img alt="RMSE Scores for Biomarker: EOS with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_001.png" />
+<li><img alt="RMSE Scores for Biomarker: EOS with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_001.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: MONO with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_002.png" />
+<li><img alt="RMSE Scores for Biomarker: MONO with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_002.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: BASO with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_003.png" />
+<li><img alt="RMSE Scores for Biomarker: BASO with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_003.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: NEUT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_004.png" />
+<li><img alt="RMSE Scores for Biomarker: NEUT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_004.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: RBC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_005.png" />
+<li><img alt="RMSE Scores for Biomarker: RBC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_005.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: WBC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_006.png" />
+<li><img alt="RMSE Scores for Biomarker: WBC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_006.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: MCHC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_007.png" />
+<li><img alt="RMSE Scores for Biomarker: MCHC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_007.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: MCV with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_008.png" />
+<li><img alt="RMSE Scores for Biomarker: MCV with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_008.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: LY with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_009.png" />
+<li><img alt="RMSE Scores for Biomarker: LY with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_009.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: HCT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_010.png" />
+<li><img alt="RMSE Scores for Biomarker: HCT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_010.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: RDW with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_011.png" />
+<li><img alt="RMSE Scores for Biomarker: RDW with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_011.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: HGB with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_012.png" />
+<li><img alt="RMSE Scores for Biomarker: HGB with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_012.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: MCH with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_013.png" />
+<li><img alt="RMSE Scores for Biomarker: MCH with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_013.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: PLT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_014.png" />
+<li><img alt="RMSE Scores for Biomarker: PLT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_014.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: MPV with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_015.png" />
+<li><img alt="RMSE Scores for Biomarker: MPV with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_015.png" />
 </li>
-<li><img alt="RMSE Scores for Biomarker: NRBCA with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_016.png" />
+<li><img alt="RMSE Scores for Biomarker: NRBCA with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_016.png" />
 </li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 109 minutes  49.073 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 36 minutes  37.503 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-1-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/2a01ce5b96ea580daad5e568559ad093/plot_iter_imputer_exp1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/d690d3706c39e7e4a086d70819e779ce/plot_iter_imputer_exp1_1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1_1.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/cb52c19e22fe57562a3a3fdb5f4a42d2/plot_iter_imputer_exp1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_exp1.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/33dfbd665f04443b9ff06132102317a7/plot_iter_imputer_exp1_1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_exp1_1.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -1114,8 +1136,8 @@ K-Fold Cross Validation.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="plot_iter_imputer_exp1_1.html" class="btn btn-neutral float-right" title="Iterative Imputer Experiment I.I" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Iterative Imputer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../widgets/index.html" class="btn btn-neutral float-right" title="The Widgets’ gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plot_iter_imputer_exp1.html" class="btn btn-neutral float-left" title="Iterative Imputer Experiment I" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

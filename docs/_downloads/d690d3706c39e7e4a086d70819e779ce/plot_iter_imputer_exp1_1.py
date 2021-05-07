@@ -1,9 +1,9 @@
 """
-Iterative Imputer Experiment I
+Iterative Imputer Experiment I.I
 ===========================================
 
 Single biomarker removal experiment with
-K-Fold Cross Validation.
+K-Fold Cross Validation without outliers.
 
 """
 #######################################
@@ -54,7 +54,18 @@ df.reset_index(drop=True, inplace=True)
 # -------------------------------------
 
 # Obtain the biomarkers DataFrame with outliers
-biomarkers_df = df[FBC_CODES].dropna(subset=FBC_CODES)
+biomarkers_raw = df[FBC_CODES].dropna(subset=FBC_CODES)
+
+
+# Remove values based on Q(1/3) -+ 1.5 * IQR method
+q1, q3 = biomarkers_raw.quantile(0.25), biomarkers_raw.quantile(0.75)
+IQR = q3 - q1
+lower_bound = q1 - (1.5 * IQR)
+upper_bound = q3 + (1.5 * IQR)
+
+# New biomarkers dataframe with outlier values removed
+biomarkers_df = biomarkers_raw[~((biomarkers_raw < lower_bound) | 
+(biomarkers_raw > upper_bound)).any(axis=1)]
 
 # Make dataset copy
 biomarkers_original_df_copy = biomarkers_df.copy(deep=True)
