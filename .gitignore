@@ -26,6 +26,7 @@ docs/source/_*
 examples/iterative_imputer/datasets/*
 examples/load_dataset/datasets/*
 examples/widgets/*.csv
+examples/resources/*
 # -------------------------------------------------
 
 # Byte-compiled / optimized / DLL files
