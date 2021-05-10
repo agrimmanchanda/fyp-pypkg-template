@@ -6,3 +6,6 @@ matplotlib
 pandas
 seaborn
 networkx
+sklearn
+numpy
+xgboost
