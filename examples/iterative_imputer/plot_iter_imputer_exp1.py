@@ -106,18 +106,18 @@ temp_rmsle_score_df = rmse_score_df.copy(deep=True)
 
 estimators = {
     'Bayesian Ridge': BayesianRidge(),
-    'Decision Tree': DecisionTreeRegressor(),
-    'Random Forest': ExtraTreesRegressor(),
-    'XGBoost': XGBRegressor(),
-    'K-NN': KNeighborsRegressor(weights='distance'),
-    'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
-    early_stopping=True),
-    'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
-    'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
-    early_stopping=True),
-    'MLP': MLPRegressor(hidden_layer_sizes=32, 
-    early_stopping=True, max_iter=100),
-    'Simple Median': SimpleImputer(strategy='median'),
+    # 'Decision Tree': DecisionTreeRegressor(),
+    # 'Random Forest': ExtraTreesRegressor(),
+    # 'XGBoost': XGBRegressor(),
+    # 'K-NN': KNeighborsRegressor(weights='distance'),
+    # 'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
+    # early_stopping=True),
+    # 'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
+    # 'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
+    # early_stopping=True),
+    # 'MLP': MLPRegressor(hidden_layer_sizes=32, 
+    # early_stopping=True, max_iter=100),
+    # 'Simple Median': SimpleImputer(strategy='median'),
 }
 
 #######################################
