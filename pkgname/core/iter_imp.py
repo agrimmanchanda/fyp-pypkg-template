@@ -19,6 +19,7 @@ from sklearn.ensemble import RandomForestRegressor
 # Metrics
 from sklearn.metrics import make_scorer
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_log_error
 
 
 class IterativeImputerRegressor(IterativeImputer):

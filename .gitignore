@@ -25,6 +25,7 @@ docs/source/_*
 # Folders with sensitive data
 examples/iterative_imputer/datasets/*
 !examples/iterative_imputer/datasets/compendium.csv
+!examples/iterative_imputer/datasets/iir_results.csv
 examples/load_dataset/datasets/*
 examples/widgets/*.csv
 examples/resources/*
