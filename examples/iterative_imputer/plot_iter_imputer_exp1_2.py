@@ -2,8 +2,8 @@
 Iterative Imputer Experiment I.II
 ===========================================
 
-Single biomarker removal using ``sklearn`` 
-methods only.
+Hyperparameter tuning using ``sklearn`` 
+``GridSearchCV``. 
 
 """
 
@@ -17,9 +17,6 @@ import numpy as np
 import pandas as pd
 import sklearn
 
-# explicitly require this experimental feature
-from sklearn.experimental import enable_iterative_imputer  # noqa
-
 # Libraries sklearn
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
@@ -31,6 +28,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import BayesianRidge
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.linear_model import SGDRegressor
+from sklearn.neighbors import KNeighborsRegressor
 
 # Metrics
 from sklearn.metrics import make_scorer
@@ -63,6 +64,40 @@ param_grid_iir = {
     ]
 }
 
+param_grid_dt = {
+    'dt__criterion': ["mse", "mae"],
+    'dt__max_depth': [8, 12],
+    'dt__min_samples_split': [8, 12],
+    'dt__min_samples_leaf': [8, 12],
+    'dt__max_leaf_nodes': [10, 15],
+}
+
+param_grid_etr = {
+    'etr__n_estimators': [x*10 for x in range (1, 11)],
+    'etr__criterion': ["mse", "mae"],
+    'etr__max_depth': [8, 12],
+    'etr__min_samples_split': [8, 12],
+    'etr__bootstrap': [False, True],
+    'etr__warm_start': [False, True]
+}
+
+param_grid_sgd = {
+    'sgd__loss': ["squared_loss", 
+                "huber", 
+                "epsilon_insensitive",
+                "squared_epsilon_insensitive"],
+    'sgd__alpha': [1e-2, 1e-3, 1e-4],
+    'sgd__epsilon': [0.01, 0.05, 0.1],
+    'sgd__learning_rate': ["optimal", "invscaling", "adaptive"],
+    'sgd__early_stopping': [False, True],
+    'sgd__warm_start': [False, True]
+}
+
+param_grid_knn = {
+    'knn__n_neighbors': [2, 5, 8],
+    'knn__weights': ["uniform", "distance"],
+}
+
 param_grid_sir = {
     'sir__strategy': [
         'mean',
@@ -80,6 +115,10 @@ _DEFAULT_PARAM_GRIDS = {
     'bridge': param_grid_bridge,
     'iir': param_grid_iir,
     'rfr': param_grid_rfr,
+    'dt': param_grid_dt,
+    'etr': param_grid_etr,
+    'sgd': param_grid_sgd,
+    'knn': param_grid_knn,
     'sir': param_grid_sir,
 }
 
@@ -89,6 +128,10 @@ _DEFAULT_ESTIMATORS = {
     'bridge': BayesianRidge(),
     'iir': IterativeImputerRegressor(),
     'rfr': RandomForestRegressor(),
+    'dt': DecisionTreeRegressor(),
+    'etr': ExtraTreesRegressor(),
+    'sgd': SGDRegressor(max_iter=2000),
+    'knn': KNeighborsRegressor(),
     'sir': SimpleImputerRegressor(),
 }
 
@@ -161,15 +204,21 @@ compendium = pd.DataFrame()
 
 # Create a list of estimators
 ESTIMATORS = [
-    'lr',
+    # 'lr',
     #'ridge',
     #'bridge',
     # 'iir',
+    # 'dt',
+    # 'etr',
+    # 'sgd',
+    # 'knn',
     # 'sir',
 ]
 
 # For each estimator
 for i, est in enumerate(ESTIMATORS):
+
+    data = pd.DataFrame()
 
     # Basic checks
     if est not in _DEFAULT_ESTIMATORS:
@@ -207,6 +256,8 @@ for i, est in enumerate(ESTIMATORS):
         
         # Add to compendium
         compendium = compendium.append(results)
+        data = data.append(results)
+        data.to_csv(f'datasets/{est}.csv')
 
 
 #######################################
@@ -219,4 +270,4 @@ for i, est in enumerate(ESTIMATORS):
 # print(compendium.T)
 
 # Save
-compendium.to_csv('datasets/compendium.csv')
+# compendium.to_csv('datasets/compendium.csv')

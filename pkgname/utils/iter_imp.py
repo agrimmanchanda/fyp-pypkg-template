@@ -58,3 +58,34 @@ def get_metric_scores(true, pred, metric):
 
     else:
         return 0
+
+def get_score_statistics(df, metric, folds=5, combined=True):
+
+    # Use 5-fold CV
+    FOLDS = folds
+    
+    # get score for specified metric
+    if metric == 'rmse':
+        scores = df.test_nrmse.values # RMSE
+    elif metric == 'mse':
+        scores = df.test_nmse.values # MSE
+    else:
+        scores = df.test_nmae.values # MAE
+    
+    # Take absolute value 
+    scores = scores * -1
+    
+    mean_scores, std_scores = [], []
+    
+    # Loop over all scores using folds
+    for i in range(0, len(scores), FOLDS):
+        mean = np.mean(scores[i:i+FOLDS])
+        std = np.std(scores[i:i+FOLDS])
+        mean_scores.append(mean)
+        std_scores.append(std)
+    
+    # Return combined or separate scores
+    if combined:
+        return list(zip(mean_scores, std_scores))
+    else:
+        return mean_scores, std_scores

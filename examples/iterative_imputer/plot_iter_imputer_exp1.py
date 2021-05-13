@@ -117,7 +117,7 @@ estimators = {
     # early_stopping=True),
     # 'MLP': MLPRegressor(hidden_layer_sizes=32, 
     # early_stopping=True, max_iter=100),
-    # 'Simple Median': SimpleImputer(strategy='median'),
+    'Simple Median': SimpleImputer(strategy='median'),
 }
 
 #######################################

@@ -26,10 +26,9 @@ class IterativeImputerRegressor(IterativeImputer):
 
     def fit(self, X, y, **kwargs):
         """
-
-        The IterativeImputer needs to have the column to
-        predict (y) in the X, as it is considered an
-        imputer and not a regressor.
+        Concatenate two columns to treat each
+        X as the entire dataset inclusive of the
+        target column.
         """
         # Cannot reshape a series
         if isinstance(y, pd.Series):
@@ -64,10 +63,9 @@ class SimpleImputerRegressor(SimpleImputer):
 
     def fit(self, X, y, **kwargs):
         """
-
-        The IterativeImputer needs to have the column to
-        predict (y) in the X, as it is considered an
-        imputer and not a regressor.
+        Concatenate two columns to treat each
+        X as the entire dataset inclusive of the
+        target column.
         """
         # Cannot reshape a series
         if isinstance(y, pd.Series):
@@ -84,7 +82,7 @@ class SimpleImputerRegressor(SimpleImputer):
         dataset and passed to transform method of the 
         base class to impute. We are only interested 
         in the imputed column results so the last 
-        column is returned. 
+        column is returned.
         """
         # Copy just for safety (might not be necessary)
         aux = np.copy(X)
@@ -97,21 +95,3 @@ class SimpleImputerRegressor(SimpleImputer):
         aux = self.transform(aux)
         # Return predictions (last column)
         return aux[:, -1]
-
-
-
-
-
-def get_metric_scores(true, pred, metric):
-
-    # Check that they are the same shape
-    assert len(true) == len(pred)
-    
-    if metric == 'RMSE':
-        return mean_squared_error(true, pred, squared=False)
-
-    elif metric == 'RMSLE':
-        return np.sqrt(mean_squared_log_error(true, pred))
-
-    else:
-        return 0
