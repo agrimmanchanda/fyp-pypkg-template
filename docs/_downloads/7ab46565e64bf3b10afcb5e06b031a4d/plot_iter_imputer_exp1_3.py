@@ -1,5 +1,5 @@
 """
-Iterative Imputer Experiment I.I
+Iterative Imputer Experiment I.III
 ===========================================
 
 Single biomarker removal using ``sklearn``
@@ -150,10 +150,17 @@ print(complete_profiles)
 print("\nCorrelation (pearson):")
 print(corr_mat)
 
-#######################################
-# -------------------------------------
-# Obtain evaluation scores
-# -------------------------------------
+###############################################
+# ---------------------------------------------
+# Split complete profiles based on correlations
+# ---------------------------------------------
+
+# split MCH-MCHC-MCV from the rest
+
+SPLIT_FEATURES = ['RBC', 'HCT', 'HGB']
+df1 = complete_profiles[SPLIT_FEATURES] 
+df2 = complete_profiles[[x for x in complete_profiles.columns if x not in SPLIT_FEATURES]]
+
 
 # Number of splits
 n_splits = 5
@@ -170,11 +177,11 @@ scoring = {
 }
 
 # Compendium of results
-iir_results = pd.DataFrame()
+cb_iir_results = pd.DataFrame()
 
 # Create a list of estimators
 ESTIMATORS = [
-    # 'lr',
+    'lr',
     # 'bridge',
     # 'dt',
     # 'etr',
@@ -184,6 +191,13 @@ ESTIMATORS = [
     # 'xgb',
     # 'sir',
 ]
+
+# Define datasets to obtain scores for
+_TEST_DATA = {
+    'cp': complete_profiles,
+    'df1': df1,
+    'df2': df2,
+}
 
 # For each estimator
 for i, est in enumerate(ESTIMATORS):
@@ -201,9 +215,11 @@ for i, est in enumerate(ESTIMATORS):
     else:
         imputer = estimator
 
-    for biomarker in complete_profiles:
+    test_data = _TEST_DATA['df2']
 
-        aux = complete_profiles.copy(deep=True)
+    for biomarker in test_data:
+
+        aux = test_data.copy(deep=True)
         X = aux[[x for x in aux.columns if x != biomarker]]
         y = aux[biomarker]
 
@@ -230,10 +246,8 @@ for i, est in enumerate(ESTIMATORS):
         results.index = ['%s_%s_%s' % (biomarker, est, j)
             for j in range(results.shape[0])]
         
-        # Add to compendium and data
-        iir_results = iir_results.append(results)
-        data = data.append(results)
-        # data.to_csv(f'datasets/iir_{est}.csv')
+        # Add to compendium
+        cb_iir_results = cb_iir_results.append(results)
 
 
 #######################################
@@ -241,85 +255,32 @@ for i, est in enumerate(ESTIMATORS):
 # Save results
 # -------------------------------------
 
-# Save
-# iir_results.to_csv('datasets/iir_results.csv')
-
+# # Save
+cb_iir_results.to_csv('datasets/cb_iir_results_df2.csv')
 
 #######################################
 # -------------------------------------
 # Analyse scores and test results
 # -------------------------------------
 
-# Create a list of estimators
-METHODS = [
-    'lr',
-    'bridge',
-    'dt',
-    'etr',
-    'sgd-ls',
-    'sgd-sv',
-    'knn',
-    'mlp',
-    # 'xgb',
-    'sir',
-]
+# Combine the two DataFrame together
+combined_df = pd.concat([df1, df2], axis=0)
 
+# Read results
+compendium_df1 = pd.read_csv('datasets/cb_iir_results_df1.csv', index_col=0)
+compendium_df2 = pd.read_csv('datasets/cb_iir_results_df2.csv', index_col=0)
 
-compendium = pd.read_csv('datasets/iir_results.csv', index_col=0)
+# Combine the two compendium together
+combine_compendium = pd.concat([compendium_df1, compendium_df2], axis=0)
 
-# Get mean and variance of RMSE scores
-all_scores = get_score_statistics(compendium, 'rmse')
-
-# Split scores to obtain score for each estimator
-split_scores = np.array_split(all_scores, len(METHODS))
-
-# Stack scores horizontally for easier plotting
-hsplit_scores = np.hstack((split_scores))
+# Obtain RMSE scores
+all_scores = get_score_statistics(combine_compendium, 'rmse')
 
 # Create DataFrame for mean and std dev statistics
-statistics = pd.DataFrame(hsplit_scores, index=complete_profiles.columns)
+statistics = pd.DataFrame(all_scores, index=combined_df.columns)
 
-# Split mean and std dev statistics
-mean_stats, std_stats = statistics.iloc[:,::2], statistics.iloc[:,1::2]
+# Rename the columns
+statistics.columns = ['Mean', 'Std Dev']
 
-# Rename columns to match algorithms
-mean_stats.columns, std_stats.columns = METHODS, METHODS
-
-print("Mean RMSE Statistics: ")
-
-# Highlighting the minimum values of last 2 columns
-mean_stats.style.highlight_min(color = 'lightgreen', 
-                       axis = 1)
-
-#######################################
-# -------------------------------------
-# Plot results
-# -------------------------------------
-
-plt.figure(figsize=(20,40))
-
-# Set single title for all figures
-# plt.suptitle('Iterative Imputer RMSE scores for complete profiles', 
-#             fontweight='bold', 
-#             fontsize=12)
-
-
-for idx, (biomarker, scores) in enumerate(mean_stats.iterrows(), start=1):
-    plt.subplot(7,2,idx)
-    plt.title(f'RMSE for {biomarker}', 
-    fontweight='bold', 
-    fontsize=14)
-    cmap = ['green' if (x == min(scores)) else 'royalblue' for x in scores]
-    scores.plot.barh(grid=True, 
-                xerr=list(std_stats.loc[biomarker, :]), 
-                align='center', 
-                color=cmap)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('RMSE Score', fontsize=16)
-    
-# Space plots out
-plt.tight_layout()
-
-# Show
-plt.show()
+# Show the mean and std dev for linear regressor
+statistics

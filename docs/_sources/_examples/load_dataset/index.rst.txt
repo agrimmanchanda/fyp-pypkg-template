@@ -51,6 +51,27 @@ This section will be used to visualise interesting results from the (raw) data s
    :hidden:
 
    /_examples/load_dataset/plot_corr_networks
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Using dataprep to create interactive report.">
+
+.. only:: html
+
+ .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_pathology_data_summary_thumb.png
+     :alt: Summary report of NHS Pathology Data
+
+     :ref:`sphx_glr__examples_load_dataset_plot_pathology_data_summary.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/load_dataset/plot_pathology_data_summary
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

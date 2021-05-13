@@ -721,7 +721,7 @@ Combined RMSE Plot for each biomarker
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  37.551 seconds)
+   **Total running time of the script:** ( 0 minutes  34.008 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp1.py:

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Iterative Imputer Experiment I.I &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  <title>Iterative Imputer Experiment I.III &mdash; fyp2020-am9717 0.0.1 documentation</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Iterative Imputer Experiment I.II" href="plot_iter_imputer_exp1_2.html" />
-    <link rel="prev" title="Iterative Imputer Experiment I" href="plot_iter_imputer_exp1.html" /> 
+    <link rel="next" title="The Widgets’ gallery" href="../widgets/index.html" />
+    <link rel="prev" title="Iterative Imputer Experiment I.II" href="plot_iter_imputer_exp1_2.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,19 +98,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Loading the data set</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Iterative Imputer</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1.html">Iterative Imputer Experiment I</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Iterative Imputer Experiment I.I</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_1.html">Iterative Imputer Experiment I.I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_2.html">Iterative Imputer Experiment I.II</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Iterative Imputer Experiment I.III</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#libraries-import">Libraries import</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#define-tuned-estimators">Define tuned estimators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#correlation-matrix">Correlation matrix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#obtain-evaluation-scores">Obtain evaluation scores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#split-complete-profiles-based-on-correlations">Split complete profiles based on correlations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#save-results">Save results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#analyse-scores-and-test-results">Analyse scores and test results</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-results">Plot results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_2.html">Iterative Imputer Experiment I.II</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_3.html">Iterative Imputer Experiment I.III</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
@@ -164,13 +163,13 @@
         
           <li><a href="index.html">Iterative Imputer</a> &raquo;</li>
         
-      <li>Iterative Imputer Experiment I.I</li>
+      <li>Iterative Imputer Experiment I.III</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_exp1_1.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_exp1_3.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -185,11 +184,11 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-1-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-3-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="iterative-imputer-experiment-i-i">
-<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp1-1-py"></span><h1>Iterative Imputer Experiment I.I<a class="headerlink" href="#iterative-imputer-experiment-i-i" title="Permalink to this headline">¶</a></h1>
+<div class="sphx-glr-example-title section" id="iterative-imputer-experiment-i-iii">
+<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp1-3-py"></span><h1>Iterative Imputer Experiment I.III<a class="headerlink" href="#iterative-imputer-experiment-i-iii" title="Permalink to this headline">¶</a></h1>
 <p>Single biomarker removal using <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>
 methods only.</p>
 <div class="section" id="libraries-import">
@@ -465,28 +464,28 @@ methods only.</p>
 [56271 rows x 14 columns]
 
 Correlation (pearson):
-           EOS      MONO      NEUT       RBC       WBC  ...       RDW       HGB       MCH       PLT       MPV
-EOS   1.000000  0.176592 -0.077021  0.076247  0.063383  ... -0.029017  0.063382 -0.046216  0.148320 -0.008346
-MONO  0.176592  1.000000  0.437707 -0.011525  0.565965  ...  0.000838 -0.011822 -0.007282  0.191892  0.006449
-NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  ...  0.043472 -0.142903 -0.036335  0.204307 -0.015518
-RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  ... -0.317913  0.921963 -0.301421  0.089001  0.169995
-WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  ... -0.031387 -0.030376 -0.058005  0.275886  0.021949
-MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  ... -0.237056  0.160611  0.391104 -0.087255 -0.041123
-MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355  ... -0.273143  0.016983  0.902952 -0.143448 -0.061824
-LY    0.289178  0.228941 -0.067306  0.381424  0.242921  ... -0.258299  0.367455 -0.079429  0.227641  0.133033
-HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098  ... -0.445215  0.983795  0.018124  0.044596  0.156687
-RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387  ...  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
-HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  ... -0.479547  1.000000  0.084460  0.030526  0.148419
-MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  ... -0.354513  0.084460  1.000000 -0.169143 -0.073755
-PLT   0.148320  0.191892  0.204307  0.089001  0.275886  ... -0.050207  0.030526 -0.169143  1.000000 -0.329940
-MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 -0.073755 -0.329940  1.000000
+           EOS      MONO      NEUT       RBC       WBC      MCHC  ...       HCT       RDW       HGB       MCH       PLT       MPV
+EOS   1.000000  0.176592 -0.077021  0.076247  0.063383 -0.073132  ...  0.075691 -0.029017  0.063382 -0.046216  0.148320 -0.008346
+MONO  0.176592  1.000000  0.437707 -0.011525  0.565965 -0.006352  ... -0.011767  0.000838 -0.011822 -0.007282  0.191892  0.006449
+NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  0.014154  ... -0.147780  0.043472 -0.142903 -0.036335  0.204307 -0.015518
+RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  0.002774  ...  0.932916 -0.317913  0.921963 -0.301421  0.089001  0.169995
+WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  0.015221  ... -0.034098 -0.031387 -0.030376 -0.058005  0.275886  0.021949
+MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  1.000000  ... -0.009970 -0.237056  0.160611  0.391104 -0.087255 -0.041123
+MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355 -0.040685  ...  0.024410 -0.273143  0.016983  0.902952 -0.143448 -0.061824
+LY    0.289178  0.228941 -0.067306  0.381424  0.242921  0.021764  ...  0.368346 -0.258299  0.367455 -0.079429  0.227641  0.133033
+HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098 -0.009970  ...  1.000000 -0.445215  0.983795  0.018124  0.044596  0.156687
+RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387 -0.237056  ... -0.445215  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
+HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  0.160611  ...  0.983795 -0.479547  1.000000  0.084460  0.030526  0.148419
+MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  0.391104  ...  0.018124 -0.354513  0.084460  1.000000 -0.169143 -0.073755
+PLT   0.148320  0.191892  0.204307  0.089001  0.275886 -0.087255  ...  0.044596 -0.050207  0.030526 -0.169143  1.000000 -0.329940
+MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949 -0.041123  ...  0.156687 -0.129583  0.148419 -0.073755 -0.329940  1.000000
 
 [14 rows x 14 columns]
 </pre></div>
 </div>
 </div>
-<div class="section" id="obtain-evaluation-scores">
-<h2>Obtain evaluation scores<a class="headerlink" href="#obtain-evaluation-scores" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="split-complete-profiles-based-on-correlations">
+<h2>Split complete profiles based on correlations<a class="headerlink" href="#split-complete-profiles-based-on-correlations" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>158
 159
 160
@@ -565,7 +564,28 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
 233
 234
 235
-236</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Number of splits</span>
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># split MCH-MCHC-MCV from the rest</span>
+
+ <span class="n">SPLIT_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RBC&#39;</span><span class="p">,</span> <span class="s1">&#39;HCT&#39;</span><span class="p">,</span> <span class="s1">&#39;HGB&#39;</span><span class="p">]</span>
+ <span class="n">df1</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="p">[</span><span class="n">SPLIT_FEATURES</span><span class="p">]</span>
+ <span class="n">df2</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SPLIT_FEATURES</span><span class="p">]]</span>
+
+
+ <span class="c1"># Number of splits</span>
  <span class="n">n_splits</span> <span class="o">=</span> <span class="mi">5</span>
 
  <span class="c1"># Create Kfold instance</span>
@@ -580,11 +600,11 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
  <span class="p">}</span>
 
  <span class="c1"># Compendium of results</span>
- <span class="n">iir_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+ <span class="n">cb_iir_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
  <span class="c1"># Create a list of estimators</span>
  <span class="n">ESTIMATORS</span> <span class="o">=</span> <span class="p">[</span>
-     <span class="c1"># &#39;lr&#39;,</span>
+     <span class="s1">&#39;lr&#39;</span><span class="p">,</span>
      <span class="c1"># &#39;bridge&#39;,</span>
      <span class="c1"># &#39;dt&#39;,</span>
      <span class="c1"># &#39;etr&#39;,</span>
@@ -594,6 +614,13 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
      <span class="c1"># &#39;xgb&#39;,</span>
      <span class="c1"># &#39;sir&#39;,</span>
  <span class="p">]</span>
+
+ <span class="c1"># Define datasets to obtain scores for</span>
+ <span class="n">_TEST_DATA</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;cp&#39;</span><span class="p">:</span> <span class="n">complete_profiles</span><span class="p">,</span>
+     <span class="s1">&#39;df1&#39;</span><span class="p">:</span> <span class="n">df1</span><span class="p">,</span>
+     <span class="s1">&#39;df2&#39;</span><span class="p">:</span> <span class="n">df2</span><span class="p">,</span>
+ <span class="p">}</span>
 
  <span class="c1"># For each estimator</span>
  <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">est</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ESTIMATORS</span><span class="p">):</span>
@@ -611,9 +638,11 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
      <span class="k">else</span><span class="p">:</span>
          <span class="n">imputer</span> <span class="o">=</span> <span class="n">estimator</span>
 
-     <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">complete_profiles</span><span class="p">:</span>
+     <span class="n">test_data</span> <span class="o">=</span> <span class="n">_TEST_DATA</span><span class="p">[</span><span class="s1">&#39;df2&#39;</span><span class="p">]</span>
 
-         <span class="n">aux</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+     <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">test_data</span><span class="p">:</span>
+
+         <span class="n">aux</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
          <span class="n">X</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">aux</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">biomarker</span><span class="p">]]</span>
          <span class="n">y</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span>
 
@@ -640,37 +669,46 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
          <span class="n">results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">biomarker</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
              <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
 
-         <span class="c1"># Add to compendium and data</span>
-         <span class="n">iir_results</span> <span class="o">=</span> <span class="n">iir_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
-         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
-         <span class="c1"># data.to_csv(f&#39;datasets/iir_{est}.csv&#39;)</span>
+         <span class="c1"># Add to compendium</span>
+         <span class="n">cb_iir_results</span> <span class="o">=</span> <span class="n">cb_iir_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0. Evaluating... lr for biomarker... EOS
+
+0. Evaluating... lr for biomarker... MONO
+
+0. Evaluating... lr for biomarker... NEUT
+
+0. Evaluating... lr for biomarker... WBC
+
+0. Evaluating... lr for biomarker... MCHC
+
+0. Evaluating... lr for biomarker... MCV
+
+0. Evaluating... lr for biomarker... LY
+
+0. Evaluating... lr for biomarker... RDW
+
+0. Evaluating... lr for biomarker... MCH
+
+0. Evaluating... lr for biomarker... PLT
+
+0. Evaluating... lr for biomarker... MPV
+</pre></div>
+</div>
 </div>
 <div class="section" id="save-results">
 <h2>Save results<a class="headerlink" href="#save-results" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>244
-245</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Save</span>
- <span class="c1"># iir_results.to_csv(&#39;datasets/iir_results.csv&#39;)</span>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>258
+259</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># # Save</span>
+ <span class="n">cb_iir_results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;datasets/cb_iir_results_df2.csv&#39;</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
 </div>
 <div class="section" id="analyse-scores-and-test-results">
 <h2>Analyse scores and test results<a class="headerlink" href="#analyse-scores-and-test-results" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>253
-254
-255
-256
-257
-258
-259
-260
-261
-262
-263
-264
-265
-266
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>266
 267
 268
 269
@@ -690,300 +728,135 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
 283
 284
 285
-286
-287
-288
-289
-290
-291
-292</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Create a list of estimators</span>
- <span class="n">METHODS</span> <span class="o">=</span> <span class="p">[</span>
-     <span class="s1">&#39;lr&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;bridge&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;dt&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;etr&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;sgd-ls&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;sgd-sv&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;knn&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;mlp&#39;</span><span class="p">,</span>
-     <span class="c1"># &#39;xgb&#39;,</span>
-     <span class="s1">&#39;sir&#39;</span><span class="p">,</span>
- <span class="p">]</span>
+286</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Combine the two DataFrame together</span>
+ <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
+ <span class="c1"># Read results</span>
+ <span class="n">compendium_df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/cb_iir_results_df1.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+ <span class="n">compendium_df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/cb_iir_results_df2.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
- <span class="n">compendium</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/iir_results.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+ <span class="c1"># Combine the two compendium together</span>
+ <span class="n">combine_compendium</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">compendium_df1</span><span class="p">,</span> <span class="n">compendium_df2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
- <span class="c1"># Get mean and variance of RMSE scores</span>
- <span class="n">all_scores</span> <span class="o">=</span> <span class="n">get_score_statistics</span><span class="p">(</span><span class="n">compendium</span><span class="p">,</span> <span class="s1">&#39;rmse&#39;</span><span class="p">)</span>
-
- <span class="c1"># Split scores to obtain score for each estimator</span>
- <span class="n">split_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">all_scores</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">METHODS</span><span class="p">))</span>
-
- <span class="c1"># Stack scores horizontally for easier plotting</span>
- <span class="n">hsplit_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">split_scores</span><span class="p">))</span>
+ <span class="c1"># Obtain RMSE scores</span>
+ <span class="n">all_scores</span> <span class="o">=</span> <span class="n">get_score_statistics</span><span class="p">(</span><span class="n">combine_compendium</span><span class="p">,</span> <span class="s1">&#39;rmse&#39;</span><span class="p">)</span>
 
  <span class="c1"># Create DataFrame for mean and std dev statistics</span>
- <span class="n">statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hsplit_scores</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+ <span class="n">statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_scores</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">combined_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
- <span class="c1"># Split mean and std dev statistics</span>
- <span class="n">mean_stats</span><span class="p">,</span> <span class="n">std_stats</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,::</span><span class="mi">2</span><span class="p">],</span> <span class="n">statistics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+ <span class="c1"># Rename the columns</span>
+ <span class="n">statistics</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mean&#39;</span><span class="p">,</span> <span class="s1">&#39;Std Dev&#39;</span><span class="p">]</span>
 
- <span class="c1"># Rename columns to match algorithms</span>
- <span class="n">mean_stats</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">std_stats</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">METHODS</span><span class="p">,</span> <span class="n">METHODS</span>
-
- <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean RMSE Statistics: &quot;</span><span class="p">)</span>
-
- <span class="c1"># Highlighting the minimum values of last 2 columns</span>
- <span class="n">mean_stats</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">highlight_min</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+ <span class="c1"># Show the mean and std dev for linear regressor</span>
+ <span class="n">statistics</span>
 </pre></div>
 </td></tr></table></div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Mean RMSE Statistics:
-</pre></div>
-</div>
 <div class="output_subarea output_html rendered_html output_result">
-<style  type="text/css" >
-#T_8818f_row0_col0,#T_8818f_row1_col0,#T_8818f_row2_col0,#T_8818f_row3_col7,#T_8818f_row4_col4,#T_8818f_row5_col3,#T_8818f_row6_col3,#T_8818f_row7_col0,#T_8818f_row8_col3,#T_8818f_row9_col7,#T_8818f_row10_col7,#T_8818f_row11_col3,#T_8818f_row12_col7,#T_8818f_row13_col7{
-            background-color:  lightgreen;
-        }</style><table id="T_8818f_" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >lr</th>        <th class="col_heading level0 col1" >bridge</th>        <th class="col_heading level0 col2" >dt</th>        <th class="col_heading level0 col3" >etr</th>        <th class="col_heading level0 col4" >sgd-ls</th>        <th class="col_heading level0 col5" >sgd-sv</th>        <th class="col_heading level0 col6" >knn</th>        <th class="col_heading level0 col7" >mlp</th>        <th class="col_heading level0 col8" >sir</th>    </tr></thead><tbody>
-                <tr>
-                        <th id="T_8818f_level0_row0" class="row_heading level0 row0" >EOS</th>
-                        <td id="T_8818f_row0_col0" class="data row0 col0" >0.058488</td>
-                        <td id="T_8818f_row0_col1" class="data row0 col1" >0.058488</td>
-                        <td id="T_8818f_row0_col2" class="data row0 col2" >0.108792</td>
-                        <td id="T_8818f_row0_col3" class="data row0 col3" >0.095702</td>
-                        <td id="T_8818f_row0_col4" class="data row0 col4" >0.059439</td>
-                        <td id="T_8818f_row0_col5" class="data row0 col5" >0.058766</td>
-                        <td id="T_8818f_row0_col6" class="data row0 col6" >0.113106</td>
-                        <td id="T_8818f_row0_col7" class="data row0 col7" >0.059043</td>
-                        <td id="T_8818f_row0_col8" class="data row0 col8" >0.116911</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row1" class="row_heading level0 row1" >MONO</th>
-                        <td id="T_8818f_row1_col0" class="data row1 col0" >0.063966</td>
-                        <td id="T_8818f_row1_col1" class="data row1 col1" >0.063966</td>
-                        <td id="T_8818f_row1_col2" class="data row1 col2" >0.201050</td>
-                        <td id="T_8818f_row1_col3" class="data row1 col3" >0.111960</td>
-                        <td id="T_8818f_row1_col4" class="data row1 col4" >0.064266</td>
-                        <td id="T_8818f_row1_col5" class="data row1 col5" >0.064135</td>
-                        <td id="T_8818f_row1_col6" class="data row1 col6" >0.211939</td>
-                        <td id="T_8818f_row1_col7" class="data row1 col7" >0.064650</td>
-                        <td id="T_8818f_row1_col8" class="data row1 col8" >0.260395</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row2" class="row_heading level0 row2" >NEUT</th>
-                        <td id="T_8818f_row2_col0" class="data row2 col0" >0.066160</td>
-                        <td id="T_8818f_row2_col1" class="data row2 col1" >0.066160</td>
-                        <td id="T_8818f_row2_col2" class="data row2 col2" >0.656279</td>
-                        <td id="T_8818f_row2_col3" class="data row2 col3" >0.098258</td>
-                        <td id="T_8818f_row2_col4" class="data row2 col4" >0.066161</td>
-                        <td id="T_8818f_row2_col5" class="data row2 col5" >0.066290</td>
-                        <td id="T_8818f_row2_col6" class="data row2 col6" >0.748481</td>
-                        <td id="T_8818f_row2_col7" class="data row2 col7" >0.072136</td>
-                        <td id="T_8818f_row2_col8" class="data row2 col8" >2.602406</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row3" class="row_heading level0 row3" >RBC</th>
-                        <td id="T_8818f_row3_col0" class="data row3 col0" >0.051247</td>
-                        <td id="T_8818f_row3_col1" class="data row3 col1" >0.051247</td>
-                        <td id="T_8818f_row3_col2" class="data row3 col2" >0.205544</td>
-                        <td id="T_8818f_row3_col3" class="data row3 col3" >0.019375</td>
-                        <td id="T_8818f_row3_col4" class="data row3 col4" >0.051210</td>
-                        <td id="T_8818f_row3_col5" class="data row3 col5" >0.051289</td>
-                        <td id="T_8818f_row3_col6" class="data row3 col6" >0.141072</td>
-                        <td id="T_8818f_row3_col7" class="data row3 col7" >0.016111</td>
-                        <td id="T_8818f_row3_col8" class="data row3 col8" >0.751817</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row4" class="row_heading level0 row4" >WBC</th>
-                        <td id="T_8818f_row4_col0" class="data row4 col0" >0.066188</td>
-                        <td id="T_8818f_row4_col1" class="data row4 col1" >0.066188</td>
-                        <td id="T_8818f_row4_col2" class="data row4 col2" >0.716875</td>
-                        <td id="T_8818f_row4_col3" class="data row4 col3" >0.097273</td>
-                        <td id="T_8818f_row4_col4" class="data row4 col4" >0.066186</td>
-                        <td id="T_8818f_row4_col5" class="data row4 col5" >0.066316</td>
-                        <td id="T_8818f_row4_col6" class="data row4 col6" >0.691134</td>
-                        <td id="T_8818f_row4_col7" class="data row4 col7" >0.072144</td>
-                        <td id="T_8818f_row4_col8" class="data row4 col8" >2.768599</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row5" class="row_heading level0 row5" >MCHC</th>
-                        <td id="T_8818f_row5_col0" class="data row5 col0" >0.804123</td>
-                        <td id="T_8818f_row5_col1" class="data row5 col1" >0.804123</td>
-                        <td id="T_8818f_row5_col2" class="data row5 col2" >6.098773</td>
-                        <td id="T_8818f_row5_col3" class="data row5 col3" >0.594074</td>
-                        <td id="T_8818f_row5_col4" class="data row5 col4" >0.804267</td>
-                        <td id="T_8818f_row5_col5" class="data row5 col5" >0.804433</td>
-                        <td id="T_8818f_row5_col6" class="data row5 col6" >6.843804</td>
-                        <td id="T_8818f_row5_col7" class="data row5 col7" >0.670137</td>
-                        <td id="T_8818f_row5_col8" class="data row5 col8" >9.788781</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row6" class="row_heading level0 row6" >MCV</th>
-                        <td id="T_8818f_row6_col0" class="data row6 col0" >0.231830</td>
-                        <td id="T_8818f_row6_col1" class="data row6 col1" >0.231830</td>
-                        <td id="T_8818f_row6_col2" class="data row6 col2" >1.903430</td>
-                        <td id="T_8818f_row6_col3" class="data row6 col3" >0.169743</td>
-                        <td id="T_8818f_row6_col4" class="data row6 col4" >0.231860</td>
-                        <td id="T_8818f_row6_col5" class="data row6 col5" >0.231743</td>
-                        <td id="T_8818f_row6_col6" class="data row6 col6" >1.840807</td>
-                        <td id="T_8818f_row6_col7" class="data row6 col7" >0.211474</td>
-                        <td id="T_8818f_row6_col8" class="data row6 col8" >5.900812</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row7" class="row_heading level0 row7" >LY</th>
-                        <td id="T_8818f_row7_col0" class="data row7 col0" >0.065669</td>
-                        <td id="T_8818f_row7_col1" class="data row7 col1" >0.065669</td>
-                        <td id="T_8818f_row7_col2" class="data row7 col2" >0.576354</td>
-                        <td id="T_8818f_row7_col3" class="data row7 col3" >0.189363</td>
-                        <td id="T_8818f_row7_col4" class="data row7 col4" >0.065711</td>
-                        <td id="T_8818f_row7_col5" class="data row7 col5" >0.065783</td>
-                        <td id="T_8818f_row7_col6" class="data row7 col6" >0.569163</td>
-                        <td id="T_8818f_row7_col7" class="data row7 col7" >0.066641</td>
-                        <td id="T_8818f_row7_col8" class="data row7 col8" >0.753773</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row8" class="row_heading level0 row8" >HCT</th>
-                        <td id="T_8818f_row8_col0" class="data row8 col0" >0.003551</td>
-                        <td id="T_8818f_row8_col1" class="data row8 col1" >0.003551</td>
-                        <td id="T_8818f_row8_col2" class="data row8 col2" >0.012595</td>
-                        <td id="T_8818f_row8_col3" class="data row8 col3" >0.002508</td>
-                        <td id="T_8818f_row8_col4" class="data row8 col4" >0.003551</td>
-                        <td id="T_8818f_row8_col5" class="data row8 col5" >0.003762</td>
-                        <td id="T_8818f_row8_col6" class="data row8 col6" >0.013079</td>
-                        <td id="T_8818f_row8_col7" class="data row8 col7" >0.003458</td>
-                        <td id="T_8818f_row8_col8" class="data row8 col8" >0.065571</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row9" class="row_heading level0 row9" >RDW</th>
-                        <td id="T_8818f_row9_col0" class="data row9 col0" >1.451828</td>
-                        <td id="T_8818f_row9_col1" class="data row9 col1" >1.451846</td>
-                        <td id="T_8818f_row9_col2" class="data row9 col2" >1.479226</td>
-                        <td id="T_8818f_row9_col3" class="data row9 col3" >1.416980</td>
-                        <td id="T_8818f_row9_col4" class="data row9 col4" >1.451754</td>
-                        <td id="T_8818f_row9_col5" class="data row9 col5" >1.452074</td>
-                        <td id="T_8818f_row9_col6" class="data row9 col6" >1.484753</td>
-                        <td id="T_8818f_row9_col7" class="data row9 col7" >1.397548</td>
-                        <td id="T_8818f_row9_col8" class="data row9 col8" >1.879196</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row10" class="row_heading level0 row10" >HGB</th>
-                        <td id="T_8818f_row10_col0" class="data row10 col0" >1.046061</td>
-                        <td id="T_8818f_row10_col1" class="data row10 col1" >1.046061</td>
-                        <td id="T_8818f_row10_col2" class="data row10 col2" >4.047838</td>
-                        <td id="T_8818f_row10_col3" class="data row10 col3" >0.898766</td>
-                        <td id="T_8818f_row10_col4" class="data row10 col4" >1.045922</td>
-                        <td id="T_8818f_row10_col5" class="data row10 col5" >1.046057</td>
-                        <td id="T_8818f_row10_col6" class="data row10 col6" >4.127998</td>
-                        <td id="T_8818f_row10_col7" class="data row10 col7" >0.597006</td>
-                        <td id="T_8818f_row10_col8" class="data row10 col8" >21.515179</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row11" class="row_heading level0 row11" >MCH</th>
-                        <td id="T_8818f_row11_col0" class="data row11 col0" >0.075980</td>
-                        <td id="T_8818f_row11_col1" class="data row11 col1" >0.075980</td>
-                        <td id="T_8818f_row11_col2" class="data row11 col2" >0.645027</td>
-                        <td id="T_8818f_row11_col3" class="data row11 col3" >0.055803</td>
-                        <td id="T_8818f_row11_col4" class="data row11 col4" >0.075975</td>
-                        <td id="T_8818f_row11_col5" class="data row11 col5" >0.075964</td>
-                        <td id="T_8818f_row11_col6" class="data row11 col6" >0.546108</td>
-                        <td id="T_8818f_row11_col7" class="data row11 col7" >0.064752</td>
-                        <td id="T_8818f_row11_col8" class="data row11 col8" >2.081556</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row12" class="row_heading level0 row12" >PLT</th>
-                        <td id="T_8818f_row12_col0" class="data row12 col0" >68.079100</td>
-                        <td id="T_8818f_row12_col1" class="data row12 col1" >68.079544</td>
-                        <td id="T_8818f_row12_col2" class="data row12 col2" >70.988611</td>
-                        <td id="T_8818f_row12_col3" class="data row12 col3" >67.699751</td>
-                        <td id="T_8818f_row12_col4" class="data row12 col4" >68.088919</td>
-                        <td id="T_8818f_row12_col5" class="data row12 col5" >68.065699</td>
-                        <td id="T_8818f_row12_col6" class="data row12 col6" >71.329544</td>
-                        <td id="T_8818f_row12_col7" class="data row12 col7" >66.628538</td>
-                        <td id="T_8818f_row12_col8" class="data row12 col8" >80.604096</td>
-            </tr>
-            <tr>
-                        <th id="T_8818f_level0_row13" class="row_heading level0 row13" >MPV</th>
-                        <td id="T_8818f_row13_col0" class="data row13 col0" >1.009346</td>
-                        <td id="T_8818f_row13_col1" class="data row13 col1" >1.009359</td>
-                        <td id="T_8818f_row13_col2" class="data row13 col2" >1.030925</td>
-                        <td id="T_8818f_row13_col3" class="data row13 col3" >1.009860</td>
-                        <td id="T_8818f_row13_col4" class="data row13 col4" >1.009302</td>
-                        <td id="T_8818f_row13_col5" class="data row13 col5" >1.009492</td>
-                        <td id="T_8818f_row13_col6" class="data row13 col6" >1.063030</td>
-                        <td id="T_8818f_row13_col7" class="data row13 col7" >0.998184</td>
-                        <td id="T_8818f_row13_col8" class="data row13 col8" >1.137396</td>
-            </tr>
-    </tbody></table>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Mean</th>
+      <th>Std Dev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>RBC</th>
+      <td>0.266706</td>
+      <td>0.006667</td>
+    </tr>
+    <tr>
+      <th>HCT</th>
+      <td>0.010782</td>
+      <td>0.000234</td>
+    </tr>
+    <tr>
+      <th>HGB</th>
+      <td>3.830598</td>
+      <td>0.111756</td>
+    </tr>
+    <tr>
+      <th>EOS</th>
+      <td>0.058522</td>
+      <td>0.000589</td>
+    </tr>
+    <tr>
+      <th>MONO</th>
+      <td>0.063986</td>
+      <td>0.000266</td>
+    </tr>
+    <tr>
+      <th>NEUT</th>
+      <td>0.066184</td>
+      <td>0.000360</td>
+    </tr>
+    <tr>
+      <th>WBC</th>
+      <td>0.066206</td>
+      <td>0.000360</td>
+    </tr>
+    <tr>
+      <th>MCHC</th>
+      <td>0.826491</td>
+      <td>0.050064</td>
+    </tr>
+    <tr>
+      <th>MCV</th>
+      <td>0.234059</td>
+      <td>0.016364</td>
+    </tr>
+    <tr>
+      <th>LY</th>
+      <td>0.065670</td>
+      <td>0.000342</td>
+    </tr>
+    <tr>
+      <th>RDW</th>
+      <td>1.592062</td>
+      <td>0.101072</td>
+    </tr>
+    <tr>
+      <th>MCH</th>
+      <td>0.076054</td>
+      <td>0.005021</td>
+    </tr>
+    <tr>
+      <th>PLT</th>
+      <td>68.150864</td>
+      <td>2.068673</td>
+    </tr>
+    <tr>
+      <th>MPV</th>
+      <td>1.011418</td>
+      <td>0.017465</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 <br />
-<br /></div>
-<div class="section" id="plot-results">
-<h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">))</span>
-
- <span class="c1"># Set single title for all figures</span>
- <span class="c1"># plt.suptitle(&#39;Iterative Imputer RMSE scores for complete profiles&#39;,</span>
- <span class="c1">#             fontweight=&#39;bold&#39;,</span>
- <span class="c1">#             fontsize=12)</span>
-
-
- <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">biomarker</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mean_stats</span><span class="o">.</span><span class="n">iterrows</span><span class="p">(),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">idx</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMSE for </span><span class="si">{biomarker}</span><span class="s1">&#39;</span><span class="p">,</span>
-     <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
-     <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-     <span class="n">cmap</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span> <span class="k">else</span> <span class="s1">&#39;royalblue&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">]</span>
-     <span class="n">scores</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">xerr</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">std_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomarker</span><span class="p">,</span> <span class="p">:]),</span>
-                 <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
-                 <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RMSE Score&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-
- <span class="c1"># Space plots out</span>
- <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-
- <span class="c1"># Show</span>
- <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</td></tr></table></div>
-<img alt="RMSE for EOS, RMSE for MONO, RMSE for NEUT, RMSE for RBC, RMSE for WBC, RMSE for MCHC, RMSE for MCV, RMSE for LY, RMSE for HCT, RMSE for RDW, RMSE for HGB, RMSE for MCH, RMSE for PLT, RMSE for MPV" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_001.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.837 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-1-py">
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  21.912 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-3-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/d690d3706c39e7e4a086d70819e779ce/plot_iter_imputer_exp1_1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1_1.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/7ab46565e64bf3b10afcb5e06b031a4d/plot_iter_imputer_exp1_3.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1_3.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/33dfbd665f04443b9ff06132102317a7/plot_iter_imputer_exp1_1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_exp1_1.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/fcfe7ccd2ca453453da675a516d4c376/plot_iter_imputer_exp1_3.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_exp1_3.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -996,8 +869,8 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="plot_iter_imputer_exp1_2.html" class="btn btn-neutral float-right" title="Iterative Imputer Experiment I.II" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="plot_iter_imputer_exp1.html" class="btn btn-neutral float-left" title="Iterative Imputer Experiment I" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../widgets/index.html" class="btn btn-neutral float-right" title="The Widgets’ gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plot_iter_imputer_exp1_2.html" class="btn btn-neutral float-left" title="Iterative Imputer Experiment I.II" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

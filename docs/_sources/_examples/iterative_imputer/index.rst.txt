@@ -72,6 +72,27 @@ This section will include different experiments with sklearn's IterativeImputer
    :hidden:
 
    /_examples/iterative_imputer/plot_iter_imputer_exp1_2
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Single biomarker removal using sklearn methods only.">
+
+.. only:: html
+
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp1_3_thumb.png
+     :alt: Iterative Imputer Experiment I.III
+
+     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_3.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/iterative_imputer/plot_iter_imputer_exp1_3
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

@@ -244,21 +244,21 @@ Correlation matrix
     [56271 rows x 14 columns]
 
     Correlation (pearson):
-               EOS      MONO      NEUT       RBC       WBC      MCHC  ...       HCT       RDW       HGB       MCH       PLT       MPV
-    EOS   1.000000  0.176592 -0.077021  0.076247  0.063383 -0.073132  ...  0.075691 -0.029017  0.063382 -0.046216  0.148320 -0.008346
-    MONO  0.176592  1.000000  0.437707 -0.011525  0.565965 -0.006352  ... -0.011767  0.000838 -0.011822 -0.007282  0.191892  0.006449
-    NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  0.014154  ... -0.147780  0.043472 -0.142903 -0.036335  0.204307 -0.015518
-    RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  0.002774  ...  0.932916 -0.317913  0.921963 -0.301421  0.089001  0.169995
-    WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  0.015221  ... -0.034098 -0.031387 -0.030376 -0.058005  0.275886  0.021949
-    MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  1.000000  ... -0.009970 -0.237056  0.160611  0.391104 -0.087255 -0.041123
-    MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355 -0.040685  ...  0.024410 -0.273143  0.016983  0.902952 -0.143448 -0.061824
-    LY    0.289178  0.228941 -0.067306  0.381424  0.242921  0.021764  ...  0.368346 -0.258299  0.367455 -0.079429  0.227641  0.133033
-    HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098 -0.009970  ...  1.000000 -0.445215  0.983795  0.018124  0.044596  0.156687
-    RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387 -0.237056  ... -0.445215  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
-    HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  0.160611  ...  0.983795 -0.479547  1.000000  0.084460  0.030526  0.148419
-    MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  0.391104  ...  0.018124 -0.354513  0.084460  1.000000 -0.169143 -0.073755
-    PLT   0.148320  0.191892  0.204307  0.089001  0.275886 -0.087255  ...  0.044596 -0.050207  0.030526 -0.169143  1.000000 -0.329940
-    MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949 -0.041123  ...  0.156687 -0.129583  0.148419 -0.073755 -0.329940  1.000000
+               EOS      MONO      NEUT       RBC       WBC  ...       RDW       HGB       MCH       PLT       MPV
+    EOS   1.000000  0.176592 -0.077021  0.076247  0.063383  ... -0.029017  0.063382 -0.046216  0.148320 -0.008346
+    MONO  0.176592  1.000000  0.437707 -0.011525  0.565965  ...  0.000838 -0.011822 -0.007282  0.191892  0.006449
+    NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  ...  0.043472 -0.142903 -0.036335  0.204307 -0.015518
+    RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  ... -0.317913  0.921963 -0.301421  0.089001  0.169995
+    WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  ... -0.031387 -0.030376 -0.058005  0.275886  0.021949
+    MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  ... -0.237056  0.160611  0.391104 -0.087255 -0.041123
+    MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355  ... -0.273143  0.016983  0.902952 -0.143448 -0.061824
+    LY    0.289178  0.228941 -0.067306  0.381424  0.242921  ... -0.258299  0.367455 -0.079429  0.227641  0.133033
+    HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098  ... -0.445215  0.983795  0.018124  0.044596  0.156687
+    RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387  ...  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
+    HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  ... -0.479547  1.000000  0.084460  0.030526  0.148419
+    MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  ... -0.354513  0.084460  1.000000 -0.169143 -0.073755
+    PLT   0.148320  0.191892  0.204307  0.089001  0.275886  ... -0.050207  0.030526 -0.169143  1.000000 -0.329940
+    MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 -0.073755 -0.329940  1.000000
 
     [14 rows x 14 columns]
 
@@ -394,7 +394,7 @@ Save results
 Analyse scores and test results
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-292
+.. GENERATED FROM PYTHON SOURCE LINES 252-294
 
 .. code-block:: default
    :lineno-start: 253
@@ -437,7 +437,9 @@ Analyse scores and test results
 
     print("Mean RMSE Statistics: ")
 
-    mean_stats
+    # Highlighting the minimum values of last 2 columns
+    mean_stats.style.highlight_min(color = 'lightgreen', 
+                           axis = 1)
 
 
 
@@ -455,221 +457,193 @@ Analyse scores and test results
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-
-        .dataframe thead th {
-            text-align: right;
-        }
-    </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>lr</th>
-          <th>bridge</th>
-          <th>dt</th>
-          <th>etr</th>
-          <th>sgd-ls</th>
-          <th>sgd-sv</th>
-          <th>knn</th>
-          <th>mlp</th>
-          <th>sir</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>EOS</th>
-          <td>0.058488</td>
-          <td>0.058488</td>
-          <td>0.108792</td>
-          <td>0.095702</td>
-          <td>0.059439</td>
-          <td>0.058766</td>
-          <td>0.113106</td>
-          <td>0.059043</td>
-          <td>0.116911</td>
-        </tr>
-        <tr>
-          <th>MONO</th>
-          <td>0.063966</td>
-          <td>0.063966</td>
-          <td>0.201050</td>
-          <td>0.111960</td>
-          <td>0.064266</td>
-          <td>0.064135</td>
-          <td>0.211939</td>
-          <td>0.064650</td>
-          <td>0.260395</td>
-        </tr>
-        <tr>
-          <th>NEUT</th>
-          <td>0.066160</td>
-          <td>0.066160</td>
-          <td>0.656279</td>
-          <td>0.098258</td>
-          <td>0.066161</td>
-          <td>0.066290</td>
-          <td>0.748481</td>
-          <td>0.072136</td>
-          <td>2.602406</td>
-        </tr>
-        <tr>
-          <th>RBC</th>
-          <td>0.051247</td>
-          <td>0.051247</td>
-          <td>0.205544</td>
-          <td>0.019375</td>
-          <td>0.051210</td>
-          <td>0.051289</td>
-          <td>0.141072</td>
-          <td>0.016111</td>
-          <td>0.751817</td>
-        </tr>
-        <tr>
-          <th>WBC</th>
-          <td>0.066188</td>
-          <td>0.066188</td>
-          <td>0.716875</td>
-          <td>0.097273</td>
-          <td>0.066186</td>
-          <td>0.066316</td>
-          <td>0.691134</td>
-          <td>0.072144</td>
-          <td>2.768599</td>
-        </tr>
-        <tr>
-          <th>MCHC</th>
-          <td>0.804123</td>
-          <td>0.804123</td>
-          <td>6.098773</td>
-          <td>0.594074</td>
-          <td>0.804267</td>
-          <td>0.804433</td>
-          <td>6.843804</td>
-          <td>0.670137</td>
-          <td>9.788781</td>
-        </tr>
-        <tr>
-          <th>MCV</th>
-          <td>0.231830</td>
-          <td>0.231830</td>
-          <td>1.903430</td>
-          <td>0.169743</td>
-          <td>0.231860</td>
-          <td>0.231743</td>
-          <td>1.840807</td>
-          <td>0.211474</td>
-          <td>5.900812</td>
-        </tr>
-        <tr>
-          <th>LY</th>
-          <td>0.065669</td>
-          <td>0.065669</td>
-          <td>0.576354</td>
-          <td>0.189363</td>
-          <td>0.065711</td>
-          <td>0.065783</td>
-          <td>0.569163</td>
-          <td>0.066641</td>
-          <td>0.753773</td>
-        </tr>
-        <tr>
-          <th>HCT</th>
-          <td>0.003551</td>
-          <td>0.003551</td>
-          <td>0.012595</td>
-          <td>0.002508</td>
-          <td>0.003551</td>
-          <td>0.003762</td>
-          <td>0.013079</td>
-          <td>0.003458</td>
-          <td>0.065571</td>
-        </tr>
-        <tr>
-          <th>RDW</th>
-          <td>1.451828</td>
-          <td>1.451846</td>
-          <td>1.479226</td>
-          <td>1.416980</td>
-          <td>1.451754</td>
-          <td>1.452074</td>
-          <td>1.484753</td>
-          <td>1.397548</td>
-          <td>1.879196</td>
-        </tr>
-        <tr>
-          <th>HGB</th>
-          <td>1.046061</td>
-          <td>1.046061</td>
-          <td>4.047838</td>
-          <td>0.898766</td>
-          <td>1.045922</td>
-          <td>1.046057</td>
-          <td>4.127998</td>
-          <td>0.597006</td>
-          <td>21.515179</td>
-        </tr>
-        <tr>
-          <th>MCH</th>
-          <td>0.075980</td>
-          <td>0.075980</td>
-          <td>0.645027</td>
-          <td>0.055803</td>
-          <td>0.075975</td>
-          <td>0.075964</td>
-          <td>0.546108</td>
-          <td>0.064752</td>
-          <td>2.081556</td>
-        </tr>
-        <tr>
-          <th>PLT</th>
-          <td>68.079100</td>
-          <td>68.079544</td>
-          <td>70.988611</td>
-          <td>67.699751</td>
-          <td>68.088919</td>
-          <td>68.065699</td>
-          <td>71.329544</td>
-          <td>66.628538</td>
-          <td>80.604096</td>
-        </tr>
-        <tr>
-          <th>MPV</th>
-          <td>1.009346</td>
-          <td>1.009359</td>
-          <td>1.030925</td>
-          <td>1.009860</td>
-          <td>1.009302</td>
-          <td>1.009492</td>
-          <td>1.063030</td>
-          <td>0.998184</td>
-          <td>1.137396</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
+    <style  type="text/css" >
+    #T_8818f_row0_col0,#T_8818f_row1_col0,#T_8818f_row2_col0,#T_8818f_row3_col7,#T_8818f_row4_col4,#T_8818f_row5_col3,#T_8818f_row6_col3,#T_8818f_row7_col0,#T_8818f_row8_col3,#T_8818f_row9_col7,#T_8818f_row10_col7,#T_8818f_row11_col3,#T_8818f_row12_col7,#T_8818f_row13_col7{
+                background-color:  lightgreen;
+            }</style><table id="T_8818f_" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >lr</th>        <th class="col_heading level0 col1" >bridge</th>        <th class="col_heading level0 col2" >dt</th>        <th class="col_heading level0 col3" >etr</th>        <th class="col_heading level0 col4" >sgd-ls</th>        <th class="col_heading level0 col5" >sgd-sv</th>        <th class="col_heading level0 col6" >knn</th>        <th class="col_heading level0 col7" >mlp</th>        <th class="col_heading level0 col8" >sir</th>    </tr></thead><tbody>
+                    <tr>
+                            <th id="T_8818f_level0_row0" class="row_heading level0 row0" >EOS</th>
+                            <td id="T_8818f_row0_col0" class="data row0 col0" >0.058488</td>
+                            <td id="T_8818f_row0_col1" class="data row0 col1" >0.058488</td>
+                            <td id="T_8818f_row0_col2" class="data row0 col2" >0.108792</td>
+                            <td id="T_8818f_row0_col3" class="data row0 col3" >0.095702</td>
+                            <td id="T_8818f_row0_col4" class="data row0 col4" >0.059439</td>
+                            <td id="T_8818f_row0_col5" class="data row0 col5" >0.058766</td>
+                            <td id="T_8818f_row0_col6" class="data row0 col6" >0.113106</td>
+                            <td id="T_8818f_row0_col7" class="data row0 col7" >0.059043</td>
+                            <td id="T_8818f_row0_col8" class="data row0 col8" >0.116911</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row1" class="row_heading level0 row1" >MONO</th>
+                            <td id="T_8818f_row1_col0" class="data row1 col0" >0.063966</td>
+                            <td id="T_8818f_row1_col1" class="data row1 col1" >0.063966</td>
+                            <td id="T_8818f_row1_col2" class="data row1 col2" >0.201050</td>
+                            <td id="T_8818f_row1_col3" class="data row1 col3" >0.111960</td>
+                            <td id="T_8818f_row1_col4" class="data row1 col4" >0.064266</td>
+                            <td id="T_8818f_row1_col5" class="data row1 col5" >0.064135</td>
+                            <td id="T_8818f_row1_col6" class="data row1 col6" >0.211939</td>
+                            <td id="T_8818f_row1_col7" class="data row1 col7" >0.064650</td>
+                            <td id="T_8818f_row1_col8" class="data row1 col8" >0.260395</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row2" class="row_heading level0 row2" >NEUT</th>
+                            <td id="T_8818f_row2_col0" class="data row2 col0" >0.066160</td>
+                            <td id="T_8818f_row2_col1" class="data row2 col1" >0.066160</td>
+                            <td id="T_8818f_row2_col2" class="data row2 col2" >0.656279</td>
+                            <td id="T_8818f_row2_col3" class="data row2 col3" >0.098258</td>
+                            <td id="T_8818f_row2_col4" class="data row2 col4" >0.066161</td>
+                            <td id="T_8818f_row2_col5" class="data row2 col5" >0.066290</td>
+                            <td id="T_8818f_row2_col6" class="data row2 col6" >0.748481</td>
+                            <td id="T_8818f_row2_col7" class="data row2 col7" >0.072136</td>
+                            <td id="T_8818f_row2_col8" class="data row2 col8" >2.602406</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row3" class="row_heading level0 row3" >RBC</th>
+                            <td id="T_8818f_row3_col0" class="data row3 col0" >0.051247</td>
+                            <td id="T_8818f_row3_col1" class="data row3 col1" >0.051247</td>
+                            <td id="T_8818f_row3_col2" class="data row3 col2" >0.205544</td>
+                            <td id="T_8818f_row3_col3" class="data row3 col3" >0.019375</td>
+                            <td id="T_8818f_row3_col4" class="data row3 col4" >0.051210</td>
+                            <td id="T_8818f_row3_col5" class="data row3 col5" >0.051289</td>
+                            <td id="T_8818f_row3_col6" class="data row3 col6" >0.141072</td>
+                            <td id="T_8818f_row3_col7" class="data row3 col7" >0.016111</td>
+                            <td id="T_8818f_row3_col8" class="data row3 col8" >0.751817</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row4" class="row_heading level0 row4" >WBC</th>
+                            <td id="T_8818f_row4_col0" class="data row4 col0" >0.066188</td>
+                            <td id="T_8818f_row4_col1" class="data row4 col1" >0.066188</td>
+                            <td id="T_8818f_row4_col2" class="data row4 col2" >0.716875</td>
+                            <td id="T_8818f_row4_col3" class="data row4 col3" >0.097273</td>
+                            <td id="T_8818f_row4_col4" class="data row4 col4" >0.066186</td>
+                            <td id="T_8818f_row4_col5" class="data row4 col5" >0.066316</td>
+                            <td id="T_8818f_row4_col6" class="data row4 col6" >0.691134</td>
+                            <td id="T_8818f_row4_col7" class="data row4 col7" >0.072144</td>
+                            <td id="T_8818f_row4_col8" class="data row4 col8" >2.768599</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row5" class="row_heading level0 row5" >MCHC</th>
+                            <td id="T_8818f_row5_col0" class="data row5 col0" >0.804123</td>
+                            <td id="T_8818f_row5_col1" class="data row5 col1" >0.804123</td>
+                            <td id="T_8818f_row5_col2" class="data row5 col2" >6.098773</td>
+                            <td id="T_8818f_row5_col3" class="data row5 col3" >0.594074</td>
+                            <td id="T_8818f_row5_col4" class="data row5 col4" >0.804267</td>
+                            <td id="T_8818f_row5_col5" class="data row5 col5" >0.804433</td>
+                            <td id="T_8818f_row5_col6" class="data row5 col6" >6.843804</td>
+                            <td id="T_8818f_row5_col7" class="data row5 col7" >0.670137</td>
+                            <td id="T_8818f_row5_col8" class="data row5 col8" >9.788781</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row6" class="row_heading level0 row6" >MCV</th>
+                            <td id="T_8818f_row6_col0" class="data row6 col0" >0.231830</td>
+                            <td id="T_8818f_row6_col1" class="data row6 col1" >0.231830</td>
+                            <td id="T_8818f_row6_col2" class="data row6 col2" >1.903430</td>
+                            <td id="T_8818f_row6_col3" class="data row6 col3" >0.169743</td>
+                            <td id="T_8818f_row6_col4" class="data row6 col4" >0.231860</td>
+                            <td id="T_8818f_row6_col5" class="data row6 col5" >0.231743</td>
+                            <td id="T_8818f_row6_col6" class="data row6 col6" >1.840807</td>
+                            <td id="T_8818f_row6_col7" class="data row6 col7" >0.211474</td>
+                            <td id="T_8818f_row6_col8" class="data row6 col8" >5.900812</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row7" class="row_heading level0 row7" >LY</th>
+                            <td id="T_8818f_row7_col0" class="data row7 col0" >0.065669</td>
+                            <td id="T_8818f_row7_col1" class="data row7 col1" >0.065669</td>
+                            <td id="T_8818f_row7_col2" class="data row7 col2" >0.576354</td>
+                            <td id="T_8818f_row7_col3" class="data row7 col3" >0.189363</td>
+                            <td id="T_8818f_row7_col4" class="data row7 col4" >0.065711</td>
+                            <td id="T_8818f_row7_col5" class="data row7 col5" >0.065783</td>
+                            <td id="T_8818f_row7_col6" class="data row7 col6" >0.569163</td>
+                            <td id="T_8818f_row7_col7" class="data row7 col7" >0.066641</td>
+                            <td id="T_8818f_row7_col8" class="data row7 col8" >0.753773</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row8" class="row_heading level0 row8" >HCT</th>
+                            <td id="T_8818f_row8_col0" class="data row8 col0" >0.003551</td>
+                            <td id="T_8818f_row8_col1" class="data row8 col1" >0.003551</td>
+                            <td id="T_8818f_row8_col2" class="data row8 col2" >0.012595</td>
+                            <td id="T_8818f_row8_col3" class="data row8 col3" >0.002508</td>
+                            <td id="T_8818f_row8_col4" class="data row8 col4" >0.003551</td>
+                            <td id="T_8818f_row8_col5" class="data row8 col5" >0.003762</td>
+                            <td id="T_8818f_row8_col6" class="data row8 col6" >0.013079</td>
+                            <td id="T_8818f_row8_col7" class="data row8 col7" >0.003458</td>
+                            <td id="T_8818f_row8_col8" class="data row8 col8" >0.065571</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row9" class="row_heading level0 row9" >RDW</th>
+                            <td id="T_8818f_row9_col0" class="data row9 col0" >1.451828</td>
+                            <td id="T_8818f_row9_col1" class="data row9 col1" >1.451846</td>
+                            <td id="T_8818f_row9_col2" class="data row9 col2" >1.479226</td>
+                            <td id="T_8818f_row9_col3" class="data row9 col3" >1.416980</td>
+                            <td id="T_8818f_row9_col4" class="data row9 col4" >1.451754</td>
+                            <td id="T_8818f_row9_col5" class="data row9 col5" >1.452074</td>
+                            <td id="T_8818f_row9_col6" class="data row9 col6" >1.484753</td>
+                            <td id="T_8818f_row9_col7" class="data row9 col7" >1.397548</td>
+                            <td id="T_8818f_row9_col8" class="data row9 col8" >1.879196</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row10" class="row_heading level0 row10" >HGB</th>
+                            <td id="T_8818f_row10_col0" class="data row10 col0" >1.046061</td>
+                            <td id="T_8818f_row10_col1" class="data row10 col1" >1.046061</td>
+                            <td id="T_8818f_row10_col2" class="data row10 col2" >4.047838</td>
+                            <td id="T_8818f_row10_col3" class="data row10 col3" >0.898766</td>
+                            <td id="T_8818f_row10_col4" class="data row10 col4" >1.045922</td>
+                            <td id="T_8818f_row10_col5" class="data row10 col5" >1.046057</td>
+                            <td id="T_8818f_row10_col6" class="data row10 col6" >4.127998</td>
+                            <td id="T_8818f_row10_col7" class="data row10 col7" >0.597006</td>
+                            <td id="T_8818f_row10_col8" class="data row10 col8" >21.515179</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row11" class="row_heading level0 row11" >MCH</th>
+                            <td id="T_8818f_row11_col0" class="data row11 col0" >0.075980</td>
+                            <td id="T_8818f_row11_col1" class="data row11 col1" >0.075980</td>
+                            <td id="T_8818f_row11_col2" class="data row11 col2" >0.645027</td>
+                            <td id="T_8818f_row11_col3" class="data row11 col3" >0.055803</td>
+                            <td id="T_8818f_row11_col4" class="data row11 col4" >0.075975</td>
+                            <td id="T_8818f_row11_col5" class="data row11 col5" >0.075964</td>
+                            <td id="T_8818f_row11_col6" class="data row11 col6" >0.546108</td>
+                            <td id="T_8818f_row11_col7" class="data row11 col7" >0.064752</td>
+                            <td id="T_8818f_row11_col8" class="data row11 col8" >2.081556</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row12" class="row_heading level0 row12" >PLT</th>
+                            <td id="T_8818f_row12_col0" class="data row12 col0" >68.079100</td>
+                            <td id="T_8818f_row12_col1" class="data row12 col1" >68.079544</td>
+                            <td id="T_8818f_row12_col2" class="data row12 col2" >70.988611</td>
+                            <td id="T_8818f_row12_col3" class="data row12 col3" >67.699751</td>
+                            <td id="T_8818f_row12_col4" class="data row12 col4" >68.088919</td>
+                            <td id="T_8818f_row12_col5" class="data row12 col5" >68.065699</td>
+                            <td id="T_8818f_row12_col6" class="data row12 col6" >71.329544</td>
+                            <td id="T_8818f_row12_col7" class="data row12 col7" >66.628538</td>
+                            <td id="T_8818f_row12_col8" class="data row12 col8" >80.604096</td>
+                </tr>
+                <tr>
+                            <th id="T_8818f_level0_row13" class="row_heading level0 row13" >MPV</th>
+                            <td id="T_8818f_row13_col0" class="data row13 col0" >1.009346</td>
+                            <td id="T_8818f_row13_col1" class="data row13 col1" >1.009359</td>
+                            <td id="T_8818f_row13_col2" class="data row13 col2" >1.030925</td>
+                            <td id="T_8818f_row13_col3" class="data row13 col3" >1.009860</td>
+                            <td id="T_8818f_row13_col4" class="data row13 col4" >1.009302</td>
+                            <td id="T_8818f_row13_col5" class="data row13 col5" >1.009492</td>
+                            <td id="T_8818f_row13_col6" class="data row13 col6" >1.063030</td>
+                            <td id="T_8818f_row13_col7" class="data row13 col7" >0.998184</td>
+                            <td id="T_8818f_row13_col8" class="data row13 col8" >1.137396</td>
+                </tr>
+        </tbody></table>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-296
+.. GENERATED FROM PYTHON SOURCE LINES 295-298
 
 -------------------------------------
 Plot results
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-323
+.. GENERATED FROM PYTHON SOURCE LINES 298-325
 
 .. code-block:: default
-   :lineno-start: 297
+   :lineno-start: 299
 
 
     plt.figure(figsize=(20,40))
@@ -712,7 +686,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.831 seconds)
+   **Total running time of the script:** ( 0 minutes  2.837 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp1_1.py:
