@@ -157,7 +157,7 @@ print(corr_mat)
 
 # split MCH-MCHC-MCV from the rest
 
-SPLIT_FEATURES = ['MCH', 'MCHC', 'MCV']
+SPLIT_FEATURES = ['RBC', 'HCT', 'HGB']
 df1 = complete_profiles[SPLIT_FEATURES] 
 df2 = complete_profiles[[x for x in complete_profiles.columns if x not in SPLIT_FEATURES]]
 
@@ -181,10 +181,10 @@ cb_iir_results = pd.DataFrame()
 
 # Create a list of estimators
 ESTIMATORS = [
-    # 'lr',
+    'lr',
     # 'bridge',
     # 'dt',
-    'etr',
+    # 'etr',
     # 'sgd-ls',
     # 'sgd-sv',
     # 'knn',
@@ -255,9 +255,8 @@ for i, est in enumerate(ESTIMATORS):
 # Save results
 # -------------------------------------
 
-# Save
+# # Save
 cb_iir_results.to_csv('datasets/cb_iir_results_df2.csv')
-
 
 #######################################
 # -------------------------------------

@@ -79,7 +79,8 @@ sphinx_gallery_conf = {
     # Other
     'line_numbers': True,
     'download_all_examples': False,
-    'within_subsection_order': FileNameSortKey}
+    'within_subsection_order': FileNameSortKey,
+    'capture_repr': ('_repr_html_', '__repr__')}
 
 # ------------------
 # Todo extension
