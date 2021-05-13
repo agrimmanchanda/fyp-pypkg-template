@@ -98,9 +98,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Loading the data set</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Biomarker distributions in dataset</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#preprocessing-step-obtain-fbc-panel">Preprocessing step: obtain FBC panel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-distributions-and-histograms-for-each-biomarker">Plot distributions and histograms for each biomarker</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plot-same-histograms-without-outliers">Plot same histograms without outliers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#violin-plots-for-raw-data">Violin plots for raw data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#violin-plots-without-outliers">Violin plots without outliers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jarque-bera-jb-test-for-normality">Jarque-Bera (JB) test for normality</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="plot_corr_networks.html">Network graphs to visualise correlations</a></li>
@@ -192,29 +192,33 @@ to download the full example code</p>
 13
 14
 15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
  <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
  <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
  <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
  <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
  <span class="kn">import</span> <span class="nn">warnings</span>
  <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+ <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </td></tr></table></div>
 <div class="section" id="data-import">
 <h2>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>23
-24
-25
-26
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>26
 27
 28
 29
 30
 31
 32
-33</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set relative data path and set FBC panel list</span>
- <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;datasets/Transformed_First_FBC_dataset.csv&#39;</span>
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set relative data path and set FBC panel list</span>
+ <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;../resources/datasets/nhs/Transformed_First_FBC_dataset.csv&#39;</span>
 
  <span class="n">FBC_CODES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;MONO&quot;</span><span class="p">,</span> <span class="s2">&quot;BASO&quot;</span><span class="p">,</span> <span class="s2">&quot;NEUT&quot;</span><span class="p">,</span> <span class="s2">&quot;RBC&quot;</span><span class="p">,</span> <span class="s2">&quot;WBC&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;MCHC&quot;</span><span class="p">,</span> <span class="s2">&quot;MCV&quot;</span><span class="p">,</span> <span class="s2">&quot;LY&quot;</span><span class="p">,</span> <span class="s2">&quot;HCT&quot;</span><span class="p">,</span> <span class="s2">&quot;RDW&quot;</span><span class="p">,</span> <span class="s2">&quot;HGB&quot;</span><span class="p">,</span>
@@ -227,21 +231,16 @@ to download the full example code</p>
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="preprocessing-step-obtain-fbc-panel">
-<h2>Preprocessing step: obtain FBC panel<a class="headerlink" href="#preprocessing-step-obtain-fbc-panel" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>40
-41
-42
-43</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame only</span>
- <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
- <span class="n">biomarkers_df_copy</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
- <span class="n">biomarkers_data</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="plot-distributions-and-histograms-for-each-biomarker">
-<h2>Plot distributions and histograms for each biomarker<a class="headerlink" href="#plot-distributions-and-histograms-for-each-biomarker" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>50
+<div class="section" id="violin-plots-for-raw-data">
+<h2>Violin plots for raw data<a class="headerlink" href="#violin-plots-for-raw-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>43
+44
+45
+46
+47
+48
+49
+50
 51
 52
 53
@@ -258,68 +257,46 @@ to download the full example code</p>
 64
 65
 66
-67</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">biomarkers_df_copy</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Distribution and boxplot for biomarker: </span><span class="si">{col}</span><span class="s1">&#39;</span><span class="p">,</span>
-     <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+67
+68
+69
+70
+71</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame only</span>
+ <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
 
-     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-     <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-     <span class="n">kde_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="p">},</span> <span class="n">hist_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span><span class="s1">&#39;black&#39;</span><span class="p">})</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{col}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+ <span class="c1"># Set figure size</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
 
-     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-     <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">biomarkers_df</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{col}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+ <span class="c1"># Set single title for all figures</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Violin plot for raw data&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+ <span class="k">for</span> <span class="n">plot_idx</span><span class="p">,</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">plot_idx</span><span class="p">)</span>
+
+     <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">biomarkers_df</span><span class="p">[</span><span class="n">biomarker</span><span class="p">],</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span>
+                 <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{biomarker}</span><span class="s1">&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+ <span class="c1"># Space out plots</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+ <span class="c1"># Show</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </td></tr></table></div>
-<ul class="sphx-glr-horizontal">
-<li><img alt="Distribution and boxplot for biomarker: EOS" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_001.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MONO" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_002.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: BASO" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_003.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: NEUT" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_004.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: RBC" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_005.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: WBC" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_006.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MCHC" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_007.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MCV" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_008.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: LY" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_009.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: HCT" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_010.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: RDW" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_011.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: HGB" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_012.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MCH" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_013.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: PLT" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_014.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MPV" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_015.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: NRBCA" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_016.png" />
-</li>
-</ul>
+<img alt="Violin plot for raw data" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_biomarkers_dist_001.png" />
 </div>
-<div class="section" id="plot-same-histograms-without-outliers">
-<h2>Plot same histograms without outliers<a class="headerlink" href="#plot-same-histograms-without-outliers" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 74
- 75
- 76
- 77
- 78
+<div class="section" id="violin-plots-without-outliers">
+<h2>Violin plots without outliers<a class="headerlink" href="#violin-plots-without-outliers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 78
  79
  80
  81
@@ -346,75 +323,197 @@ to download the full example code</p>
 102
 103
 104
-105</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Remove data outliers based on absolute Z-Score value &lt; 3</span>
- <span class="c1">#biomarkers_df[(np.abs(stats.zscore(biomarkers_df)) &lt; 3).all(axis=1)]</span>
+105
+106</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Remove outliers from dataset</span>
+ <span class="n">complete_profiles</span><span class="p">,</span> <span class="n">outlier_count</span> <span class="o">=</span> <span class="n">remove_data_outliers</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">)</span>
 
- <span class="c1"># Remove values based on Q(1/3) -+ 1.5 * IQR method</span>
- <span class="n">q1</span><span class="p">,</span> <span class="n">q3</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
- <span class="n">IQR</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">-</span> <span class="n">q1</span>
- <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span>
- <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span>
+ <span class="c1"># Set figure size</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
 
- <span class="c1"># New biomarkers dataframe with outlier values removed</span>
- <span class="n">biomarkers_df_wo_outliers</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">biomarkers_df</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span>
- <span class="p">(</span><span class="n">biomarkers_df</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+ <span class="c1"># Set single title for all figures</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Violin plot for complete profiles&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
- <span class="c1"># Plot distribution and boxplots</span>
- <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">biomarkers_df_wo_outliers</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Distribution and boxplot for biomarker: </span><span class="si">{col}</span><span class="s1">&#39;</span><span class="p">,</span>
-     <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+ <span class="k">for</span> <span class="n">plot_idx</span><span class="p">,</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
-     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-     <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">biomarkers_df_wo_outliers</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-     <span class="n">kde_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="p">},</span> <span class="n">hist_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span><span class="s1">&#39;black&#39;</span><span class="p">})</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{col}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">plot_idx</span><span class="p">)</span>
 
-     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-     <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">biomarkers_df_wo_outliers</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{col}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+     <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">complete_profiles</span><span class="p">[</span><span class="n">biomarker</span><span class="p">],</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span>
+                 <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{biomarker}</span><span class="s1">&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+ <span class="c1"># Space out plots</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+ <span class="c1"># Show</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </td></tr></table></div>
-<ul class="sphx-glr-horizontal">
-<li><img alt="Distribution and boxplot for biomarker: EOS" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_017.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MONO" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_018.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: BASO" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_019.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: NEUT" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_020.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: RBC" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_021.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: WBC" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_022.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MCHC" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_023.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MCV" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_024.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: LY" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_025.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: HCT" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_026.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: RDW" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_027.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: HGB" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_028.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MCH" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_029.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: PLT" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_030.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: MPV" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_031.png" />
-</li>
-<li><img alt="Distribution and boxplot for biomarker: NRBCA" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_biomarkers_dist_032.png" />
-</li>
-</ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  21.676 seconds)</p>
+<img alt="Violin plot for complete profiles" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_biomarkers_dist_002.png" />
+</div>
+<div class="section" id="jarque-bera-jb-test-for-normality">
+<h2>Jarque-Bera (JB) test for normality<a class="headerlink" href="#jarque-bera-jb-test-for-normality" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Standardise data</span>
+ <span class="n">std_complete_profiles</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">)</span>
+
+ <span class="c1"># Create DataFrame of standardised data</span>
+ <span class="n">norm_profiles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">std_complete_profiles</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+ <span class="c1"># Dataframe to store JB Test</span>
+ <span class="n">norm_scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+ <span class="c1"># Note: JB test is only valid on datasets with n &gt; 2000 where n are samples</span>
+ <span class="c1"># in the dataset. The complete profile data set contains 56271 records.</span>
+
+ <span class="c1"># Loop</span>
+ <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+
+     <span class="c1"># Calculate and store JB test statistic and p-value for each biomarker</span>
+     <span class="n">jb_test</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">jarque_bera</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">[</span><span class="n">biomarker</span><span class="p">])</span>
+     <span class="n">norm_scores</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span> <span class="o">=</span> <span class="n">jb_test</span>
+
+ <span class="n">norm_scores</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Test Statistic&#39;</span><span class="p">,</span> <span class="s1">&#39;P-Value&#39;</span><span class="p">]</span>
+
+ <span class="n">norm_scores</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</td></tr></table></div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Test Statistic</th>
+      <th>P-Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>EOS</th>
+      <td>13429.167720</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MONO</th>
+      <td>4508.001342</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>BASO</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>NEUT</th>
+      <td>6413.170125</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>RBC</th>
+      <td>611.121763</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>WBC</th>
+      <td>2824.097411</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MCHC</th>
+      <td>140.936892</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MCV</th>
+      <td>206.280739</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>LY</th>
+      <td>1201.464250</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>HCT</th>
+      <td>1014.117837</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>RDW</th>
+      <td>7896.951619</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>HGB</th>
+      <td>848.836491</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MCH</th>
+      <td>310.994030</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>PLT</th>
+      <td>909.825877</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MPV</th>
+      <td>880.109647</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>NRBCA</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.701 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-load-dataset-plot-biomarkers-dist-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e98d65df5b35ce7dadc562ede2440cb5/plot_biomarkers_dist.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_biomarkers_dist.py</span></code></a></p>

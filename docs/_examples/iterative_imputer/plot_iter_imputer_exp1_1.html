@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The Widgets’ gallery" href="../widgets/index.html" />
+    <link rel="next" title="Iterative Imputer Experiment I.II" href="plot_iter_imputer_exp1_2.html" />
     <link rel="prev" title="Iterative Imputer Experiment I" href="plot_iter_imputer_exp1.html" /> 
 </head>
 
@@ -100,17 +100,16 @@
 <li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1.html">Iterative Imputer Experiment I</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Iterative Imputer Experiment I.I</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#libraries-import">Libraries import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#define-tuned-estimators">Define tuned estimators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#remove-outliers-from-dataset">Remove outliers from dataset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#biomarker-correlations">Biomarker correlations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#k-fold-cross-validation-k-5">K-Fold Cross Validation (K = 5)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#define-estimators">Define estimators</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#predict-values-using-imputer">Predict values using imputer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#table-of-results-rmse">Table of Results: RMSE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#table-of-results-rmsle">Table of Results: RMSlE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#combined-rmse-plot-for-each-biomarker">Combined RMSE Plot for each biomarker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#correlation-matrix">Correlation matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#obtain-evaluation-scores">Obtain evaluation scores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#save-results">Save results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analyse-scores-and-test-results">Analyse scores and test results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plot-results">Plot results</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_2.html">Iterative Imputer Experiment I.II</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
@@ -190,12 +189,11 @@ to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="iterative-imputer-experiment-i-i">
 <span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp1-1-py"></span><h1>Iterative Imputer Experiment I.I<a class="headerlink" href="#iterative-imputer-experiment-i-i" title="Permalink to this headline">¶</a></h1>
-<p>Single biomarker removal experiment with
-K-Fold Cross Validation without outliers.</p>
+<p>Single biomarker removal using <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>
+methods only.</p>
 <div class="section" id="libraries-import">
 <h2>Libraries import<a class="headerlink" href="#libraries-import" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>14
-15
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>15
 16
 17
 18
@@ -212,159 +210,179 @@ K-Fold Cross Validation without outliers.</p>
 29
 30
 31
-32</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
- <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
- <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
- <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
- <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">BayesianRidge</span>
- <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
- <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
- <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsRegressor</span>
- <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
- <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDRegressor</span>
- <span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPRegressor</span>
- <span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBRegressor</span>
- <span class="kn">from</span> <span class="nn">sklearn.experimental</span> <span class="kn">import</span> <span class="n">enable_iterative_imputer</span>
- <span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">IterativeImputer</span>
- <span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
- <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
- <span class="kn">import</span> <span class="nn">warnings</span>
- <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.iter_imp</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="data-import">
-<h2>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>39
+32
+33
+34
+35
+36
+37
+38
+39
 40
 41
 42
 43
 44
 45
-46
-47
-48
-49</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set relative data path and set FBC panel list</span>
- <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;datasets/Transformed_First_FBC_dataset.csv&#39;</span>
+46</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Libraries generic</span>
+ <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+ <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+ <span class="kn">import</span> <span class="nn">sklearn</span>
+ <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
- <span class="n">FBC_CODES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;MONO&quot;</span><span class="p">,</span> <span class="s2">&quot;BASO&quot;</span><span class="p">,</span> <span class="s2">&quot;NEUT&quot;</span><span class="p">,</span> <span class="s2">&quot;RBC&quot;</span><span class="p">,</span> <span class="s2">&quot;WBC&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;MCHC&quot;</span><span class="p">,</span> <span class="s2">&quot;MCV&quot;</span><span class="p">,</span> <span class="s2">&quot;LY&quot;</span><span class="p">,</span> <span class="s2">&quot;HCT&quot;</span><span class="p">,</span> <span class="s2">&quot;RDW&quot;</span><span class="p">,</span> <span class="s2">&quot;HGB&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;MCH&quot;</span><span class="p">,</span> <span class="s2">&quot;PLT&quot;</span><span class="p">,</span> <span class="s2">&quot;MPV&quot;</span><span class="p">,</span> <span class="s2">&quot;NRBCA&quot;</span><span class="p">]</span>
+ <span class="c1"># Libraries sklearn</span>
+ <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+ <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+ <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+ <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 
- <span class="c1"># Read data and drop Nan _uid records</span>
- <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">])</span>
+ <span class="c1"># Regressors</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">BayesianRidge</span>
+ <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPRegressor</span>
+ <span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBRegressor</span>
 
- <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+ <span class="c1"># Metrics</span>
+ <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">make_scorer</span>
+ <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+
+ <span class="c1"># Custom Packages</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="o">*</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.iter_imp</span> <span class="kn">import</span> <span class="o">*</span>
+ <span class="kn">from</span> <span class="nn">pkgname.core.iter_imp</span> <span class="kn">import</span> <span class="n">IterativeImputerRegressor</span><span class="p">,</span> <span class="n">SimpleImputerRegressor</span>
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="remove-outliers-from-dataset">
-<h2>Remove outliers from dataset<a class="headerlink" href="#remove-outliers-from-dataset" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame with outliers</span>
- <span class="n">biomarkers_raw</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
-
-
- <span class="c1"># Remove values based on Q(1/3) -+ 1.5 * IQR method</span>
- <span class="n">q1</span><span class="p">,</span> <span class="n">q3</span> <span class="o">=</span> <span class="n">biomarkers_raw</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span> <span class="n">biomarkers_raw</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
- <span class="n">IQR</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">-</span> <span class="n">q1</span>
- <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span>
- <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span>
-
- <span class="c1"># New biomarkers dataframe with outlier values removed</span>
- <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">biomarkers_raw</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">biomarkers_raw</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span>
- <span class="p">(</span><span class="n">biomarkers_raw</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
-
- <span class="c1"># Make dataset copy</span>
- <span class="n">biomarkers_original_df_copy</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
- <span class="c1"># Store column names</span>
- <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-
- <span class="c1"># Convert to array for processing</span>
- <span class="n">biomarkers_data</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="biomarker-correlations">
-<h2>Biomarker correlations<a class="headerlink" href="#biomarker-correlations" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain highest correlation pairs Pearson Correlation Coefficient</span>
- <span class="n">biomarkers_highest_corr</span> <span class="o">=</span> <span class="n">corr_pairs</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">)</span>
-
- <span class="c1"># Find biomarkers that are to be dropped from the dataset</span>
- <span class="n">biomarkers_to_drop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">biomarkers_highest_corr</span><span class="p">[[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-
- <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Biomarkers with high correlations: &quot;</span><span class="p">,</span> <span class="n">biomarkers_to_drop</span><span class="p">)</span>
-
- <span class="c1"># DataFrame to store all experiment MSE scores</span>
- <span class="n">rmse_score_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">biomarkers_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
- <span class="n">rmse_score_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Biomarker&#39;</span><span class="p">]</span>
- <span class="n">rmsle_score_df</span> <span class="o">=</span> <span class="n">rmse_score_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</td></tr></table></div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Biomarkers with high correlations:  [&#39;HCT&#39; &#39;HGB&#39; &#39;MCH&#39; &#39;MCV&#39; &#39;NEUT&#39; &#39;RBC&#39; &#39;WBC&#39;]
-</pre></div>
-</div>
-</div>
-<div class="section" id="k-fold-cross-validation-k-5">
-<h2>K-Fold Cross Validation (K = 5)<a class="headerlink" href="#k-fold-cross-validation-k-5" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>102
+<div class="section" id="define-tuned-estimators">
+<h2>Define tuned estimators<a class="headerlink" href="#define-tuned-estimators" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
 103
 104
 105
 106
 107
-108
-109
-110</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Define min-max scaler and normalise dataset</span>
- <span class="n">min_max_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
-
- <span class="c1"># Initialise 5-Fold cross validation</span>
- <span class="n">kf5</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
- <span class="c1"># Temporary mse_score_df to store mse score for each fold</span>
- <span class="n">temp_rmse_score_df</span> <span class="o">=</span> <span class="n">rmse_score_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
- <span class="n">temp_rmsle_score_df</span> <span class="o">=</span> <span class="n">rmse_score_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+108</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">_TUNED_ESTIMATORS</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="n">LinearRegression</span><span class="p">(),</span>
+     <span class="s1">&#39;bridge&#39;</span><span class="p">:</span> <span class="n">BayesianRidge</span><span class="p">(</span>
+         <span class="n">alpha_1</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span>
+         <span class="n">alpha_2</span><span class="o">=</span><span class="mf">1e-07</span><span class="p">,</span>
+         <span class="n">lambda_1</span><span class="o">=</span><span class="mf">1e-07</span><span class="p">,</span>
+         <span class="n">lambda_2</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span>
+         <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span>
+         <span class="n">splitter</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span>
+         <span class="n">max_depth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+         <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+         <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+         <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;etr&#39;</span><span class="p">:</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span>
+         <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+         <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span>
+         <span class="n">bootstrap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;sgd-ls&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span>
+         <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+         <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+         <span class="n">learning_rate</span><span class="o">=</span><span class="s1">&#39;adaptive&#39;</span><span class="p">,</span>
+         <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;squared_loss&#39;</span><span class="p">,</span>
+         <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;sgd-sv&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span>
+         <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+         <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+         <span class="n">learning_rate</span><span class="o">=</span><span class="s1">&#39;adaptive&#39;</span><span class="p">,</span>
+         <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;squared_epsilon_insensitive&#39;</span><span class="p">,</span>
+         <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;knn&#39;</span><span class="p">:</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span>
+         <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+         <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span>
+         <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;xgb&#39;</span><span class="p">:</span> <span class="n">XGBRegressor</span><span class="p">(),</span>
+     <span class="s1">&#39;mlp&#39;</span><span class="p">:</span> <span class="n">MLPRegressor</span><span class="p">(</span>
+         <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+         <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+         <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+         <span class="n">learning_rate</span><span class="o">=</span><span class="s1">&#39;invscaling&#39;</span><span class="p">,</span>
+         <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+     <span class="p">),</span>
+     <span class="s1">&#39;sir&#39;</span><span class="p">:</span> <span class="n">SimpleImputerRegressor</span><span class="p">(</span>
+         <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;median&#39;</span>
+     <span class="p">),</span>
+ <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="define-estimators">
-<h2>Define estimators<a class="headerlink" href="#define-estimators" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>118
+<div class="section" id="data-import">
+<h2>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>115
+116
+117
+118
 119
 120
 121
@@ -378,46 +396,97 @@ K-Fold Cross Validation without outliers.</p>
 129
 130
 131
-132</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">estimators</span> <span class="o">=</span> <span class="p">{</span>
-     <span class="s1">&#39;Bayesian Ridge&#39;</span><span class="p">:</span> <span class="n">BayesianRidge</span><span class="p">(),</span>
-     <span class="s1">&#39;Decision Tree&#39;</span><span class="p">:</span> <span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
-     <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">ExtraTreesRegressor</span><span class="p">(),</span>
-     <span class="s1">&#39;XGBoost&#39;</span><span class="p">:</span> <span class="n">XGBRegressor</span><span class="p">(),</span>
-     <span class="s1">&#39;K-NN&#39;</span><span class="p">:</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">),</span>
-     <span class="s1">&#39;Least Squares (SGD)&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;squared_loss&#39;</span><span class="p">,</span>
-     <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-     <span class="s1">&#39;Huber (SGD)&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;huber&#39;</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-     <span class="s1">&#39;Support Vector (SGD)&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;epsilon_insensitive&#39;</span><span class="p">,</span>
-     <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-     <span class="s1">&#39;MLP&#39;</span><span class="p">:</span> <span class="n">MLPRegressor</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-     <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-     <span class="s1">&#39;Simple Median&#39;</span><span class="p">:</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">),</span>
- <span class="p">}</span>
+132
+133
+134
+135
+136
+137</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set relative data path and set FBC panel list</span>
+ <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;../resources/datasets/nhs/Transformed_First_FBC_dataset.csv&#39;</span>
+
+ <span class="n">FBC_CODES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;MONO&quot;</span><span class="p">,</span> <span class="s2">&quot;BASO&quot;</span><span class="p">,</span> <span class="s2">&quot;NEUT&quot;</span><span class="p">,</span> <span class="s2">&quot;RBC&quot;</span><span class="p">,</span> <span class="s2">&quot;WBC&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MCHC&quot;</span><span class="p">,</span> <span class="s2">&quot;MCV&quot;</span><span class="p">,</span> <span class="s2">&quot;LY&quot;</span><span class="p">,</span> <span class="s2">&quot;HCT&quot;</span><span class="p">,</span> <span class="s2">&quot;RDW&quot;</span><span class="p">,</span> <span class="s2">&quot;HGB&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MCH&quot;</span><span class="p">,</span> <span class="s2">&quot;PLT&quot;</span><span class="p">,</span> <span class="s2">&quot;MPV&quot;</span><span class="p">,</span> <span class="s2">&quot;NRBCA&quot;</span><span class="p">]</span>
+
+ <span class="c1"># Read data and drop Nan _uid records</span>
+ <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">])</span>
+
+ <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+ <span class="c1"># Obtain the biomarkers DataFrame only</span>
+ <span class="n">raw_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
+
+ <span class="c1"># Remove outliers from dataset</span>
+ <span class="n">complete_profiles</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">remove_data_outliers</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+
+ <span class="c1"># Constant variables to drop</span>
+ <span class="n">DROP_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BASO&#39;</span><span class="p">,</span> <span class="s1">&#39;NRBCA&#39;</span><span class="p">]</span>
+
+ <span class="c1"># Complete profiles for complete case analysis</span>
+ <span class="n">complete_profiles</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">DROP_FEATURES</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="predict-values-using-imputer">
-<h2>Predict values using imputer<a class="headerlink" href="#predict-values-using-imputer" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>139
-140
-141
-142
-143
-144
+<div class="section" id="correlation-matrix">
+<h2>Correlation matrix<a class="headerlink" href="#correlation-matrix" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>144
 145
 146
 147
 148
 149
 150
-151
-152
-153
-154
-155
-156
-157
-158
+151</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Calculate correlation matrix using Pearson Correlation Coefficient</span>
+ <span class="n">corr_mat</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">)</span>
+
+ <span class="c1"># Show</span>
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data:&quot;</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Correlation (pearson):&quot;</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="n">corr_mat</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Data:
+        EOS  MONO  NEUT   RBC   WBC   MCHC    MCV   LY   HCT   RDW    HGB   MCH    PLT   MPV
+0       0.0   0.4   3.9  4.23   5.0  320.0   92.6  0.7  0.39  15.1  125.0  29.6  202.0   8.6
+6       0.0   0.7   4.0  3.53   5.9  307.0  104.0  1.1  0.37  15.1  113.0  32.0  257.0   7.4
+7       0.1   0.3   3.0  3.40   4.2  320.0  101.0  0.8  0.34  13.8  110.0  32.2  282.0   8.0
+8       0.1   0.3   3.4  3.32   4.5  321.0  101.0  0.7  0.34  14.4  108.0  32.5  282.0   8.1
+9       0.2   0.6   4.6  3.34   6.1  320.0  102.0  0.7  0.34  14.1  109.0  32.7  298.0   8.7
+...     ...   ...   ...   ...   ...    ...    ...  ...   ...   ...    ...   ...    ...   ...
+101167  0.1   0.4   4.4  4.62   7.1  328.0   90.8  2.1  0.42  11.3  138.0  29.8  210.0   9.6
+101169  0.2   0.4   4.9  4.33   7.6  334.0   88.2  2.0  0.38  12.9  128.0  29.5  208.0   9.3
+101170  0.2   0.4   4.0  4.67   6.8  323.0   88.8  2.2  0.42  13.9  134.0  28.7  295.0   8.9
+101173  0.0   0.6   4.5  4.19   7.2  325.0   89.4  2.1  0.37  11.1  122.0  29.0  247.0  10.5
+101174  0.0   0.8   8.1  4.01  10.1  326.0   92.4  1.2  0.37  11.7  121.0  30.1  204.0   9.2
+
+[56271 rows x 14 columns]
+
+Correlation (pearson):
+           EOS      MONO      NEUT       RBC       WBC      MCHC  ...       HCT       RDW       HGB       MCH       PLT       MPV
+EOS   1.000000  0.176592 -0.077021  0.076247  0.063383 -0.073132  ...  0.075691 -0.029017  0.063382 -0.046216  0.148320 -0.008346
+MONO  0.176592  1.000000  0.437707 -0.011525  0.565965 -0.006352  ... -0.011767  0.000838 -0.011822 -0.007282  0.191892  0.006449
+NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  0.014154  ... -0.147780  0.043472 -0.142903 -0.036335  0.204307 -0.015518
+RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  0.002774  ...  0.932916 -0.317913  0.921963 -0.301421  0.089001  0.169995
+WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  0.015221  ... -0.034098 -0.031387 -0.030376 -0.058005  0.275886  0.021949
+MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  1.000000  ... -0.009970 -0.237056  0.160611  0.391104 -0.087255 -0.041123
+MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355 -0.040685  ...  0.024410 -0.273143  0.016983  0.902952 -0.143448 -0.061824
+LY    0.289178  0.228941 -0.067306  0.381424  0.242921  0.021764  ...  0.368346 -0.258299  0.367455 -0.079429  0.227641  0.133033
+HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098 -0.009970  ...  1.000000 -0.445215  0.983795  0.018124  0.044596  0.156687
+RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387 -0.237056  ... -0.445215  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
+HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  0.160611  ...  0.983795 -0.479547  1.000000  0.084460  0.030526  0.148419
+MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  0.391104  ...  0.018124 -0.354513  0.084460  1.000000 -0.169143 -0.073755
+PLT   0.148320  0.191892  0.204307  0.089001  0.275886 -0.087255  ...  0.044596 -0.050207  0.030526 -0.169143  1.000000 -0.329940
+MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949 -0.041123  ...  0.156687 -0.129583  0.148419 -0.073755 -0.329940  1.000000
+
+[14 rows x 14 columns]
+</pre></div>
+</div>
+</div>
+<div class="section" id="obtain-evaluation-scores">
+<h2>Obtain evaluation scores<a class="headerlink" href="#obtain-evaluation-scores" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>158
 159
 160
 161
@@ -463,606 +532,28 @@ K-Fold Cross Validation without outliers.</p>
 201
 202
 203
-204</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Run 5-fold CV for each estimator method</span>
- <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">imputer_estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kf5</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">biomarkers_data</span><span class="p">)):</span>
-
-         <span class="c1"># Obtain 1-fold test and 4-fold train sets</span>
-         <span class="n">train_df</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
-         <span class="n">val_scaled</span> <span class="o">=</span>  <span class="n">min_max_scaler</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
-         <span class="n">train_scaled</span> <span class="o">=</span> <span class="n">val_scaled</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
-         <span class="n">train_scaled_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train_scaled</span><span class="p">)</span>
-         <span class="n">train_scaled_copy_df</span> <span class="o">=</span> <span class="n">train_scaled_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-         <span class="n">test_df</span> <span class="o">=</span> <span class="n">biomarkers_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
-         <span class="n">test_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
-         <span class="n">test_scaled</span> <span class="o">=</span> <span class="n">val_scaled</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
-         <span class="n">test_scaled_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_scaled</span><span class="p">)</span>
-         <span class="n">test_scaled_copy_df</span> <span class="o">=</span> <span class="n">test_scaled_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-         <span class="c1"># Define imputer</span>
-         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;Simple Median&#39;</span><span class="p">:</span>
-             <span class="n">imputer</span> <span class="o">=</span> <span class="n">imputer_estimator</span>
-         <span class="k">else</span><span class="p">:</span>
-             <span class="n">imputer</span> <span class="o">=</span> <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">imputer_estimator</span><span class="p">)</span>
-
-         <span class="c1"># Fit on the dataset</span>
-         <span class="n">trained_imputer</span> <span class="o">=</span> <span class="n">imputer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_scaled_df</span><span class="p">)</span>
-
-         <span class="c1"># Test each biomarker independently</span>
-         <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">test_scaled_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-
-             <span class="c1"># Use a clean copy of the normalised data set</span>
-             <span class="n">test_with_nan</span> <span class="o">=</span> <span class="n">test_scaled_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-             <span class="c1"># Strictly set every biomarker value to NaN</span>
-             <span class="n">col_pos</span> <span class="o">=</span> <span class="n">test_with_nan</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="n">biomarker</span><span class="p">)</span>
-             <span class="n">test_with_nan</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="mi">1</span><span class="p">,</span> <span class="n">col_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-
-             <span class="c1"># Transform test data using trained imputer</span>
-             <span class="n">test_transformed_data</span> <span class="o">=</span> <span class="n">trained_imputer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_with_nan</span><span class="p">)</span>
-
-             <span class="c1"># Make dataframe of imputed data</span>
-             <span class="n">imputed_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test_transformed_data</span><span class="p">,</span>
-             <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_transformed_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span>
-             <span class="n">columns</span><span class="o">=</span><span class="n">test_scaled_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-
-             <span class="c1"># Inverse transform the scaled values</span>
-             <span class="n">test_og_data</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val_scaled</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">imputed_data</span><span class="p">))</span>
-
-             <span class="n">imputed_data_og</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test_og_data</span><span class="p">,</span>
-             <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_transformed_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span>
-             <span class="n">columns</span><span class="o">=</span><span class="n">test_scaled_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-
-             <span class="c1"># Compute true and obtain real value</span>
-             <span class="n">val_pred</span> <span class="o">=</span> <span class="n">imputed_data_og</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-             <span class="n">val_true</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-             <span class="c1"># Calculate MSE scores from the true and predicted values</span>
-             <span class="n">rmse_score</span> <span class="o">=</span> <span class="n">get_metric_scores</span><span class="p">(</span><span class="n">val_true</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">,</span> <span class="s1">&#39;RMSE&#39;</span><span class="p">)</span>
-             <span class="n">rmsle_score</span> <span class="o">=</span> <span class="n">get_metric_scores</span><span class="p">(</span><span class="n">val_true</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">,</span> <span class="s1">&#39;RMSLE&#39;</span><span class="p">)</span>
-
-             <span class="c1"># Store in temp_mse_score_df and temp_rmsle_score_df</span>
-             <span class="n">temp_rmse_score_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_rmse_score_df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">biomarker</span><span class="p">],</span> <span class="sa">f</span><span class="s1">&#39;K-Fold: {k+1}&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmse_score</span>
-             <span class="n">temp_rmsle_score_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_rmsle_score_df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">biomarker</span><span class="p">],</span> <span class="sa">f</span><span class="s1">&#39;K-Fold: {k+1}&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmsle_score</span>
-
-     <span class="c1"># Calculate mean MSE score for each biomarker across the 5-folds</span>
-     <span class="n">rmse_score_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{method}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_rmse_score_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-     <span class="n">rmsle_score_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{method}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_rmsle_score_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="section" id="table-of-results-rmse">
-<h2>Table of Results: RMSE<a class="headerlink" href="#table-of-results-rmse" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>211</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">rmse_score_df</span>
-</pre></div>
-</td></tr></table></div>
-<div class="output_subarea output_html rendered_html output_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Bayesian Ridge</th>
-      <th>Decision Tree</th>
-      <th>Random Forest</th>
-      <th>XGBoost</th>
-      <th>K-NN</th>
-      <th>Least Squares (SGD)</th>
-      <th>Huber (SGD)</th>
-      <th>Support Vector (SGD)</th>
-      <th>MLP</th>
-      <th>Simple Median</th>
-    </tr>
-    <tr>
-      <th>Biomarker</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>EOS</th>
-      <td>0.058294</td>
-      <td>0.137839</td>
-      <td>0.095585</td>
-      <td>8.566184e-02</td>
-      <td>0.116909</td>
-      <td>0.094871</td>
-      <td>0.109400</td>
-      <td>0.099160</td>
-      <td>0.057668</td>
-      <td>0.116911</td>
-    </tr>
-    <tr>
-      <th>MONO</th>
-      <td>0.063966</td>
-      <td>0.172678</td>
-      <td>0.111622</td>
-      <td>1.016483e-01</td>
-      <td>0.219023</td>
-      <td>0.078710</td>
-      <td>0.161495</td>
-      <td>0.071990</td>
-      <td>0.063801</td>
-      <td>0.260395</td>
-    </tr>
-    <tr>
-      <th>BASO</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1.618776e-16</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.150705</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>NEUT</th>
-      <td>0.066157</td>
-      <td>0.192284</td>
-      <td>0.098201</td>
-      <td>9.317628e-02</td>
-      <td>0.768844</td>
-      <td>0.066237</td>
-      <td>0.066270</td>
-      <td>0.074788</td>
-      <td>0.072393</td>
-      <td>2.602406</td>
-    </tr>
-    <tr>
-      <th>RBC</th>
-      <td>0.051247</td>
-      <td>0.043273</td>
-      <td>0.019184</td>
-      <td>2.442371e-02</td>
-      <td>0.147038</td>
-      <td>0.051536</td>
-      <td>0.051620</td>
-      <td>0.053178</td>
-      <td>0.015003</td>
-      <td>0.751817</td>
-    </tr>
-    <tr>
-      <th>WBC</th>
-      <td>0.066188</td>
-      <td>0.194278</td>
-      <td>0.096936</td>
-      <td>9.484127e-02</td>
-      <td>0.715558</td>
-      <td>0.066322</td>
-      <td>0.066296</td>
-      <td>0.077568</td>
-      <td>0.071578</td>
-      <td>2.768599</td>
-    </tr>
-    <tr>
-      <th>MCHC</th>
-      <td>0.804123</td>
-      <td>0.884185</td>
-      <td>0.596445</td>
-      <td>6.799949e-01</td>
-      <td>6.937810</td>
-      <td>0.822634</td>
-      <td>0.827447</td>
-      <td>0.829683</td>
-      <td>0.537913</td>
-      <td>9.788781</td>
-    </tr>
-    <tr>
-      <th>MCV</th>
-      <td>0.231830</td>
-      <td>0.251600</td>
-      <td>0.168982</td>
-      <td>1.944491e-01</td>
-      <td>1.892155</td>
-      <td>0.236988</td>
-      <td>0.237999</td>
-      <td>0.239545</td>
-      <td>0.171166</td>
-      <td>5.900812</td>
-    </tr>
-    <tr>
-      <th>LY</th>
-      <td>0.065642</td>
-      <td>0.270326</td>
-      <td>0.193146</td>
-      <td>1.187148e-01</td>
-      <td>0.583804</td>
-      <td>0.065936</td>
-      <td>0.068249</td>
-      <td>0.066744</td>
-      <td>0.066344</td>
-      <td>0.753773</td>
-    </tr>
-    <tr>
-      <th>HCT</th>
-      <td>0.003551</td>
-      <td>0.003726</td>
-      <td>0.002514</td>
-      <td>3.080910e-03</td>
-      <td>0.013621</td>
-      <td>0.003662</td>
-      <td>0.003699</td>
-      <td>0.003597</td>
-      <td>0.003121</td>
-      <td>0.065571</td>
-    </tr>
-    <tr>
-      <th>RDW</th>
-      <td>1.451846</td>
-      <td>1.994501</td>
-      <td>1.414516</td>
-      <td>1.417188e+00</td>
-      <td>1.532347</td>
-      <td>1.453734</td>
-      <td>1.476640</td>
-      <td>1.478366</td>
-      <td>1.386422</td>
-      <td>1.879196</td>
-    </tr>
-    <tr>
-      <th>HGB</th>
-      <td>1.046061</td>
-      <td>1.382246</td>
-      <td>0.887322</td>
-      <td>7.598997e-01</td>
-      <td>4.304529</td>
-      <td>1.058549</td>
-      <td>1.067277</td>
-      <td>1.065919</td>
-      <td>0.562459</td>
-      <td>21.515179</td>
-    </tr>
-    <tr>
-      <th>MCH</th>
-      <td>0.075980</td>
-      <td>0.084027</td>
-      <td>0.055909</td>
-      <td>6.333524e-02</td>
-      <td>0.564793</td>
-      <td>0.078050</td>
-      <td>0.078470</td>
-      <td>0.079521</td>
-      <td>0.055048</td>
-      <td>2.081556</td>
-    </tr>
-    <tr>
-      <th>PLT</th>
-      <td>68.079544</td>
-      <td>95.969037</td>
-      <td>67.718888</td>
-      <td>6.810031e+01</td>
-      <td>73.655717</td>
-      <td>68.146017</td>
-      <td>68.499864</td>
-      <td>68.466659</td>
-      <td>66.572377</td>
-      <td>80.604096</td>
-    </tr>
-    <tr>
-      <th>MPV</th>
-      <td>1.009359</td>
-      <td>1.432508</td>
-      <td>1.010391</td>
-      <td>1.015090e+00</td>
-      <td>1.097861</td>
-      <td>1.012768</td>
-      <td>1.011129</td>
-      <td>1.012702</td>
-      <td>0.994313</td>
-      <td>1.137396</td>
-    </tr>
-    <tr>
-      <th>NRBCA</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1.618776e-16</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.145408</td>
-      <td>0.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-<br />
-<br /></div>
-<div class="section" id="table-of-results-rmsle">
-<h2>Table of Results: RMSlE<a class="headerlink" href="#table-of-results-rmsle" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>218</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">rmsle_score_df</span>
-</pre></div>
-</td></tr></table></div>
-<div class="output_subarea output_html rendered_html output_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Bayesian Ridge</th>
-      <th>Decision Tree</th>
-      <th>Random Forest</th>
-      <th>XGBoost</th>
-      <th>K-NN</th>
-      <th>Least Squares (SGD)</th>
-      <th>Huber (SGD)</th>
-      <th>Support Vector (SGD)</th>
-      <th>MLP</th>
-      <th>Simple Median</th>
-    </tr>
-    <tr>
-      <th>Biomarker</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>EOS</th>
-      <td>0.051316</td>
-      <td>0.117546</td>
-      <td>0.081766</td>
-      <td>7.333371e-02</td>
-      <td>0.100107</td>
-      <td>0.080654</td>
-      <td>0.092399</td>
-      <td>0.083458</td>
-      <td>0.050641</td>
-      <td>0.099355</td>
-    </tr>
-    <tr>
-      <th>MONO</th>
-      <td>0.041347</td>
-      <td>0.107250</td>
-      <td>0.069200</td>
-      <td>6.339200e-02</td>
-      <td>0.135614</td>
-      <td>0.049725</td>
-      <td>0.099329</td>
-      <td>0.045747</td>
-      <td>0.041108</td>
-      <td>0.159436</td>
-    </tr>
-    <tr>
-      <th>BASO</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1.618776e-16</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.134487</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>NEUT</th>
-      <td>0.014814</td>
-      <td>0.042423</td>
-      <td>0.023945</td>
-      <td>2.050577e-02</td>
-      <td>0.162473</td>
-      <td>0.014817</td>
-      <td>0.014829</td>
-      <td>0.016844</td>
-      <td>0.016650</td>
-      <td>0.438348</td>
-    </tr>
-    <tr>
-      <th>RBC</th>
-      <td>0.011103</td>
-      <td>0.008705</td>
-      <td>0.003854</td>
-      <td>4.926293e-03</td>
-      <td>0.030538</td>
-      <td>0.011221</td>
-      <td>0.011184</td>
-      <td>0.011246</td>
-      <td>0.003033</td>
-      <td>0.153451</td>
-    </tr>
-    <tr>
-      <th>WBC</th>
-      <td>0.009682</td>
-      <td>0.027850</td>
-      <td>0.014193</td>
-      <td>1.372673e-02</td>
-      <td>0.103951</td>
-      <td>0.009714</td>
-      <td>0.009699</td>
-      <td>0.012347</td>
-      <td>0.010696</td>
-      <td>0.352867</td>
-    </tr>
-    <tr>
-      <th>MCHC</th>
-      <td>0.002466</td>
-      <td>0.002711</td>
-      <td>0.001830</td>
-      <td>2.083470e-03</td>
-      <td>0.021233</td>
-      <td>0.002521</td>
-      <td>0.002535</td>
-      <td>0.002546</td>
-      <td>0.001650</td>
-      <td>0.029928</td>
-    </tr>
-    <tr>
-      <th>MCV</th>
-      <td>0.002508</td>
-      <td>0.002662</td>
-      <td>0.001784</td>
-      <td>2.065222e-03</td>
-      <td>0.020456</td>
-      <td>0.002567</td>
-      <td>0.002577</td>
-      <td>0.002592</td>
-      <td>0.001808</td>
-      <td>0.064287</td>
-    </tr>
-    <tr>
-      <th>LY</th>
-      <td>0.029220</td>
-      <td>0.125513</td>
-      <td>0.090610</td>
-      <td>5.380307e-02</td>
-      <td>0.237171</td>
-      <td>0.029294</td>
-      <td>0.030162</td>
-      <td>0.029809</td>
-      <td>0.029584</td>
-      <td>0.310500</td>
-    </tr>
-    <tr>
-      <th>HCT</th>
-      <td>0.002601</td>
-      <td>0.002710</td>
-      <td>0.001830</td>
-      <td>2.244560e-03</td>
-      <td>0.010012</td>
-      <td>0.002684</td>
-      <td>0.002713</td>
-      <td>0.002631</td>
-      <td>0.002275</td>
-      <td>0.048126</td>
-    </tr>
-    <tr>
-      <th>RDW</th>
-      <td>0.098402</td>
-      <td>0.134229</td>
-      <td>0.095462</td>
-      <td>9.546735e-02</td>
-      <td>0.103352</td>
-      <td>0.098452</td>
-      <td>0.099232</td>
-      <td>0.099410</td>
-      <td>0.093456</td>
-      <td>0.126245</td>
-    </tr>
-    <tr>
-      <th>HGB</th>
-      <td>0.009455</td>
-      <td>0.011717</td>
-      <td>0.007565</td>
-      <td>6.563935e-03</td>
-      <td>0.038579</td>
-      <td>0.009634</td>
-      <td>0.009743</td>
-      <td>0.009473</td>
-      <td>0.004893</td>
-      <td>0.184858</td>
-    </tr>
-    <tr>
-      <th>MCH</th>
-      <td>0.002468</td>
-      <td>0.002705</td>
-      <td>0.001773</td>
-      <td>2.032023e-03</td>
-      <td>0.018344</td>
-      <td>0.002545</td>
-      <td>0.002551</td>
-      <td>0.002587</td>
-      <td>0.001763</td>
-      <td>0.068246</td>
-    </tr>
-    <tr>
-      <th>PLT</th>
-      <td>0.362331</td>
-      <td>0.480989</td>
-      <td>0.350403</td>
-      <td>3.512794e-01</td>
-      <td>0.375210</td>
-      <td>0.362645</td>
-      <td>0.361707</td>
-      <td>0.360641</td>
-      <td>0.346085</td>
-      <td>0.422514</td>
-    </tr>
-    <tr>
-      <th>MPV</th>
-      <td>0.109901</td>
-      <td>0.155733</td>
-      <td>0.110008</td>
-      <td>1.105440e-01</td>
-      <td>0.119425</td>
-      <td>0.110195</td>
-      <td>0.109861</td>
-      <td>0.110064</td>
-      <td>0.108188</td>
-      <td>0.123139</td>
-    </tr>
-    <tr>
-      <th>NRBCA</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1.618776e-16</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.130317</td>
-      <td>0.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-<br />
-<br /></div>
-<div class="section" id="combined-rmse-plot-for-each-biomarker">
-<h2>Combined RMSE Plot for each biomarker<a class="headerlink" href="#combined-rmse-plot-for-each-biomarker" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>225
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
 226
 227
 228
@@ -1071,53 +562,445 @@ K-Fold Cross Validation without outliers.</p>
 231
 232
 233
-234</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Plot horizontal bar graph</span>
- <span class="k">for</span> <span class="n">biomarker</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">rmse_score_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMSE Scores for Biomarker: </span><span class="si">{biomarker}</span><span class="s1"> with Different Iterative Imputation Methods&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-     <span class="n">cmap</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span> <span class="k">else</span> <span class="s1">&#39;blue&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">]</span>
-     <span class="n">scores</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RMSE Score&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+234
+235
+236</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Number of splits</span>
+ <span class="n">n_splits</span> <span class="o">=</span> <span class="mi">5</span>
+
+ <span class="c1"># Create Kfold instance</span>
+ <span class="n">skf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+ <span class="c1"># Scoring</span>
+ <span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;nmae&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">,</span> <span class="c1"># MAE</span>
+     <span class="s1">&#39;nmse&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">,</span>       <span class="c1"># MSE</span>
+     <span class="s1">&#39;nrmse&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_root_mean_squared_error&#39;</span><span class="p">,</span> <span class="c1"># RMSE</span>
+     <span class="c1">#&#39;norm_rmse&#39;: make_scorer(norm_rmse) # NRMSE</span>
+ <span class="p">}</span>
+
+ <span class="c1"># Compendium of results</span>
+ <span class="n">iir_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+ <span class="c1"># Create a list of estimators</span>
+ <span class="n">ESTIMATORS</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="c1"># &#39;lr&#39;,</span>
+     <span class="c1"># &#39;bridge&#39;,</span>
+     <span class="c1"># &#39;dt&#39;,</span>
+     <span class="c1"># &#39;etr&#39;,</span>
+     <span class="c1"># &#39;sgd-ls&#39;,</span>
+     <span class="c1"># &#39;sgd-sv&#39;,</span>
+     <span class="c1"># &#39;knn&#39;,</span>
+     <span class="c1"># &#39;xgb&#39;,</span>
+     <span class="c1"># &#39;sir&#39;,</span>
+ <span class="p">]</span>
+
+ <span class="c1"># For each estimator</span>
+ <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">est</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ESTIMATORS</span><span class="p">):</span>
+
+     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+     <span class="c1"># Check if estimator has been defined else skip</span>
+     <span class="k">if</span> <span class="n">est</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_TUNED_ESTIMATORS</span><span class="p">:</span>
+         <span class="k">continue</span>
+
+     <span class="n">estimator</span> <span class="o">=</span> <span class="n">_TUNED_ESTIMATORS</span><span class="p">[</span><span class="n">est</span><span class="p">]</span>
+
+     <span class="k">if</span> <span class="n">estimator</span> <span class="o">!=</span> <span class="s1">&#39;sir&#39;</span><span class="p">:</span>
+         <span class="n">imputer</span> <span class="o">=</span> <span class="n">IterativeImputerRegressor</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">)</span>
+     <span class="k">else</span><span class="p">:</span>
+         <span class="n">imputer</span> <span class="o">=</span> <span class="n">estimator</span>
+
+     <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">complete_profiles</span><span class="p">:</span>
+
+         <span class="n">aux</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+         <span class="n">X</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">aux</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">biomarker</span><span class="p">]]</span>
+         <span class="n">y</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span>
+
+         <span class="c1"># Information</span>
+         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">%s</span><span class="s2">. Evaluating... </span><span class="si">%s</span><span class="s2"> for biomarker... </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">biomarker</span><span class="p">))</span>
+
+         <span class="c1"># Create pipeline</span>
+         <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span> <span class="p">(</span><span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+                                 <span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">imputer</span><span class="p">)],</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+         <span class="c1"># Obtain scores for each fold using cross_validate</span>
+         <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span>
+                                 <span class="n">X</span><span class="p">,</span>
+                                 <span class="n">y</span><span class="p">,</span>
+                                 <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+                                 <span class="n">cv</span><span class="o">=</span><span class="n">skf</span><span class="p">,</span>
+                                 <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                 <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+         <span class="c1"># Extract results</span>
+         <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+         <span class="n">results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">biomarker</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+         <span class="c1"># Add to compendium and data</span>
+         <span class="n">iir_results</span> <span class="o">=</span> <span class="n">iir_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+         <span class="c1"># data.to_csv(f&#39;datasets/iir_{est}.csv&#39;)</span>
 </pre></div>
 </td></tr></table></div>
-<ul class="sphx-glr-horizontal">
-<li><img alt="RMSE Scores for Biomarker: EOS with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_001.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: MONO with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_002.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: BASO with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_003.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: NEUT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_004.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: RBC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_005.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: WBC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_006.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: MCHC with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_007.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: MCV with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_008.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: LY with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_009.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: HCT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_010.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: RDW with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_011.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: HGB with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_012.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: MCH with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_013.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: PLT with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_014.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: MPV with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_015.png" />
-</li>
-<li><img alt="RMSE Scores for Biomarker: NRBCA with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_016.png" />
-</li>
-</ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 36 minutes  37.503 seconds)</p>
+</div>
+<div class="section" id="save-results">
+<h2>Save results<a class="headerlink" href="#save-results" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>244
+245</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Save</span>
+ <span class="c1"># iir_results.to_csv(&#39;datasets/iir_results.csv&#39;)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="analyse-scores-and-test-results">
+<h2>Analyse scores and test results<a class="headerlink" href="#analyse-scores-and-test-results" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Create a list of estimators</span>
+ <span class="n">METHODS</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="s1">&#39;lr&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;bridge&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;dt&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;etr&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;sgd-ls&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;sgd-sv&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;knn&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;mlp&#39;</span><span class="p">,</span>
+     <span class="c1"># &#39;xgb&#39;,</span>
+     <span class="s1">&#39;sir&#39;</span><span class="p">,</span>
+ <span class="p">]</span>
+
+
+ <span class="n">compendium</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/iir_results.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+ <span class="c1"># Get mean and variance of RMSE scores</span>
+ <span class="n">all_scores</span> <span class="o">=</span> <span class="n">get_score_statistics</span><span class="p">(</span><span class="n">compendium</span><span class="p">,</span> <span class="s1">&#39;rmse&#39;</span><span class="p">)</span>
+
+ <span class="c1"># Split scores to obtain score for each estimator</span>
+ <span class="n">split_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">all_scores</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">METHODS</span><span class="p">))</span>
+
+ <span class="c1"># Stack scores horizontally for easier plotting</span>
+ <span class="n">hsplit_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">split_scores</span><span class="p">))</span>
+
+ <span class="c1"># Create DataFrame for mean and std dev statistics</span>
+ <span class="n">statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hsplit_scores</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+ <span class="c1"># Split mean and std dev statistics</span>
+ <span class="n">mean_stats</span><span class="p">,</span> <span class="n">std_stats</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,::</span><span class="mi">2</span><span class="p">],</span> <span class="n">statistics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+
+ <span class="c1"># Rename columns to match algorithms</span>
+ <span class="n">mean_stats</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">std_stats</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">METHODS</span><span class="p">,</span> <span class="n">METHODS</span>
+
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean RMSE Statistics: &quot;</span><span class="p">)</span>
+
+ <span class="n">mean_stats</span>
+</pre></div>
+</td></tr></table></div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Mean RMSE Statistics:
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>lr</th>
+      <th>bridge</th>
+      <th>dt</th>
+      <th>etr</th>
+      <th>sgd-ls</th>
+      <th>sgd-sv</th>
+      <th>knn</th>
+      <th>mlp</th>
+      <th>sir</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>EOS</th>
+      <td>0.058488</td>
+      <td>0.058488</td>
+      <td>0.108792</td>
+      <td>0.095702</td>
+      <td>0.059439</td>
+      <td>0.058766</td>
+      <td>0.113106</td>
+      <td>0.059043</td>
+      <td>0.116911</td>
+    </tr>
+    <tr>
+      <th>MONO</th>
+      <td>0.063966</td>
+      <td>0.063966</td>
+      <td>0.201050</td>
+      <td>0.111960</td>
+      <td>0.064266</td>
+      <td>0.064135</td>
+      <td>0.211939</td>
+      <td>0.064650</td>
+      <td>0.260395</td>
+    </tr>
+    <tr>
+      <th>NEUT</th>
+      <td>0.066160</td>
+      <td>0.066160</td>
+      <td>0.656279</td>
+      <td>0.098258</td>
+      <td>0.066161</td>
+      <td>0.066290</td>
+      <td>0.748481</td>
+      <td>0.072136</td>
+      <td>2.602406</td>
+    </tr>
+    <tr>
+      <th>RBC</th>
+      <td>0.051247</td>
+      <td>0.051247</td>
+      <td>0.205544</td>
+      <td>0.019375</td>
+      <td>0.051210</td>
+      <td>0.051289</td>
+      <td>0.141072</td>
+      <td>0.016111</td>
+      <td>0.751817</td>
+    </tr>
+    <tr>
+      <th>WBC</th>
+      <td>0.066188</td>
+      <td>0.066188</td>
+      <td>0.716875</td>
+      <td>0.097273</td>
+      <td>0.066186</td>
+      <td>0.066316</td>
+      <td>0.691134</td>
+      <td>0.072144</td>
+      <td>2.768599</td>
+    </tr>
+    <tr>
+      <th>MCHC</th>
+      <td>0.804123</td>
+      <td>0.804123</td>
+      <td>6.098773</td>
+      <td>0.594074</td>
+      <td>0.804267</td>
+      <td>0.804433</td>
+      <td>6.843804</td>
+      <td>0.670137</td>
+      <td>9.788781</td>
+    </tr>
+    <tr>
+      <th>MCV</th>
+      <td>0.231830</td>
+      <td>0.231830</td>
+      <td>1.903430</td>
+      <td>0.169743</td>
+      <td>0.231860</td>
+      <td>0.231743</td>
+      <td>1.840807</td>
+      <td>0.211474</td>
+      <td>5.900812</td>
+    </tr>
+    <tr>
+      <th>LY</th>
+      <td>0.065669</td>
+      <td>0.065669</td>
+      <td>0.576354</td>
+      <td>0.189363</td>
+      <td>0.065711</td>
+      <td>0.065783</td>
+      <td>0.569163</td>
+      <td>0.066641</td>
+      <td>0.753773</td>
+    </tr>
+    <tr>
+      <th>HCT</th>
+      <td>0.003551</td>
+      <td>0.003551</td>
+      <td>0.012595</td>
+      <td>0.002508</td>
+      <td>0.003551</td>
+      <td>0.003762</td>
+      <td>0.013079</td>
+      <td>0.003458</td>
+      <td>0.065571</td>
+    </tr>
+    <tr>
+      <th>RDW</th>
+      <td>1.451828</td>
+      <td>1.451846</td>
+      <td>1.479226</td>
+      <td>1.416980</td>
+      <td>1.451754</td>
+      <td>1.452074</td>
+      <td>1.484753</td>
+      <td>1.397548</td>
+      <td>1.879196</td>
+    </tr>
+    <tr>
+      <th>HGB</th>
+      <td>1.046061</td>
+      <td>1.046061</td>
+      <td>4.047838</td>
+      <td>0.898766</td>
+      <td>1.045922</td>
+      <td>1.046057</td>
+      <td>4.127998</td>
+      <td>0.597006</td>
+      <td>21.515179</td>
+    </tr>
+    <tr>
+      <th>MCH</th>
+      <td>0.075980</td>
+      <td>0.075980</td>
+      <td>0.645027</td>
+      <td>0.055803</td>
+      <td>0.075975</td>
+      <td>0.075964</td>
+      <td>0.546108</td>
+      <td>0.064752</td>
+      <td>2.081556</td>
+    </tr>
+    <tr>
+      <th>PLT</th>
+      <td>68.079100</td>
+      <td>68.079544</td>
+      <td>70.988611</td>
+      <td>67.699751</td>
+      <td>68.088919</td>
+      <td>68.065699</td>
+      <td>71.329544</td>
+      <td>66.628538</td>
+      <td>80.604096</td>
+    </tr>
+    <tr>
+      <th>MPV</th>
+      <td>1.009346</td>
+      <td>1.009359</td>
+      <td>1.030925</td>
+      <td>1.009860</td>
+      <td>1.009302</td>
+      <td>1.009492</td>
+      <td>1.063030</td>
+      <td>0.998184</td>
+      <td>1.137396</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></div>
+<div class="section" id="plot-results">
+<h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">))</span>
+
+ <span class="c1"># Set single title for all figures</span>
+ <span class="c1"># plt.suptitle(&#39;Iterative Imputer RMSE scores for complete profiles&#39;,</span>
+ <span class="c1">#             fontweight=&#39;bold&#39;,</span>
+ <span class="c1">#             fontsize=12)</span>
+
+
+ <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">biomarker</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mean_stats</span><span class="o">.</span><span class="n">iterrows</span><span class="p">(),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">idx</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMSE for </span><span class="si">{biomarker}</span><span class="s1">&#39;</span><span class="p">,</span>
+     <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+     <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+     <span class="n">cmap</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span> <span class="k">else</span> <span class="s1">&#39;royalblue&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">]</span>
+     <span class="n">scores</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">xerr</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">std_stats</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomarker</span><span class="p">,</span> <span class="p">:]),</span>
+                 <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RMSE Score&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+ <span class="c1"># Space plots out</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+ <span class="c1"># Show</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<img alt="RMSE for EOS, RMSE for MONO, RMSE for NEUT, RMSE for RBC, RMSE for WBC, RMSE for MCHC, RMSE for MCV, RMSE for LY, RMSE for HCT, RMSE for RDW, RMSE for HGB, RMSE for MCH, RMSE for PLT, RMSE for MPV" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_1_001.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.831 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-1-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/d690d3706c39e7e4a086d70819e779ce/plot_iter_imputer_exp1_1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1_1.py</span></code></a></p>
@@ -1136,7 +1019,7 @@ K-Fold Cross Validation without outliers.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../widgets/index.html" class="btn btn-neutral float-right" title="The Widgets’ gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plot_iter_imputer_exp1_2.html" class="btn btn-neutral float-right" title="Iterative Imputer Experiment I.II" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="plot_iter_imputer_exp1.html" class="btn btn-neutral float-left" title="Iterative Imputer Experiment I" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

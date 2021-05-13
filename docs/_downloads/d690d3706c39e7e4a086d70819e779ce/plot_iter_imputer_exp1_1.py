@@ -2,34 +2,110 @@
 Iterative Imputer Experiment I.I
 ===========================================
 
-Single biomarker removal experiment with
-K-Fold Cross Validation without outliers.
+Single biomarker removal using ``sklearn``
+methods only.
 
 """
+
 #######################################
 # -------------------------------------
-# Libraries import 
+# Libraries import
 # -------------------------------------
 
-import numpy as np 
+# Libraries generic
+import numpy as np
 import pandas as pd
+import sklearn
 import matplotlib.pyplot as plt
+
+# Libraries sklearn
+from sklearn.pipeline import Pipeline
 from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_validate
+from sklearn.preprocessing import StandardScaler
+
+# Regressors
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 from sklearn.linear_model import BayesianRidge
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import SGDRegressor
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 from xgboost import XGBRegressor
-from sklearn.experimental import enable_iterative_imputer
-from sklearn.impute import IterativeImputer
-from sklearn.impute import SimpleImputer
-from sklearn import preprocessing
-import warnings
-warnings.filterwarnings("ignore")
+
+# Metrics
+from sklearn.metrics import make_scorer
+from sklearn.metrics import mean_squared_error
+
+# Custom Packages
+from pkgname.utils.load_dataset import *
 from pkgname.utils.iter_imp import *
+from pkgname.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
+
+#######################################
+# -------------------------------------
+# Define tuned estimators
+# -------------------------------------
+_TUNED_ESTIMATORS = {
+    'lr': LinearRegression(),
+    'bridge': BayesianRidge(
+        alpha_1=1e-05,
+        alpha_2=1e-07,
+        lambda_1=1e-07,
+        lambda_2=1e-05,
+    ),
+    'dt': DecisionTreeRegressor(
+        criterion='mse',
+        splitter='best',
+        max_depth=8,
+        max_leaf_nodes=15,
+        min_samples_leaf=8,
+        min_samples_split=8,
+    ),
+    'etr': ExtraTreesRegressor(
+        n_estimators=100,
+        criterion='mse',
+        bootstrap=False,
+        warm_start=False,
+        n_jobs=-1,
+    ),
+    'sgd-ls': SGDRegressor(
+        alpha=1e-4,
+        epsilon=0.05,
+        learning_rate='adaptive',
+        loss='squared_loss',
+        early_stopping=True,
+        warm_start=True,
+    ),
+    'sgd-sv': SGDRegressor(
+        alpha=1e-4,
+        epsilon=0.01,
+        learning_rate='adaptive',
+        loss='squared_epsilon_insensitive',
+        early_stopping=True,
+        warm_start=True,
+    ),
+    'knn': KNeighborsRegressor(
+        n_neighbors=8,
+        weights='distance',
+        n_jobs=-1,
+    ),
+    'xgb': XGBRegressor(),
+    'mlp': MLPRegressor(
+        alpha=1e-4,
+        hidden_layer_sizes=32,
+        solver='adam',
+        learning_rate='invscaling',
+        warm_start=True,
+        early_stopping=True,
+    ),
+    'sir': SimpleImputerRegressor(
+        strategy='median'
+    ),
+}
 
 #######################################
 # -------------------------------------
@@ -37,7 +113,7 @@ from pkgname.utils.iter_imp import *
 # -------------------------------------
 
 # Set relative data path and set FBC panel list
-path_data = 'datasets/Transformed_First_FBC_dataset.csv'
+path_data = '../resources/datasets/nhs/Transformed_First_FBC_dataset.csv'
 
 FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                 "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
@@ -48,187 +124,200 @@ df = pd.read_csv(path_data).dropna(subset=['pid'])
 
 df.reset_index(drop=True, inplace=True)
 
-#######################################
-# -------------------------------------
+# Obtain the biomarkers DataFrame only
+raw_data = df[FBC_CODES].dropna(subset=FBC_CODES)
+
 # Remove outliers from dataset
-# -------------------------------------
+complete_profiles, _ = remove_data_outliers(raw_data)
 
-# Obtain the biomarkers DataFrame with outliers
-biomarkers_raw = df[FBC_CODES].dropna(subset=FBC_CODES)
+# Constant variables to drop
+DROP_FEATURES = ['BASO', 'NRBCA']
 
-
-# Remove values based on Q(1/3) -+ 1.5 * IQR method
-q1, q3 = biomarkers_raw.quantile(0.25), biomarkers_raw.quantile(0.75)
-IQR = q3 - q1
-lower_bound = q1 - (1.5 * IQR)
-upper_bound = q3 + (1.5 * IQR)
-
-# New biomarkers dataframe with outlier values removed
-biomarkers_df = biomarkers_raw[~((biomarkers_raw < lower_bound) | 
-(biomarkers_raw > upper_bound)).any(axis=1)]
-
-# Make dataset copy
-biomarkers_original_df_copy = biomarkers_df.copy(deep=True)
-
-# Store column names
-cols = [col for col in biomarkers_df.columns]
-
-# Convert to array for processing 
-biomarkers_data = biomarkers_df.values
+# Complete profiles for complete case analysis
+complete_profiles = complete_profiles.drop(DROP_FEATURES, axis=1)
 
 #######################################
 # -------------------------------------
-# Biomarker correlations
+# Correlation matrix
 # -------------------------------------
 
-# Obtain highest correlation pairs Pearson Correlation Coefficient
-biomarkers_highest_corr = corr_pairs(biomarkers_df)
+# Calculate correlation matrix using Pearson Correlation Coefficient
+corr_mat = complete_profiles.corr(method='pearson')
 
-# Find biomarkers that are to be dropped from the dataset
-biomarkers_to_drop = np.unique(biomarkers_highest_corr[['var1', 'var2']].values)
-
-print("\nBiomarkers with high correlations: ", biomarkers_to_drop)
-
-# DataFrame to store all experiment MSE scores
-rmse_score_df = pd.DataFrame(index=biomarkers_df.columns)
-rmse_score_df.index.names = ['Biomarker']
-rmsle_score_df = rmse_score_df.copy(deep=True)
+# Show
+print("\nData:")
+print(complete_profiles)
+print("\nCorrelation (pearson):")
+print(corr_mat)
 
 #######################################
 # -------------------------------------
-# K-Fold Cross Validation (K = 5)
+# Obtain evaluation scores
 # -------------------------------------
 
-# Define min-max scaler and normalise dataset
-min_max_scaler = preprocessing.StandardScaler()
+# Number of splits
+n_splits = 5
 
-# Initialise 5-Fold cross validation
-kf5 = KFold(n_splits=5, shuffle=False, random_state=None)
+# Create Kfold instance
+skf = KFold(n_splits=n_splits, shuffle=False)
 
-# Temporary mse_score_df to store mse score for each fold
-temp_rmse_score_df = rmse_score_df.copy(deep=True)
-temp_rmsle_score_df = rmse_score_df.copy(deep=True)
-
-
-#######################################
-# -------------------------------------
-# Define estimators 
-# -------------------------------------
-
-estimators = {
-    'Bayesian Ridge': BayesianRidge(),
-    'Decision Tree': DecisionTreeRegressor(),
-    'Random Forest': ExtraTreesRegressor(),
-    'XGBoost': XGBRegressor(),
-    'K-NN': KNeighborsRegressor(weights='distance'),
-    'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
-    early_stopping=True),
-    'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
-    'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
-    early_stopping=True),
-    'MLP': MLPRegressor(hidden_layer_sizes=32, 
-    early_stopping=True, max_iter=100),
-    'Simple Median': SimpleImputer(strategy='median'),
+# Scoring
+scoring = {
+    'nmae': 'neg_mean_absolute_error', # MAE
+    'nmse': 'neg_mean_squared_error',       # MSE
+    'nrmse': 'neg_root_mean_squared_error', # RMSE
+    #'norm_rmse': make_scorer(norm_rmse) # NRMSE
 }
 
-#######################################
-# -------------------------------------
-# Predict values using imputer 
-# -------------------------------------
+# Compendium of results
+iir_results = pd.DataFrame()
 
-# Run 5-fold CV for each estimator method
-for method, imputer_estimator in estimators.items():
-    for k, (train_idx, test_idx) in enumerate(kf5.split(biomarkers_data)):
+# Create a list of estimators
+ESTIMATORS = [
+    # 'lr',
+    # 'bridge',
+    # 'dt',
+    # 'etr',
+    # 'sgd-ls',
+    # 'sgd-sv',
+    # 'knn',
+    # 'xgb',
+    # 'sir',
+]
 
-        # Obtain 1-fold test and 4-fold train sets 
-        train_df = biomarkers_df.iloc[train_idx]
-        val_scaled =  min_max_scaler.fit(train_df)
-        train_scaled = val_scaled.transform(train_df)
-        train_scaled_df = pd.DataFrame(train_scaled)
-        train_scaled_copy_df = train_scaled_df.copy(deep=True)
-        
-        test_df = biomarkers_df.iloc[test_idx]
-        test_df.columns = [x for x in range(test_df.shape[1])]
-        test_scaled = val_scaled.transform(test_df)
-        test_scaled_df = pd.DataFrame(test_scaled)
-        test_scaled_copy_df = test_scaled_df.copy(deep=True)
+# For each estimator
+for i, est in enumerate(ESTIMATORS):
 
-        # Define imputer
-        if method == 'Simple Median':
-            imputer = imputer_estimator
-        else:
-            imputer = IterativeImputer(estimator=imputer_estimator)
-        
-        # Fit on the dataset
-        trained_imputer = imputer.fit(train_scaled_df)
+    data = pd.DataFrame()
 
-        # Test each biomarker independently
-        for biomarker in test_scaled_df.columns:
-
-            # Use a clean copy of the normalised data set
-            test_with_nan = test_scaled_df.copy(deep=True)
-
-            # Strictly set every biomarker value to NaN
-            col_pos = test_with_nan.columns.get_loc(biomarker)
-            test_with_nan.iloc[::1, col_pos] = np.nan
-
-            # Transform test data using trained imputer
-            test_transformed_data = trained_imputer.transform(test_with_nan)
-
-            # Make dataframe of imputed data
-            imputed_data = pd.DataFrame(data=test_transformed_data, 
-            index=[i for i in range(test_transformed_data.shape[0])], 
-            columns=test_scaled_df.columns)
-
-            # Inverse transform the scaled values
-            test_og_data = abs(val_scaled.inverse_transform(imputed_data))
-
-            imputed_data_og = pd.DataFrame(data=test_og_data,
-            index=[i for i in range(test_transformed_data.shape[0])], 
-            columns=test_scaled_df.columns)
-
-            # Compute true and obtain real value
-            val_pred = imputed_data_og[biomarker].values
-            val_true = test_df[biomarker].values
-
-            # Calculate MSE scores from the true and predicted values
-            rmse_score = get_metric_scores(val_true, val_pred, 'RMSE')
-            rmsle_score = get_metric_scores(val_true, val_pred, 'RMSLE')
-
-            # Store in temp_mse_score_df and temp_rmsle_score_df 
-            temp_rmse_score_df.loc[temp_rmse_score_df.index[biomarker], f'K-Fold: {k+1}'] = rmse_score
-            temp_rmsle_score_df.loc[temp_rmsle_score_df.index[biomarker], f'K-Fold: {k+1}'] = rmsle_score
+    # Check if estimator has been defined else skip
+    if est not in _TUNED_ESTIMATORS:
+        continue
     
-    # Calculate mean MSE score for each biomarker across the 5-folds
-    rmse_score_df[f'{method}'] = temp_rmse_score_df.mean(axis=1)
-    rmsle_score_df[f'{method}'] = temp_rmsle_score_df.mean(axis=1)
+    estimator = _TUNED_ESTIMATORS[est]
+    
+    if estimator != 'sir':
+        imputer = IterativeImputerRegressor(estimator=estimator)
+    else:
+        imputer = estimator
+
+    for biomarker in complete_profiles:
+
+        aux = complete_profiles.copy(deep=True)
+        X = aux[[x for x in aux.columns if x != biomarker]]
+        y = aux[biomarker]
+
+        # Information
+        print("\n%s. Evaluating... %s for biomarker... %s" % (i, est, biomarker))
+
+        # Create pipeline
+        pipe = Pipeline(steps=[ ('std', StandardScaler()),
+                                (est, imputer)],
+                        verbose=True)
+
+        # Obtain scores for each fold using cross_validate
+        scores = cross_validate(pipe, 
+                                X, 
+                                y, 
+                                scoring=scoring, 
+                                cv=skf, 
+                                return_train_score=True, 
+                                n_jobs=-1, 
+                                verbose=0)
+        
+        # Extract results
+        results = pd.DataFrame(scores)
+        results.index = ['%s_%s_%s' % (biomarker, est, j)
+            for j in range(results.shape[0])]
+        
+        # Add to compendium and data
+        iir_results = iir_results.append(results)
+        data = data.append(results)
+        # data.to_csv(f'datasets/iir_{est}.csv')
+
 
 #######################################
 # -------------------------------------
-# Table of Results: RMSE
+# Save results
 # -------------------------------------
 
-rmse_score_df
+# Save
+# iir_results.to_csv('datasets/iir_results.csv')
 
-#######################################
-# -------------------------------------
-# Table of Results: RMSlE
-# -------------------------------------
-
-rmsle_score_df
 
 #######################################
 # -------------------------------------
-# Combined RMSE Plot for each biomarker
+# Analyse scores and test results
 # -------------------------------------
 
-# Plot horizontal bar graph 
-for biomarker, scores in rmse_score_df.iterrows():
-    plt.figure(figsize=(20,15))
-    plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
-    cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
-    scores.plot.barh(grid=True, color=cmap)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
-    plt.xlabel('RMSE Score', fontsize=18)
-    plt.show()
+# Create a list of estimators
+METHODS = [
+    'lr',
+    'bridge',
+    'dt',
+    'etr',
+    'sgd-ls',
+    'sgd-sv',
+    'knn',
+    'mlp',
+    # 'xgb',
+    'sir',
+]
+
+
+compendium = pd.read_csv('datasets/iir_results.csv', index_col=0)
+
+# Get mean and variance of RMSE scores
+all_scores = get_score_statistics(compendium, 'rmse')
+
+# Split scores to obtain score for each estimator
+split_scores = np.array_split(all_scores, len(METHODS))
+
+# Stack scores horizontally for easier plotting
+hsplit_scores = np.hstack((split_scores))
+
+# Create DataFrame for mean and std dev statistics
+statistics = pd.DataFrame(hsplit_scores, index=complete_profiles.columns)
+
+# Split mean and std dev statistics
+mean_stats, std_stats = statistics.iloc[:,::2], statistics.iloc[:,1::2]
+
+# Rename columns to match algorithms
+mean_stats.columns, std_stats.columns = METHODS, METHODS
+
+print("Mean RMSE Statistics: ")
+
+mean_stats
+
+#######################################
+# -------------------------------------
+# Plot results
+# -------------------------------------
+
+plt.figure(figsize=(20,40))
+
+# Set single title for all figures
+# plt.suptitle('Iterative Imputer RMSE scores for complete profiles', 
+#             fontweight='bold', 
+#             fontsize=12)
+
+
+for idx, (biomarker, scores) in enumerate(mean_stats.iterrows(), start=1):
+    plt.subplot(7,2,idx)
+    plt.title(f'RMSE for {biomarker}', 
+    fontweight='bold', 
+    fontsize=14)
+    cmap = ['green' if (x == min(scores)) else 'royalblue' for x in scores]
+    scores.plot.barh(grid=True, 
+                xerr=list(std_stats.loc[biomarker, :]), 
+                align='center', 
+                color=cmap)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.xlabel('RMSE Score', fontsize=16)
+    
+# Space plots out
+plt.tight_layout()
+
+# Show
+plt.show()

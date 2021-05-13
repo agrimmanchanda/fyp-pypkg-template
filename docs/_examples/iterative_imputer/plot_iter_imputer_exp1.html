@@ -111,6 +111,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_1.html">Iterative Imputer Experiment I.I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_2.html">Iterative Imputer Experiment I.II</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
@@ -358,17 +359,17 @@ K-Fold Cross Validation.</p>
 120
 121</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">estimators</span> <span class="o">=</span> <span class="p">{</span>
      <span class="s1">&#39;Bayesian Ridge&#39;</span><span class="p">:</span> <span class="n">BayesianRidge</span><span class="p">(),</span>
-     <span class="s1">&#39;Decision Tree&#39;</span><span class="p">:</span> <span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
-     <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">ExtraTreesRegressor</span><span class="p">(),</span>
-     <span class="s1">&#39;XGBoost&#39;</span><span class="p">:</span> <span class="n">XGBRegressor</span><span class="p">(),</span>
-     <span class="s1">&#39;K-NN&#39;</span><span class="p">:</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">),</span>
-     <span class="s1">&#39;Least Squares (SGD)&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;squared_loss&#39;</span><span class="p">,</span>
-     <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-     <span class="s1">&#39;Huber (SGD)&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;huber&#39;</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-     <span class="s1">&#39;Support Vector (SGD)&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;epsilon_insensitive&#39;</span><span class="p">,</span>
-     <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-     <span class="s1">&#39;MLP&#39;</span><span class="p">:</span> <span class="n">MLPRegressor</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-     <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+     <span class="c1"># &#39;Decision Tree&#39;: DecisionTreeRegressor(),</span>
+     <span class="c1"># &#39;Random Forest&#39;: ExtraTreesRegressor(),</span>
+     <span class="c1"># &#39;XGBoost&#39;: XGBRegressor(),</span>
+     <span class="c1"># &#39;K-NN&#39;: KNeighborsRegressor(weights=&#39;distance&#39;),</span>
+     <span class="c1"># &#39;Least Squares (SGD)&#39;: SGDRegressor(loss=&#39;squared_loss&#39;,</span>
+     <span class="c1"># early_stopping=True),</span>
+     <span class="c1"># &#39;Huber (SGD)&#39;: SGDRegressor(loss=&#39;huber&#39;, early_stopping=True),</span>
+     <span class="c1"># &#39;Support Vector (SGD)&#39;: SGDRegressor(loss=&#39;epsilon_insensitive&#39;,</span>
+     <span class="c1"># early_stopping=True),</span>
+     <span class="c1"># &#39;MLP&#39;: MLPRegressor(hidden_layer_sizes=32,</span>
+     <span class="c1"># early_stopping=True, max_iter=100),</span>
      <span class="s1">&#39;Simple Median&#39;</span><span class="p">:</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">),</span>
  <span class="p">}</span>
 </pre></div>
@@ -535,26 +536,10 @@ K-Fold Cross Validation.</p>
     <tr style="text-align: right;">
       <th></th>
       <th>Bayesian Ridge</th>
-      <th>Decision Tree</th>
-      <th>Random Forest</th>
-      <th>XGBoost</th>
-      <th>K-NN</th>
-      <th>Least Squares (SGD)</th>
-      <th>Huber (SGD)</th>
-      <th>Support Vector (SGD)</th>
-      <th>MLP</th>
       <th>Simple Median</th>
     </tr>
     <tr>
       <th>Biomarker</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -563,209 +548,81 @@ K-Fold Cross Validation.</p>
     <tr>
       <th>EOS</th>
       <td>0.090416</td>
-      <td>0.305212</td>
-      <td>0.260839</td>
-      <td>0.188981</td>
-      <td>0.292814</td>
-      <td>0.219964</td>
-      <td>0.285558</td>
-      <td>0.239270</td>
-      <td>0.098864</td>
       <td>0.304076</td>
     </tr>
     <tr>
       <th>MONO</th>
       <td>0.092176</td>
-      <td>0.342353</td>
-      <td>0.240731</td>
-      <td>0.245073</td>
-      <td>0.345562</td>
-      <td>0.198444</td>
-      <td>0.294941</td>
-      <td>0.124932</td>
-      <td>0.109288</td>
       <td>0.439067</td>
     </tr>
     <tr>
       <th>BASO</th>
       <td>0.055443</td>
-      <td>0.079977</td>
-      <td>0.053054</td>
-      <td>0.052892</td>
-      <td>0.056045</td>
-      <td>0.084843</td>
-      <td>0.058567</td>
-      <td>0.057632</td>
-      <td>0.052064</td>
       <td>0.059771</td>
     </tr>
     <tr>
       <th>NEUT</th>
       <td>0.093367</td>
-      <td>1.431575</td>
-      <td>1.772878</td>
-      <td>1.979962</td>
-      <td>2.271098</td>
-      <td>0.091764</td>
-      <td>0.091504</td>
-      <td>0.154498</td>
-      <td>0.124754</td>
       <td>4.670707</td>
     </tr>
     <tr>
       <th>RBC</th>
       <td>0.097375</td>
-      <td>0.052049</td>
-      <td>0.027155</td>
-      <td>0.034837</td>
-      <td>0.162829</td>
-      <td>0.096685</td>
-      <td>0.090866</td>
-      <td>0.091816</td>
-      <td>0.039636</td>
       <td>0.942473</td>
     </tr>
     <tr>
       <th>WBC</th>
       <td>0.093700</td>
-      <td>2.584008</td>
-      <td>1.576014</td>
-      <td>1.509240</td>
-      <td>2.275588</td>
-      <td>0.104852</td>
-      <td>0.091263</td>
-      <td>0.177722</td>
-      <td>0.148315</td>
       <td>5.568637</td>
     </tr>
     <tr>
       <th>MCHC</th>
       <td>7.525320</td>
-      <td>3.755485</td>
-      <td>2.963261</td>
-      <td>2.889057</td>
-      <td>8.857723</td>
-      <td>7.689674</td>
-      <td>15.853726</td>
-      <td>8.378374</td>
-      <td>2.728102</td>
       <td>40.415635</td>
     </tr>
     <tr>
       <th>MCV</th>
       <td>1.556525</td>
-      <td>0.625746</td>
-      <td>0.515977</td>
-      <td>0.495091</td>
-      <td>3.084425</td>
-      <td>1.609849</td>
-      <td>1.710076</td>
-      <td>1.619074</td>
-      <td>0.666546</td>
       <td>13.382875</td>
     </tr>
     <tr>
       <th>LY</th>
       <td>0.093676</td>
-      <td>1.603439</td>
-      <td>1.209676</td>
-      <td>1.210287</td>
-      <td>1.002147</td>
-      <td>0.098778</td>
-      <td>0.107657</td>
-      <td>0.096887</td>
-      <td>0.129428</td>
       <td>2.212157</td>
     </tr>
     <tr>
       <th>HCT</th>
       <td>0.004903</td>
-      <td>0.004083</td>
-      <td>0.002688</td>
-      <td>0.003267</td>
-      <td>0.014641</td>
-      <td>0.004953</td>
-      <td>0.004967</td>
-      <td>0.004853</td>
-      <td>0.003506</td>
       <td>0.083004</td>
     </tr>
     <tr>
       <th>RDW</th>
       <td>2.013908</td>
-      <td>2.648567</td>
-      <td>1.852919</td>
-      <td>1.843018</td>
-      <td>2.022970</td>
-      <td>2.078274</td>
-      <td>2.084273</td>
-      <td>2.042091</td>
-      <td>1.834157</td>
       <td>2.990355</td>
     </tr>
     <tr>
       <th>HGB</th>
       <td>1.907417</td>
-      <td>1.488119</td>
-      <td>1.009686</td>
-      <td>0.896534</td>
-      <td>4.664416</td>
-      <td>1.893824</td>
-      <td>2.078309</td>
-      <td>2.023520</td>
-      <td>0.837621</td>
       <td>27.205640</td>
     </tr>
     <tr>
       <th>MCH</th>
       <td>0.458002</td>
-      <td>0.367536</td>
-      <td>0.280342</td>
-      <td>0.280138</td>
-      <td>1.073319</td>
-      <td>0.475640</td>
-      <td>0.467966</td>
-      <td>0.469498</td>
-      <td>0.411149</td>
       <td>4.472741</td>
     </tr>
     <tr>
       <th>PLT</th>
       <td>103.674672</td>
-      <td>134.178854</td>
-      <td>93.289505</td>
-      <td>93.715864</td>
-      <td>102.295967</td>
-      <td>113.965805</td>
-      <td>107.444244</td>
-      <td>105.965451</td>
-      <td>95.717171</td>
       <td>118.180194</td>
     </tr>
     <tr>
       <th>MPV</th>
       <td>1.155187</td>
-      <td>1.569796</td>
-      <td>1.101126</td>
-      <td>1.101872</td>
-      <td>1.208614</td>
-      <td>1.156252</td>
-      <td>1.175385</td>
-      <td>1.153285</td>
-      <td>1.088252</td>
       <td>1.599621</td>
     </tr>
     <tr>
       <th>NRBCA</th>
       <td>0.116010</td>
-      <td>0.160225</td>
-      <td>0.115469</td>
-      <td>0.125474</td>
-      <td>0.119666</td>
-      <td>0.119678</td>
-      <td>0.114297</td>
-      <td>0.113981</td>
-      <td>0.114189</td>
       <td>0.114509</td>
     </tr>
   </tbody>
@@ -799,26 +656,10 @@ K-Fold Cross Validation.</p>
     <tr style="text-align: right;">
       <th></th>
       <th>Bayesian Ridge</th>
-      <th>Decision Tree</th>
-      <th>Random Forest</th>
-      <th>XGBoost</th>
-      <th>K-NN</th>
-      <th>Least Squares (SGD)</th>
-      <th>Huber (SGD)</th>
-      <th>Support Vector (SGD)</th>
-      <th>MLP</th>
       <th>Simple Median</th>
     </tr>
     <tr>
       <th>Biomarker</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -827,209 +668,81 @@ K-Fold Cross Validation.</p>
     <tr>
       <th>EOS</th>
       <td>0.058023</td>
-      <td>0.164637</td>
-      <td>0.129298</td>
-      <td>0.099190</td>
-      <td>0.155680</td>
-      <td>0.115297</td>
-      <td>0.145054</td>
-      <td>0.115400</td>
-      <td>0.058588</td>
       <td>0.163007</td>
     </tr>
     <tr>
       <th>MONO</th>
       <td>0.044494</td>
-      <td>0.134862</td>
-      <td>0.090082</td>
-      <td>0.091249</td>
-      <td>0.161771</td>
-      <td>0.093436</td>
-      <td>0.128629</td>
-      <td>0.058195</td>
-      <td>0.045382</td>
       <td>0.205536</td>
     </tr>
     <tr>
       <th>BASO</th>
       <td>0.040649</td>
-      <td>0.058906</td>
-      <td>0.041344</td>
-      <td>0.040908</td>
-      <td>0.044210</td>
-      <td>0.061600</td>
-      <td>0.046107</td>
-      <td>0.045070</td>
-      <td>0.040214</td>
       <td>0.047335</td>
     </tr>
     <tr>
       <th>NEUT</th>
       <td>0.017721</td>
-      <td>0.068216</td>
-      <td>0.059436</td>
-      <td>0.048669</td>
-      <td>0.204093</td>
-      <td>0.018508</td>
-      <td>0.017512</td>
-      <td>0.033333</td>
-      <td>0.026127</td>
       <td>0.539328</td>
     </tr>
     <tr>
       <th>RBC</th>
       <td>0.022307</td>
-      <td>0.011307</td>
-      <td>0.006865</td>
-      <td>0.008195</td>
-      <td>0.034709</td>
-      <td>0.022423</td>
-      <td>0.019750</td>
-      <td>0.020735</td>
-      <td>0.011351</td>
       <td>0.255991</td>
     </tr>
     <tr>
       <th>WBC</th>
       <td>0.011853</td>
-      <td>0.039574</td>
-      <td>0.024181</td>
-      <td>0.022305</td>
-      <td>0.122869</td>
-      <td>0.014022</td>
-      <td>0.011857</td>
-      <td>0.031302</td>
-      <td>0.021956</td>
       <td>0.482568</td>
     </tr>
     <tr>
       <th>MCHC</th>
       <td>0.267574</td>
-      <td>0.048668</td>
-      <td>0.041745</td>
-      <td>0.034636</td>
-      <td>0.048739</td>
-      <td>0.260958</td>
-      <td>0.574340</td>
-      <td>0.217727</td>
-      <td>0.068937</td>
       <td>0.694707</td>
     </tr>
     <tr>
       <th>MCV</th>
       <td>0.087924</td>
-      <td>0.022012</td>
-      <td>0.020925</td>
-      <td>0.018692</td>
-      <td>0.039063</td>
-      <td>0.140228</td>
-      <td>0.071851</td>
-      <td>0.085923</td>
-      <td>0.024786</td>
       <td>0.548657</td>
     </tr>
     <tr>
       <th>LY</th>
       <td>0.031921</td>
-      <td>0.150554</td>
-      <td>0.095274</td>
-      <td>0.073448</td>
-      <td>0.268356</td>
-      <td>0.034517</td>
-      <td>0.031124</td>
-      <td>0.034812</td>
-      <td>0.043957</td>
       <td>0.367702</td>
     </tr>
     <tr>
       <th>HCT</th>
       <td>0.003684</td>
-      <td>0.003005</td>
-      <td>0.001982</td>
-      <td>0.002423</td>
-      <td>0.010828</td>
-      <td>0.003699</td>
-      <td>0.003720</td>
-      <td>0.003697</td>
-      <td>0.002598</td>
       <td>0.064013</td>
     </tr>
     <tr>
       <th>RDW</th>
       <td>0.128437</td>
-      <td>0.159858</td>
-      <td>0.113408</td>
-      <td>0.112437</td>
-      <td>0.124416</td>
-      <td>0.140932</td>
-      <td>0.127645</td>
-      <td>0.127599</td>
-      <td>0.113046</td>
       <td>0.353209</td>
     </tr>
     <tr>
       <th>HGB</th>
       <td>0.075476</td>
-      <td>0.022233</td>
-      <td>0.012644</td>
-      <td>0.012813</td>
-      <td>0.046228</td>
-      <td>0.087693</td>
-      <td>0.034279</td>
-      <td>0.101344</td>
-      <td>0.054876</td>
       <td>0.609722</td>
     </tr>
     <tr>
       <th>MCH</th>
       <td>0.027191</td>
-      <td>0.023294</td>
-      <td>0.017023</td>
-      <td>0.018589</td>
-      <td>0.037760</td>
-      <td>0.031595</td>
-      <td>0.025874</td>
-      <td>0.042257</td>
-      <td>0.030058</td>
       <td>0.420535</td>
     </tr>
     <tr>
       <th>PLT</th>
       <td>0.547767</td>
-      <td>0.588677</td>
-      <td>0.425115</td>
-      <td>0.423706</td>
-      <td>0.451022</td>
-      <td>0.591132</td>
-      <td>0.496879</td>
-      <td>0.484414</td>
-      <td>0.499812</td>
       <td>0.827330</td>
     </tr>
     <tr>
       <th>MPV</th>
       <td>0.123007</td>
-      <td>0.166073</td>
-      <td>0.116171</td>
-      <td>0.116135</td>
-      <td>0.127330</td>
-      <td>0.124521</td>
-      <td>0.123933</td>
-      <td>0.121831</td>
-      <td>0.115579</td>
       <td>0.295575</td>
     </tr>
     <tr>
       <th>NRBCA</th>
       <td>0.065651</td>
-      <td>0.086275</td>
-      <td>0.064277</td>
-      <td>0.068236</td>
-      <td>0.066385</td>
-      <td>0.071158</td>
-      <td>0.062206</td>
-      <td>0.061966</td>
-      <td>0.063214</td>
       <td>0.062462</td>
     </tr>
   </tbody>
@@ -1095,7 +808,7 @@ K-Fold Cross Validation.</p>
 <li><img alt="RMSE Scores for Biomarker: NRBCA with Different Iterative Imputation Methods" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_iter_imputer_exp1_016.png" />
 </li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 109 minutes  49.073 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  37.551 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2a01ce5b96ea580daad5e568559ad093/plot_iter_imputer_exp1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1.py</span></code></a></p>

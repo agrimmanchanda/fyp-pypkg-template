@@ -14,6 +14,9 @@ import seaborn as sns
 from scipy import stats
 import warnings
 warnings.filterwarnings("ignore")
+from sklearn import preprocessing
+from pkgname.utils.load_dataset import *
+
 
 #######################################
 # -------------------------------------
@@ -21,7 +24,7 @@ warnings.filterwarnings("ignore")
 # -------------------------------------
 
 # Set relative data path and set FBC panel list
-path_data = 'datasets/Transformed_First_FBC_dataset.csv'
+path_data = '../resources/datasets/nhs/Transformed_First_FBC_dataset.csv'
 
 FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                 "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
@@ -34,72 +37,98 @@ df.reset_index(drop=True, inplace=True)
 
 #######################################
 # -------------------------------------
-# Preprocessing step: obtain FBC panel
+# Violin plots for raw data
 # -------------------------------------
 
 # Obtain the biomarkers DataFrame only
 biomarkers_df = df[FBC_CODES].dropna(subset=FBC_CODES)
-biomarkers_df_copy = biomarkers_df.copy(deep=True)
-biomarkers_data = biomarkers_df.values
 
-######################################################
-# ----------------------------------------------------
-# Plot distributions and histograms for each biomarker
-# ----------------------------------------------------
+# Set figure size
+plt.figure(figsize=(15,15))
 
-for col in biomarkers_df_copy.columns:
-    plt.figure(figsize=(20,10))
-    plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
-    fontweight='bold', fontsize=25)
+# Set single title for all figures
+plt.suptitle('Violin plot for raw data', 
+            fontweight='bold', 
+            fontsize=20)
+
+for plot_idx, biomarker in enumerate(biomarkers_df, start=1):
     
-    plt.subplot(1,2,1)
-    sns.distplot(biomarkers_df[col].values, bins=50, 
-    kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
-    plt.xlabel(f'{col}', fontsize=18)
-    plt.ylabel('Density', fontsize=18)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
+    plt.subplot(4,4,plot_idx)
     
-    plt.subplot(1,2,2)
-    sns.boxplot(x=biomarkers_df[col])
-    plt.xlabel(f'{col}', fontsize=18)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
+    sns.violinplot(data=biomarkers_df[biomarker], 
+                color='skyblue',
+                orient='h')
+    
+    plt.xticks(fontsize=12)
+    plt.xlabel(f'{biomarker}', 
+            fontweight='bold', 
+            fontsize=12)
+
+# Space out plots 
+plt.tight_layout()
+    
+# Show
+plt.show()
 
 #######################################
 # -------------------------------------
-# Plot same histograms without outliers
+# Violin plots without outliers
 # -------------------------------------
 
-# Remove data outliers based on absolute Z-Score value < 3
-#biomarkers_df[(np.abs(stats.zscore(biomarkers_df)) < 3).all(axis=1)]
+# Remove outliers from dataset
+complete_profiles, outlier_count = remove_data_outliers(biomarkers_df)
 
-# Remove values based on Q(1/3) -+ 1.5 * IQR method
-q1, q3 = biomarkers_df.quantile(0.25), biomarkers_df.quantile(0.75)
-IQR = q3 - q1
-lower_bound = q1 - (1.5 * IQR)
-upper_bound = q3 + (1.5 * IQR)
+# Set figure size
+plt.figure(figsize=(15,15))
 
-# New biomarkers dataframe with outlier values removed
-biomarkers_df_wo_outliers = biomarkers_df[~((biomarkers_df < lower_bound) | 
-(biomarkers_df > upper_bound)).any(axis=1)]
+# Set single title for all figures
+plt.suptitle('Violin plot for complete profiles', 
+            fontweight='bold', 
+            fontsize=20)
 
-# Plot distribution and boxplots 
-for col in biomarkers_df_wo_outliers.columns:
-    plt.figure(figsize=(20,10))
-    plt.suptitle(f'Distribution and boxplot for biomarker: {col}', 
-    fontweight='bold', fontsize=25)
+for plot_idx, biomarker in enumerate(complete_profiles, start=1):
     
-    plt.subplot(1,2,1)
-    sns.distplot(biomarkers_df_wo_outliers[col].values, bins=50, 
-    kde_kws={'color': 'red','linewidth': 2, }, hist_kws={'edgecolor':'black'})
-    plt.xlabel(f'{col}', fontsize=18)
-    plt.ylabel('Density', fontsize=18)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
+    plt.subplot(4,4,plot_idx)
     
-    plt.subplot(1,2,2)
-    sns.boxplot(x=biomarkers_df_wo_outliers[col])
-    plt.xlabel(f'{col}', fontsize=18)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
+    sns.violinplot(data=complete_profiles[biomarker], 
+                color='skyblue',
+                orient='h')
+    
+    plt.xticks(fontsize=12)
+    plt.xlabel(f'{biomarker}', 
+            fontweight='bold', 
+            fontsize=12)
+
+# Space out plots 
+plt.tight_layout()
+    
+# Show
+plt.show()
+
+#######################################
+# -------------------------------------
+# Jarque-Bera (JB) test for normality
+# -------------------------------------
+
+# Standardise data 
+std_complete_profiles = preprocessing.StandardScaler().fit_transform(complete_profiles)
+
+# Create DataFrame of standardised data
+norm_profiles = pd.DataFrame(data=std_complete_profiles, columns=complete_profiles.columns)
+
+# Dataframe to store JB Test 
+norm_scores = pd.DataFrame(columns=complete_profiles.columns)
+
+# Note: JB test is only valid on datasets with n > 2000 where n are samples
+# in the dataset. The complete profile data set contains 56271 records. 
+
+# Loop
+for biomarker in complete_profiles.columns:
+
+    # Calculate and store JB test statistic and p-value for each biomarker
+    jb_test = stats.jarque_bera(complete_profiles[biomarker])
+    norm_scores[biomarker] = jb_test
+
+norm_scores.index = ['Test Statistic', 'P-Value']
+
+norm_scores.T
