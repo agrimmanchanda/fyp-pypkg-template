@@ -70,12 +70,14 @@ sphinx_gallery_conf = {
     'examples_dirs': ['../../examples/tutorial',
                       '../../examples/widgets',
                     '../../examples/load_dataset',
-                    '../../examples/iterative_imputer'],
+                    '../../examples/iterative_imputer',
+                    '../../examples/bayesian_networks'],
     # path to where to save gallery generated output
     'gallery_dirs': ['../source/_examples/tutorial',
                      '../source/_examples/widgets',
                     '../source/_examples/load_dataset',
-                    '../source/_examples/iterative_imputer'],
+                    '../source/_examples/iterative_imputer',
+                    '../source/_examples/bayesian_networks'],
     # Other
     'line_numbers': True,
     'download_all_examples': False,

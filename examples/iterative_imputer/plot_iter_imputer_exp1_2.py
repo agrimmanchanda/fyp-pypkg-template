@@ -38,8 +38,8 @@ from sklearn.metrics import make_scorer
 from sklearn.metrics import mean_squared_error
 
 # Custom Packages
-from pkgname.utils.load_dataset import *
-from pkgname.utils.iter_imp import *
+from pkgname.utils.load_dataset import remove_data_outliers
+from pkgname.utils.iter_imp import corr_pairs, get_score_statistics
 from pkgname.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
 
 
