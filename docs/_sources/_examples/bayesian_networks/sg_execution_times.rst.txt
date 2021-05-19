@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr__examples_bayesian_networks_sg_execution_times:
+
+Computation times
+=================
+**00:03.507** total execution time for **_examples_bayesian_networks** files:
+
++-------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr__examples_bayesian_networks_plot_bayesnet_exp_1.py` (``plot_bayesnet_exp_1.py``) | 00:03.507 | 0.0 MB |
++-------------------------------------------------------------------------------------------------+-----------+--------+

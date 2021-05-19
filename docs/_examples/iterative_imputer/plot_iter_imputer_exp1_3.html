@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The Widgets’ gallery" href="../widgets/index.html" />
+    <link rel="next" title="Bayesian Networks" href="../bayesian_networks/index.html" />
     <link rel="prev" title="Iterative Imputer Experiment I.II" href="plot_iter_imputer_exp1_2.html" /> 
 </head>
 
@@ -112,6 +112,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../bayesian_networks/index.html">Bayesian Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
 </ul>
 
@@ -253,8 +254,8 @@ methods only.</p>
  <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
 
  <span class="c1"># Custom Packages</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="o">*</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.iter_imp</span> <span class="kn">import</span> <span class="o">*</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="n">remove_data_outliers</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.iter_imp</span> <span class="kn">import</span> <span class="n">corr_pairs</span><span class="p">,</span> <span class="n">get_score_statistics</span>
  <span class="kn">from</span> <span class="nn">pkgname.core.iter_imp</span> <span class="kn">import</span> <span class="n">IterativeImputerRegressor</span><span class="p">,</span> <span class="n">SimpleImputerRegressor</span>
 </pre></div>
 </td></tr></table></div>
@@ -464,21 +465,21 @@ methods only.</p>
 [56271 rows x 14 columns]
 
 Correlation (pearson):
-           EOS      MONO      NEUT       RBC       WBC      MCHC  ...       HCT       RDW       HGB       MCH       PLT       MPV
-EOS   1.000000  0.176592 -0.077021  0.076247  0.063383 -0.073132  ...  0.075691 -0.029017  0.063382 -0.046216  0.148320 -0.008346
-MONO  0.176592  1.000000  0.437707 -0.011525  0.565965 -0.006352  ... -0.011767  0.000838 -0.011822 -0.007282  0.191892  0.006449
-NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  0.014154  ... -0.147780  0.043472 -0.142903 -0.036335  0.204307 -0.015518
-RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  0.002774  ...  0.932916 -0.317913  0.921963 -0.301421  0.089001  0.169995
-WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  0.015221  ... -0.034098 -0.031387 -0.030376 -0.058005  0.275886  0.021949
-MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  1.000000  ... -0.009970 -0.237056  0.160611  0.391104 -0.087255 -0.041123
-MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355 -0.040685  ...  0.024410 -0.273143  0.016983  0.902952 -0.143448 -0.061824
-LY    0.289178  0.228941 -0.067306  0.381424  0.242921  0.021764  ...  0.368346 -0.258299  0.367455 -0.079429  0.227641  0.133033
-HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098 -0.009970  ...  1.000000 -0.445215  0.983795  0.018124  0.044596  0.156687
-RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387 -0.237056  ... -0.445215  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
-HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  0.160611  ...  0.983795 -0.479547  1.000000  0.084460  0.030526  0.148419
-MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  0.391104  ...  0.018124 -0.354513  0.084460  1.000000 -0.169143 -0.073755
-PLT   0.148320  0.191892  0.204307  0.089001  0.275886 -0.087255  ...  0.044596 -0.050207  0.030526 -0.169143  1.000000 -0.329940
-MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949 -0.041123  ...  0.156687 -0.129583  0.148419 -0.073755 -0.329940  1.000000
+           EOS      MONO      NEUT       RBC       WBC  ...       RDW       HGB       MCH       PLT       MPV
+EOS   1.000000  0.176592 -0.077021  0.076247  0.063383  ... -0.029017  0.063382 -0.046216  0.148320 -0.008346
+MONO  0.176592  1.000000  0.437707 -0.011525  0.565965  ...  0.000838 -0.011822 -0.007282  0.191892  0.006449
+NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  ...  0.043472 -0.142903 -0.036335  0.204307 -0.015518
+RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  ... -0.317913  0.921963 -0.301421  0.089001  0.169995
+WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  ... -0.031387 -0.030376 -0.058005  0.275886  0.021949
+MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  ... -0.237056  0.160611  0.391104 -0.087255 -0.041123
+MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355  ... -0.273143  0.016983  0.902952 -0.143448 -0.061824
+LY    0.289178  0.228941 -0.067306  0.381424  0.242921  ... -0.258299  0.367455 -0.079429  0.227641  0.133033
+HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098  ... -0.445215  0.983795  0.018124  0.044596  0.156687
+RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387  ...  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
+HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  ... -0.479547  1.000000  0.084460  0.030526  0.148419
+MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  ... -0.354513  0.084460  1.000000 -0.169143 -0.073755
+PLT   0.148320  0.191892  0.204307  0.089001  0.275886  ... -0.050207  0.030526 -0.169143  1.000000 -0.329940
+MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 -0.073755 -0.329940  1.000000
 
 [14 rows x 14 columns]
 </pre></div>
@@ -850,7 +851,7 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949 -0.041123  ...  0.156687 
 </div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  21.912 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.543 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-3-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7ab46565e64bf3b10afcb5e06b031a4d/plot_iter_imputer_exp1_3.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1_3.py</span></code></a></p>
@@ -869,7 +870,7 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949 -0.041123  ...  0.156687 
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../widgets/index.html" class="btn btn-neutral float-right" title="The Widgets’ gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../bayesian_networks/index.html" class="btn btn-neutral float-right" title="Bayesian Networks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="plot_iter_imputer_exp1_2.html" class="btn btn-neutral float-left" title="Iterative Imputer Experiment I.II" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

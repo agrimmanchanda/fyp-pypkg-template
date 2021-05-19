@@ -111,6 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_3.html">Iterative Imputer Experiment I.III</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../bayesian_networks/index.html">Bayesian Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
 </ul>
 
@@ -246,8 +247,8 @@ to download the full example code</p>
  <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
 
  <span class="c1"># Custom Packages</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="o">*</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.iter_imp</span> <span class="kn">import</span> <span class="o">*</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="n">remove_data_outliers</span>
+ <span class="kn">from</span> <span class="nn">pkgname.utils.iter_imp</span> <span class="kn">import</span> <span class="n">corr_pairs</span><span class="p">,</span> <span class="n">get_score_statistics</span>
  <span class="kn">from</span> <span class="nn">pkgname.core.iter_imp</span> <span class="kn">import</span> <span class="n">IterativeImputerRegressor</span><span class="p">,</span> <span class="n">SimpleImputerRegressor</span>
 </pre></div>
 </td></tr></table></div>
@@ -706,7 +707,7 @@ MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 
  <span class="c1"># compendium.to_csv(&#39;datasets/compendium.csv&#39;)</span>
 </pre></div>
 </td></tr></table></div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.656 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.401 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp1-2-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fbf3679cb60ba7e9dff27bb2d406ce0a/plot_iter_imputer_exp1_2.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp1_2.py</span></code></a></p>

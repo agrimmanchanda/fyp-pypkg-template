@@ -62,8 +62,8 @@ Libraries import
     from sklearn.metrics import mean_squared_error
 
     # Custom Packages
-    from pkgname.utils.load_dataset import *
-    from pkgname.utils.iter_imp import *
+    from pkgname.utils.load_dataset import remove_data_outliers
+    from pkgname.utils.iter_imp import corr_pairs, get_score_statistics
     from pkgname.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
 
 
@@ -416,7 +416,7 @@ Show and save
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.656 seconds)
+   **Total running time of the script:** ( 0 minutes  0.401 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp1_2.py:
