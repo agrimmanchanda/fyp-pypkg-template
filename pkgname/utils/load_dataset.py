@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from contextlib import contextmanager,redirect_stderr,redirect_stdout
 from os import devnull
+import sys, os
 
 # Function to remove outliers based using Q(1/3) -+ 1.5 * IQR
 def remove_data_outliers(df, coeff=1.5, tol=0):
@@ -37,3 +38,14 @@ def suppress_stdout_stderr():
     with open(devnull, 'w') as fnull:
         with redirect_stderr(fnull) as err, redirect_stdout(fnull) as out:
             yield (err, out)
+
+# Code snippet from: shorturl.at/lquDN
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = old_stdout

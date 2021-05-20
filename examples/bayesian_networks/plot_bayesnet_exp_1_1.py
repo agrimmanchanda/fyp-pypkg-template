@@ -38,6 +38,7 @@ from sklearn.metrics import mean_squared_error
 from pkgname.utils.load_dataset import remove_data_outliers
 from pkgname.core.bayes_net import BNImputer, learn_model_structure
 from pkgname.utils.bayes_net import get_unique_edges
+from pkgname.utils.load_dataset import suppress_stdout
 
 #######################################
 # -------------------------------------
@@ -138,41 +139,33 @@ for cpd in model.get_cpds():
 
 #######################################
 # -------------------------------------
-# Generate test set data
+# Remove single biomarker
 # -------------------------------------
 
-# test with only top 20 columns and set 10% data to NaN
+bn_test = bn_test[:20]
 
-# for col in test.columns:
-#     test.loc[test.sample(frac=0.1).index, col] = np.nan
+rmse_scores = {}
 
-aux_test = bn_test.copy()
+for idx, col in enumerate(bn_test):
 
-aux_test.EOS = np.nan
+    aux = bn_test.copy()
 
-# show test dataframe with NaN values
+    aux[col] = np.nan
 
-aux_test = aux_test
+    print(aux)
 
-print(aux_test)
+    with suppress_stdout():
+        pred = model.imputer(aux)
 
-#######################################
-# -------------------------------------
-# Inference using Variable Elimination
-# -------------------------------------
+    ytrue = est.inverse_transform(bn_test)[:, idx]
+    ypred = est.inverse_transform(pred)[:, idx]
 
-pred = model.imputer(aux_test)
+    rmse = mean_squared_error(ytrue, ypred, squared=False)
 
-print(pred)
+    rmse_scores[col] = rmse
 
-#######################################
-# -------------------------------------
-# Measure RMSE
-# -------------------------------------
+    print(f'RMSE for {col} is {rmse}')
 
-ytrue = est.inverse_transform(bn_test)[:, 0]
-ypred = est.inverse_transform(pred)[:, 0]
-
-rmse = mean_squared_error(ytrue, ypred, squared=False)
-
-print(f"\nRMSE: {rmse}")
+# Save
+compendium = pd.DataFrame.from_dict(rmse_scores, orient='index')
+compendium.to_csv('datasets/bn_results.csv')
