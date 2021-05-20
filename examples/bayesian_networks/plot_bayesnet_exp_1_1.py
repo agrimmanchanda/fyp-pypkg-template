@@ -37,7 +37,7 @@ from sklearn.metrics import mean_squared_error
 # Custom Packages
 from pkgname.utils.load_dataset import remove_data_outliers
 from pkgname.core.bayes_net import BNImputer, learn_model_structure
-from pkgname.utils.bayes_net import get_unique_edges
+from pkgname.utils.bayes_net import get_unique_edges, get_score_statistics
 from pkgname.utils.load_dataset import suppress_stdout
 
 #######################################
@@ -152,8 +152,6 @@ for idx, col in enumerate(bn_test):
 
     aux[col] = np.nan
 
-    print(aux)
-
     with suppress_stdout():
         pred = model.imputer(aux)
 
@@ -167,5 +165,38 @@ for idx, col in enumerate(bn_test):
     print(f'RMSE for {col} is {rmse}')
 
 # Save
-compendium = pd.DataFrame.from_dict(rmse_scores, orient='index')
-compendium.to_csv('datasets/bn_results.csv')
+# compendium = pd.DataFrame.from_dict(rmse_scores, orient='index')
+# compendium.to_csv('datasets/bn_results.csv')
+
+#######################################
+# -------------------------------------
+# Analyse scores and test results
+# -------------------------------------
+
+# read bn dataset
+bn_scores = pd.read_csv('datasets/bn_results.csv', index_col=0)
+
+# read iir dataset
+iir_scores = pd.read_csv('datasets/iir_results.csv', index_col=0)
+
+# get the mean rmse for 5 folds
+mean_rmse = get_score_statistics(iir_scores, 'rmse')
+
+# Split scores to obtain score for each estimator
+split_scores = np.array_split(mean_rmse, 7)
+
+# Stack scores horizontally for easier plotting
+hsplit_scores = np.hstack((split_scores))
+
+# Create DataFrame for mean and std dev statistics
+statistics = pd.DataFrame(hsplit_scores, index=complete_profiles.columns)
+
+# Get just mean RMSE
+mean_stats = statistics.iloc[:,::2]
+
+mean_stats = pd.concat([mean_stats, bn_scores], axis=1)
+
+mean_stats.columns = ['lr', 'bridge', 'dt', 'sgd-ls', 'sgd-sv', 'knn', 'sir', 'BN']
+
+# Highlighting the minimum values of last 2 columns
+mean_stats.style.highlight_min(color = 'lightgreen', axis = 1)

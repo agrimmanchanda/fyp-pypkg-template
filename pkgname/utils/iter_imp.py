@@ -30,7 +30,7 @@ def rmse(y_true, y_pred, **kwargs):
 def norm_rmse(y_true, y_pred, **kwargs):
     score = rmse(y_true, y_pred, **kwargs)
 
-    spread = max(y_pred) - min(y_pred)
+    spread = max(y_true) - min(y_pred)
     if spread != 0:
         return score/spread
     else:
