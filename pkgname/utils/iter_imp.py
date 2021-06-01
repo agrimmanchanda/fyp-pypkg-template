@@ -59,6 +59,16 @@ def get_metric_scores(true, pred, metric):
     else:
         return 0
 
+def get_test_scores(true, pred):
+
+    rmse_score = rmse(true, pred)
+
+    rmsle_score = rmsle(true, pred)
+
+    nrmse_score = norm_rmse(true, pred)
+
+    return [rmse_score, rmsle_score, nrmse_score]
+
 def get_score_statistics(df, metric, folds=5, combined=True):
 
     # Use 5-fold CV
