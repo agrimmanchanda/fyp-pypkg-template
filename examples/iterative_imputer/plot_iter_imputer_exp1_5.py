@@ -152,10 +152,11 @@ SEED = 8
 
 train_set, test_set = train_test_split(complete_profiles, shuffle=False, test_size=0.2, random_state=8)
 
-for col in train_set.columns:
-    train_set.loc[train_set.sample(frac=0.1).index, col] = np.nan
-    test_set.loc[test_set.sample(frac=0.1).index, col] = np.nan
+train_copy, test_copy = train_set.copy(), test_set.copy()
 
+for col in train_copy.columns:
+    train_copy.loc[train_set.sample(frac=0.3).index, col] = np.nan
+    test_copy.loc[test_set.sample(frac=0.3).index, col] = np.nan
 
 #######################################
 # -------------------------------------
@@ -208,20 +209,24 @@ for i, est in enumerate(ESTIMATORS):
     if est != 'median':
         imputer = IterativeImputerRegressor(estimator=estimator,
                                             min_value=0, 
-                                            max_iter=10000)
+                                            max_iter=100,
+                                            verbose=2,
+                                           imputation_order='descending')
     else:
         imputer = estimator
 
     for biomarker in train_set:
 
-        aux_train = train_set.copy()
-        aux_test = test_set.copy()
+        aux_train = train_copy.copy()
+        aux_test = test_copy.copy()
 
         X_train = aux_train[[x for x in aux_train.columns if x != biomarker]]
-        y_train = aux_train[biomarker]
+        y_train = train_set[biomarker]
 
         X_test = aux_test[[x for x in aux_test.columns if x != biomarker]]
         y_test = aux_test[biomarker]
+
+        nan_idx = np.argwhere(np.isnan(y_test.to_numpy())).flatten()
 
         # Information
         print("\n%s. Evaluating... %s for biomarker... %s" % (i, est, biomarker))
@@ -239,13 +244,16 @@ for i, est in enumerate(ESTIMATORS):
                                 cv=skf, 
                                 return_train_score=True, 
                                 n_jobs=-1, 
-                                verbose=0)
+                                verbose=2)
 
         # Fit on training set 
         pipe.fit(X_train, y_train)
 
-        # Generate x, y test 
-        y_pred = pipe.predict(X_test)
+        # Get y predictions and choose index with missing values only
+        y_pred = pipe.predict(X_test)[nan_idx]
+        
+        # Get y true and choose index with missing values only
+        y_test = test_set[biomarker].to_numpy()[nan_idx]
 
         test_scores[biomarker] = get_test_scores(y_test, y_pred)
 
