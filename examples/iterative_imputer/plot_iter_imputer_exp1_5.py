@@ -55,17 +55,18 @@ _TUNED_ESTIMATORS = {
     'dt': DecisionTreeRegressor(
         criterion='mse',
         splitter='best',
-        max_depth=8,
-        max_leaf_nodes=15,
+        max_depth=6,
+        max_leaf_nodes=12,
         min_samples_leaf=8,
         min_samples_split=8,
     ),
     'rf': ExtraTreesRegressor(
-        n_estimators=100,
+        n_estimators=10,
         criterion='mse',
         bootstrap=False,
         warm_start=False,
         n_jobs=-1,
+        max_depth=6,
     ),
     'svr': SGDRegressor(
         alpha=1e-4,
@@ -74,22 +75,23 @@ _TUNED_ESTIMATORS = {
         loss='squared_epsilon_insensitive',
         early_stopping=True,
         warm_start=True,
+        max_iter=100,
     ),
     'knn': KNeighborsRegressor(
-        n_neighbors=8,
+        n_neighbors=7,
         weights='distance',
         n_jobs=-1,
     ),
     'xgb': XGBRegressor(
-        n_estimators=100,
+        n_estimators=10,
         eval_metric='rmse',
-        max_depth=8,
+        max_depth=6,
         eta=0.2,
         gamma=0.1,
     ),
     'mlp': MLPRegressor(
         alpha=1e-4,
-        hidden_layer_sizes=32,
+        hidden_layer_sizes=(32, 64),
         solver='adam',
         learning_rate='invscaling',
         warm_start=True,
@@ -155,8 +157,8 @@ train_set, test_set = train_test_split(complete_profiles, shuffle=False, test_si
 train_copy, test_copy = train_set.copy(), test_set.copy()
 
 for col in train_copy.columns:
-    train_copy.loc[train_set.sample(frac=0.3).index, col] = np.nan
-    test_copy.loc[test_set.sample(frac=0.3).index, col] = np.nan
+    train_copy.loc[train_set.sample(frac=0.1).index, col] = np.nan
+    test_copy.loc[test_set.sample(frac=0.1).index, col] = np.nan
 
 #######################################
 # -------------------------------------
@@ -268,4 +270,5 @@ for i, est in enumerate(ESTIMATORS):
     # Concatenate scores for the estimator to all other test scores
     test_data = pd.concat([test_data, pd.Series(test_scores, name=est)], axis=1)
 
-    print(test_data)
+test_data.csv('datasets/iir_mult_test_results_10.csv')
+iir_results.csv('datasets/iir_mult_cv_results_10.csv')
