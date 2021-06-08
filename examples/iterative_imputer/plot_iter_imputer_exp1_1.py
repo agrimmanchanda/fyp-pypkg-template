@@ -61,8 +61,9 @@ _TUNED_ESTIMATORS = {
         min_samples_split=8,
     ),
     'rf': ExtraTreesRegressor(
-        n_estimators=100,
+        n_estimators=10,
         criterion='mse',
+        max_depth=8,
         bootstrap=False,
         warm_start=False,
         n_jobs=-1,
@@ -81,7 +82,7 @@ _TUNED_ESTIMATORS = {
         n_jobs=-1,
     ),
     'xgb': XGBRegressor(
-        n_estimators=100,
+        n_estimators=10,
         eval_metric='rmse',
         max_depth=8,
         eta=0.2,
@@ -261,85 +262,82 @@ for i, est in enumerate(ESTIMATORS):
 # -------------------------------------
 
 # Save
-iir_results.to_csv('datasets/iir_results.csv')
-test_data.to_csv('datasets/test_data.csv')
+iir_results.to_csv('datasets/iir_simple_cv_results.csv')
+test_data.to_csv('datasets/iir_simple_test_results.csv')
 
+#######################################
+# -------------------------------------
+# Best model hold out test set results
+# -------------------------------------
+# # Create dict of best models (based on RMSE) for each feature: 
+BEST_MODELS = {
+    'EOS': 'lr',
+    'HCT': 'lr',
+    'HGB': 'mlp',
+    'LY': 'lr',  
+    'MCH': 'mlp',
+    'MCHC': 'mlp',
+    'MCV': 'mlp',
+    'MONO': 'lr',
+    'MPV': 'mlp',
+    'NEUT': 'lr',
+    'PLT': 'mlp',
+    'RBC': 'mlp',
+    'RDW': 'mlp',
+    'WBC': 'lr',
+}
 
-# #######################################
-# # -------------------------------------
-# # Analyse scores and test results
-# # -------------------------------------
+# all_vals_df = pd.DataFrame()
 
-# # Create a list of estimators
-# METHODS = [
-#     'lr',
-#     'bridge',
-#     'dt',
-#     'etr',
-#     'sgd-ls',
-#     'sgd-sv',
-#     'knn',
-#     'mlp',
-#     # 'xgb',
-#     'sir',
-# ]
+# for biomarker, model in BEST_MODELS.items():
 
+#     # Check if estimator has been defined else skip
+#     if est not in _TUNED_ESTIMATORS:
+#         continue
 
-# compendium = pd.read_csv('datasets/iir_results.csv', index_col=0)
-
-# # Get mean and variance of RMSE scores
-# all_scores = get_score_statistics(compendium, 'rmse')
-
-# # Split scores to obtain score for each estimator
-# split_scores = np.array_split(all_scores, len(METHODS))
-
-# # Stack scores horizontally for easier plotting
-# hsplit_scores = np.hstack((split_scores))
-
-# # Create DataFrame for mean and std dev statistics
-# statistics = pd.DataFrame(hsplit_scores, index=complete_profiles.columns)
-
-# # Split mean and std dev statistics
-# mean_stats, std_stats = statistics.iloc[:,::2], statistics.iloc[:,1::2]
-
-# # Rename columns to match algorithms
-# mean_stats.columns, std_stats.columns = METHODS, METHODS
-
-# print("Mean RMSE Statistics: ")
-
-# # Highlighting the minimum values of last 2 columns
-# mean_stats.style.highlight_min(color = 'lightgreen', 
-#                        axis = 1)
-
-# #######################################
-# # -------------------------------------
-# # Plot results
-# # -------------------------------------
-
-# plt.figure(figsize=(20,40))
-
-# # Set single title for all figures
-# # plt.suptitle('Iterative Imputer RMSE scores for complete profiles', 
-# #             fontweight='bold', 
-# #             fontsize=12)
-
-
-# for idx, (biomarker, scores) in enumerate(mean_stats.iterrows(), start=1):
-#     plt.subplot(7,2,idx)
-#     plt.title(f'RMSE for {biomarker}', 
-#     fontweight='bold', 
-#     fontsize=14)
-#     cmap = ['green' if (x == min(scores)) else 'royalblue' for x in scores]
-#     scores.plot.barh(grid=True, 
-#                 xerr=list(std_stats.loc[biomarker, :]), 
-#                 align='center', 
-#                 color=cmap)
-#     plt.xticks(fontsize=16)
-#     plt.yticks(fontsize=16)
-#     plt.xlabel('RMSE Score', fontsize=16)
+#     for est in [model, 'median']:
     
-# # Space plots out
-# plt.tight_layout()
+#         estimator = _TUNED_ESTIMATORS[est]
+        
+#         if est != 'median':
+#             imputer = IterativeImputerRegressor(estimator=estimator,
+#                                                 min_value=0, 
+#                                                 max_iter=10000)
+#         else:
+#             imputer = estimator
 
-# # Show
-# plt.show()
+#         print(imputer)
+
+#         aux_train = train_set.copy()
+#         aux_test = test_set.copy()
+
+#         X_train = aux_train[[x for x in aux_train.columns if x != biomarker]]
+#         y_train = aux_train[biomarker]
+
+#         X_test = aux_test[[x for x in aux_test.columns if x != biomarker]]
+#         y_test = aux_test[biomarker]
+
+#         # Information
+#         print("\n%s. Evaluating... %s for biomarker... %s" % (i, est, biomarker))
+
+#         # Create pipeline
+#         pipe = Pipeline(steps=[ ('std', StandardScaler()),
+#                                 (est, imputer)],
+#                         verbose=True)
+
+#         # Fit on training set 
+#         pipe.fit(X_train, y_train)
+
+#         # Generate x, y test 
+#         y_pred = pipe.predict(X_test)
+
+#         if est != 'median': 
+#             # Create a two column dataframe 
+#             true_pred_vals = pd.DataFrame(list(zip(y_test, y_pred)),
+#                     columns =[f'{biomarker}-{est}-true', f'{biomarker}-{est}-pred'])
+#         else:
+#             true_pred_vals = pd.Series(y_pred, name=f'{biomarker}-{est}-median')
+
+#         all_vals_df = pd.concat([all_vals_df, true_pred_vals], axis=1)
+
+#         all_vals_df.to_csv('datasets/iir_simple_test_values.csv')
