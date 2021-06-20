@@ -15,7 +15,7 @@ from scipy import stats
 import warnings
 warnings.filterwarnings("ignore")
 from sklearn import preprocessing
-from pkgname.utils.load_dataset import *
+from labimputer.utils.load_dataset import *
 
 
 #######################################

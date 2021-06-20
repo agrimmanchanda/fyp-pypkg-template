@@ -107,7 +107,7 @@ to host the documentation in html. Brief summary of the contents below:
             make.bat
             Makefile          # run to create documentation
         |- examples
-        |- pkgname            # your library
+        |- labimputer            # your library
             |- core           # contains your pkg core classes
             |- tests          # contains your pkg tests - pytest
             |- utils          # contains your pkg utils
@@ -119,7 +119,7 @@ Installing your pkg in editable mode
 During your project you will find that some behaviour can be encapsulated in
 either classes or methods. This will save you repeating code in every single
 script you write. These classes and/or methods will be part of your library.
-You can find an example in ``pkgname``.
+You can find an example in ``labimputer``.
 
 It is recommended to install the package in editable (develop) mode. It puts a link
 (actually \*.pth files) into the python installation to your code,
@@ -242,7 +242,7 @@ To include the output of the script (e.g. graph or console output) in the docume
 remember to prefix the script file name with ``plot`` (e.g. plot_sample_01.py). You can
 find the following examples in examples/tutorial:
 
-    - ``plot_greetings_01.py`` script using your pkgname package.
+    - ``plot_greetings_01.py`` script using your labimputer package.
     - ``plot_sample_01.py`` script just including all the code.
     - ``plot_sample_02.py`` script documenting steps within the code.
 
@@ -273,7 +273,7 @@ I would recommend to start with dirty ``scripts`` in the scripts folder.
 After some time coding, you might identify that part of your implementation
 could be encapsulated in a number of classes and methods. Or that some
 methods are being called very often. In such case, include those methods
-in your ``pkgname`` so you can import them easily and therefore don't end up
+in your ``labimputer`` so you can import them easily and therefore don't end up
 copy/paste code all the time.
 
 Once you have some results, create an example, document it and keep it clean.

@@ -29,7 +29,7 @@ from sklearn.impute import SimpleImputer
 from sklearn import preprocessing
 import warnings
 warnings.filterwarnings("ignore")
-from pkgname.utils.iter_imp import *
+from labimputer.utils.iter_imp import *
 
 #######################################
 # -------------------------------------
@@ -105,7 +105,7 @@ temp_rmsle_score_df = rmse_score_df.copy(deep=True)
 # -------------------------------------
 
 estimators = {
-    'Bayesian Ridge': BayesianRidge(),
+    # 'Bayesian Ridge': BayesianRidge(),
     # 'Decision Tree': DecisionTreeRegressor(),
     # 'Random Forest': ExtraTreesRegressor(),
     # 'XGBoost': XGBRegressor(),
@@ -117,7 +117,7 @@ estimators = {
     # early_stopping=True),
     # 'MLP': MLPRegressor(hidden_layer_sizes=32, 
     # early_stopping=True, max_iter=100),
-    'Simple Median': SimpleImputer(strategy='median'),
+    # 'Simple Median': SimpleImputer(strategy='median'),
 }
 
 #######################################
@@ -212,12 +212,12 @@ rmsle_score_df
 # -------------------------------------
 
 # Plot horizontal bar graph 
-for biomarker, scores in rmse_score_df.iterrows():
-    plt.figure(figsize=(20,15))
-    plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
-    cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
-    scores.plot.barh(grid=True, color=cmap)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
-    plt.xlabel('RMSE Score', fontsize=18)
-    plt.show()
+# for biomarker, scores in rmse_score_df.iterrows():
+#     plt.figure(figsize=(20,15))
+#     plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
+#     cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
+#     scores.plot.barh(grid=True, color=cmap)
+#     plt.xticks(fontsize=18)
+#     plt.yticks(fontsize=18)
+#     plt.xlabel('RMSE Score', fontsize=18)
+#     plt.show()

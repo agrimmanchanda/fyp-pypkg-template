@@ -31,8 +31,8 @@ from pgmpy.inference import VariableElimination
 from sklearn.model_selection import train_test_split
 
 # Custom Packages
-from pkgname.utils.load_dataset import remove_data_outliers
-from pkgname.utils.bayes_net import get_unique_edges, get_row_from_df
+from labimputer.utils.load_dataset import remove_data_outliers
+from labimputer.utils.bayes_net import get_unique_edges, get_row_from_df
 
 #######################################
 # -------------------------------------

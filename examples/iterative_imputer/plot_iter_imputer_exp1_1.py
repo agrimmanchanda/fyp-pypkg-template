@@ -42,9 +42,9 @@ from sklearn.metrics import make_scorer
 from sklearn.metrics import mean_squared_error
 
 # Custom Packages
-from pkgname.utils.load_dataset import remove_data_outliers
-from pkgname.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores
-from pkgname.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
+from labimputer.utils.load_dataset import remove_data_outliers
+from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores
+from labimputer.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
 
 #######################################
 # -------------------------------------
@@ -178,14 +178,14 @@ iir_results = pd.DataFrame()
 
 # Create a list of estimators
 ESTIMATORS = [
-    'lr',
+    # 'lr',
     # 'dt',
     # 'rf',
     # 'svr',
     # 'knn',
     # 'mlp',
     # 'xgb',
-    'median',
+    # 'median',
 ]
 
 test_data = pd.DataFrame()
@@ -262,8 +262,8 @@ for i, est in enumerate(ESTIMATORS):
 # -------------------------------------
 
 # Save
-iir_results.to_csv('datasets/iir_simple_cv_results.csv')
-test_data.to_csv('datasets/iir_simple_test_results.csv')
+# iir_results.to_csv('datasets/iir_simple_cv_results.csv')
+# test_data.to_csv('datasets/iir_simple_test_results.csv')
 
 #######################################
 # -------------------------------------

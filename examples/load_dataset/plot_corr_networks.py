@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
 warnings.filterwarnings("ignore")
-from pkgname.utils.load_dataset import *
+from labimputer.utils.load_dataset import *
 
 #######################################
 # -------------------------------------

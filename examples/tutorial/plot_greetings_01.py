@@ -6,9 +6,9 @@ Example using your package
 """
 
 # Libraries
-from pkgname.utils.display import show
-from pkgname.core.greetings import Hello
-from pkgname.core.greetings import Morning
+from labimputer.utils.display import show
+from labimputer.core.greetings import Hello
+from labimputer.core.greetings import Morning
 
 # -------------------------------------
 # Constants

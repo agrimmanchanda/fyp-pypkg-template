@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 # DataBlend library
-from pkgname.utils.widgets import TidyWidget
+from labimputer.utils.widgets import TidyWidget
 
 # ------------------------
 # Constants
