@@ -41,6 +41,10 @@ def rmsle(y_true, y_pred, **kwargs):
 
     return np.sqrt(mean_squared_log_error(y_true, y_pred, **kwargs))
 
+def nae(y_true, y_pred):
+    
+    return np.abs(y_pred - y_true)/(max(y_true) - min(y_true))
+
 def get_metric_scores(true, pred, metric):
 
     # Check that they are the same shape
@@ -99,3 +103,14 @@ def get_score_statistics(df, metric, folds=5, combined=True):
         return list(zip(mean_scores, std_scores))
     else:
         return mean_scores, std_scores
+
+
+def get_best_models(df):
+
+    best_models = {}
+
+    for biomarker, value in mean_stats.iterrows():
+
+        best_models[biomarker] = value.idxmin()
+        
+    return best_models

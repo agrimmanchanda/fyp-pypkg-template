@@ -43,7 +43,7 @@ from sklearn.metrics import mean_squared_error
 
 # Custom Packages
 from labimputer.utils.load_dataset import remove_data_outliers
-from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores
+from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores, nae
 from labimputer.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
 
 #######################################
