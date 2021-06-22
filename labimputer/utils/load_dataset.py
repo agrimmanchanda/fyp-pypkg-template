@@ -9,8 +9,16 @@ import sys, os
 
 # Function to remove outliers based using Q(1/3) -+ 1.5 * IQR
 def remove_data_outliers(df, coeff=1.5, tol=0):
-    """
-    Function to remove data outliers from the raw dataset.
+    """Utility function to remove data outliers from the data set using Z-Score method.
+
+    Args:
+        df (DataFrame): Input transformed data set.
+        coeff (float, optional): Scaling coefficient for outlier removal strategy. Defaults to 1.5.
+        tol (int, optional): Feature tolerance on how many features with NaN values may exist. Defaults to 0.
+
+    Returns:
+        Data set (DataFrame): Output data set without outlier values.
+        Outliers per variable (Series): Number of outliers remaining per variable.
     """
 
     # Calculate IQR = Q3 - Q1
@@ -42,6 +50,7 @@ def suppress_stdout_stderr():
 # Code snippet from: shorturl.at/lquDN
 @contextmanager
 def suppress_stdout():
+    """A context manager that redirects stdout and stderr to devnull"""
     with open(os.devnull, "w") as devnull:
         old_stdout = sys.stdout
         sys.stdout = devnull

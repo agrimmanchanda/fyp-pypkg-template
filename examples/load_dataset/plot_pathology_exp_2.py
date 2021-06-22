@@ -1,8 +1,9 @@
 """
-Biomarker distributions in dataset
-===========================================
+Experiment 2 and 3 (a)
+===============================================================
 
-Using ``seaborn`` library to visualise biomarker distributions
+Performing feature selection to select FBC panel and plotting the
+feature distributions.
 
 """
 #######################################
@@ -15,7 +16,7 @@ from scipy import stats
 import warnings
 warnings.filterwarnings("ignore")
 from sklearn import preprocessing
-from labimputer.utils.load_dataset import *
+from labimputer.utils.load_dataset import remove_data_outliers
 
 
 #######################################
@@ -26,13 +27,14 @@ from labimputer.utils.load_dataset import *
 # Set relative data path and set FBC panel list
 path_data = '../resources/datasets/nhs/Transformed_First_FBC_dataset.csv'
 
-FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
+FBC_CODES = sorted(["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                 "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
-                "MCH", "PLT", "MPV", "NRBCA"]
+                "MCH", "PLT", "MPV", "NRBCA"])
 
 # Read data and drop Nan _uid records
 df = pd.read_csv(path_data).dropna(subset=['pid'])
 
+# Reset index for compatibility
 df.reset_index(drop=True, inplace=True)
 
 #######################################
@@ -51,6 +53,7 @@ plt.suptitle('Violin plot for raw data',
             fontweight='bold', 
             fontsize=20)
 
+# Loop
 for plot_idx, biomarker in enumerate(biomarkers_df, start=1):
     
     plt.subplot(4,4,plot_idx)
@@ -75,7 +78,7 @@ plt.show()
 # Violin plots without outliers
 # -------------------------------------
 
-# Remove outliers from dataset
+# Remove outliers from dataset using Z-Score method
 complete_profiles, outlier_count = remove_data_outliers(biomarkers_df)
 
 # Set figure size
@@ -129,6 +132,8 @@ for biomarker in complete_profiles.columns:
     jb_test = stats.jarque_bera(complete_profiles[biomarker])
     norm_scores[biomarker] = jb_test
 
+# Rename norm_scores for compatibility
 norm_scores.index = ['Test Statistic', 'P-Value']
 
+# Display
 norm_scores.T

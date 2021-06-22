@@ -1,4 +1,4 @@
-Loading the data set
-====================
+Overview of pathology data
+=========================================
 
-This section will be used to visualise interesting results from the (raw) data set.
+Aim: The aim of the experiment is to prepare the data for static profiling, perform feature selection and carry out some of the pre-processing steps for Iterative Imputer and Bayesian Networks.

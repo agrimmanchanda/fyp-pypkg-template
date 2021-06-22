@@ -1,8 +1,8 @@
 """
-Network graphs to visualise correlations
+Experiment 3 (b)
 ===========================================
 
-Using ``networkx`` library to visualise biomarker correlations
+Using ``networkx`` library to visualise the selected feature (FBC panel) correlations.
 
 """
 #######################################
