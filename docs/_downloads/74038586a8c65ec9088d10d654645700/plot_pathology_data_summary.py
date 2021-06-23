@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from dataprep.eda import create_report
 import warnings
 warnings.filterwarnings("ignore")
-from pkgname.utils.load_dataset import *
+from labimputer.utils.load_dataset import *
 
 # Set relative data path and set FBC panel list
 path_data = '../resources/datasets/nhs/Transformed_First_FBC_dataset.csv'

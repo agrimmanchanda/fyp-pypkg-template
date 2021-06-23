@@ -4,53 +4,11 @@
 
 .. _sphx_glr__examples_load_dataset:
 
-Loading the data set
-====================
+Overview of pathology data
+=========================================
 
-This section will be used to visualise interesting results from the (raw) data set.
+Aim: The aim of the experiment is to prepare the data for static profiling, perform feature selection and carry out some of the pre-processing steps for Iterative Imputer and Bayesian Networks.
 
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Using seaborn library to visualise biomarker distributions">
-
-.. only:: html
-
- .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_biomarkers_dist_thumb.png
-     :alt: Biomarker distributions in dataset
-
-     :ref:`sphx_glr__examples_load_dataset_plot_biomarkers_dist.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /_examples/load_dataset/plot_biomarkers_dist
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Using networkx library to visualise biomarker correlations">
-
-.. only:: html
-
- .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_corr_networks_thumb.png
-     :alt: Network graphs to visualise correlations
-
-     :ref:`sphx_glr__examples_load_dataset_plot_corr_networks.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /_examples/load_dataset/plot_corr_networks
 
 .. raw:: html
 
@@ -72,6 +30,69 @@ This section will be used to visualise interesting results from the (raw) data s
    :hidden:
 
    /_examples/load_dataset/plot_pathology_data_summary
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Generating patient static profiles for patients using TidyWidget class.">
+
+.. only:: html
+
+ .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_pathology_exp_1_thumb.png
+     :alt: Experiment 1
+
+     :ref:`sphx_glr__examples_load_dataset_plot_pathology_exp_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/load_dataset/plot_pathology_exp_1
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Performing feature selection to select FBC panel and plotting the feature distributions.">
+
+.. only:: html
+
+ .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_pathology_exp_2_thumb.png
+     :alt: Experiment 2 and 3 (a)
+
+     :ref:`sphx_glr__examples_load_dataset_plot_pathology_exp_2.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/load_dataset/plot_pathology_exp_2
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Using networkx library to visualise the selected feature (FBC panel) correlations.">
+
+.. only:: html
+
+ .. figure:: /_examples/load_dataset/images/thumb/sphx_glr_plot_pathology_exp_3_thumb.png
+     :alt: Experiment 3 (b)
+
+     :ref:`sphx_glr__examples_load_dataset_plot_pathology_exp_3.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/load_dataset/plot_pathology_exp_3
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

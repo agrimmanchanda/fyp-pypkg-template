@@ -1,0 +1,587 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Experiment 2 and 3 (a) &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-rendered-html.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Experiment 3 (b)" href="plot_pathology_exp_3.html" />
+    <link rel="prev" title="Experiment 1" href="plot_pathology_exp_1.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> fyp2020-am9717
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/setup.html">Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Experiments</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Overview of pathology data</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_pathology_data_summary.html">Summary report of NHS Pathology Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_pathology_exp_1.html">Experiment 1</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Experiment 2 and 3 (a)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#violin-plots-for-raw-data">Violin plots for raw data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#violin-plots-without-outliers">Violin plots without outliers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jarque-bera-jb-test-for-normality">Jarque-Bera (JB) test for normality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="plot_pathology_exp_3.html">Experiment 3 (b)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../iterative_imputer/index.html">Iterative Imputer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bayesian_networks/index.html">Bayesian Networks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">fyp2020-am9717</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Overview of pathology data</a> &raquo;</li>
+        
+      <li>Experiment 2 and 3 (a)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/_examples/load_dataset/plot_pathology_exp_2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-load-dataset-plot-pathology-exp-2-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="experiment-2-and-3-a">
+<span id="sphx-glr-examples-load-dataset-plot-pathology-exp-2-py"></span><h1>Experiment 2 and 3 (a)<a class="headerlink" href="#experiment-2-and-3-a" title="Permalink to this headline">¶</a></h1>
+<p>Performing feature selection to select FBC panel and plotting the
+feature distributions.</p>
+<p>Import the relevant libraries first</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+ <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+ <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+ <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+ <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+ <span class="kn">import</span> <span class="nn">warnings</span>
+ <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+ <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+ <span class="kn">from</span> <span class="nn">labimputer.utils.load_dataset</span> <span class="kn">import</span> <span class="n">remove_data_outliers</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="data-import">
+<h2>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set relative data path and set FBC panel list</span>
+ <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;../resources/datasets/nhs/Transformed_First_FBC_dataset.csv&#39;</span>
+
+ <span class="n">FBC_CODES</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;MONO&quot;</span><span class="p">,</span> <span class="s2">&quot;BASO&quot;</span><span class="p">,</span> <span class="s2">&quot;NEUT&quot;</span><span class="p">,</span> <span class="s2">&quot;RBC&quot;</span><span class="p">,</span> <span class="s2">&quot;WBC&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MCHC&quot;</span><span class="p">,</span> <span class="s2">&quot;MCV&quot;</span><span class="p">,</span> <span class="s2">&quot;LY&quot;</span><span class="p">,</span> <span class="s2">&quot;HCT&quot;</span><span class="p">,</span> <span class="s2">&quot;RDW&quot;</span><span class="p">,</span> <span class="s2">&quot;HGB&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MCH&quot;</span><span class="p">,</span> <span class="s2">&quot;PLT&quot;</span><span class="p">,</span> <span class="s2">&quot;MPV&quot;</span><span class="p">,</span> <span class="s2">&quot;NRBCA&quot;</span><span class="p">])</span>
+
+ <span class="c1"># Read data and drop Nan _uid records</span>
+ <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">])</span>
+
+ <span class="c1"># Reset index for compatibility</span>
+ <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="violin-plots-for-raw-data">
+<h2>Violin plots for raw data<a class="headerlink" href="#violin-plots-for-raw-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Obtain the biomarkers DataFrame only</span>
+ <span class="n">biomarkers_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
+
+ <span class="c1"># Set figure size</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+
+ <span class="c1"># Set single title for all figures</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Violin plot for raw data&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+ <span class="c1"># Loop</span>
+ <span class="k">for</span> <span class="n">plot_idx</span><span class="p">,</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">plot_idx</span><span class="p">)</span>
+
+     <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">biomarkers_df</span><span class="p">[</span><span class="n">biomarker</span><span class="p">],</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span>
+                 <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{biomarker}</span><span class="s1">&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+ <span class="c1"># Space out plots</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+ <span class="c1"># Show</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<img alt="Violin plot for raw data" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_pathology_exp_2_001.png" />
+</div>
+<div class="section" id="violin-plots-without-outliers">
+<h2>Violin plots without outliers<a class="headerlink" href="#violin-plots-without-outliers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Remove outliers from dataset using Z-Score method</span>
+ <span class="n">complete_profiles</span><span class="p">,</span> <span class="n">outlier_count</span> <span class="o">=</span> <span class="n">remove_data_outliers</span><span class="p">(</span><span class="n">biomarkers_df</span><span class="p">)</span>
+
+ <span class="c1"># Set figure size</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+
+ <span class="c1"># Set single title for all figures</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Violin plot for complete profiles&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+ <span class="k">for</span> <span class="n">plot_idx</span><span class="p">,</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">plot_idx</span><span class="p">)</span>
+
+     <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">complete_profiles</span><span class="p">[</span><span class="n">biomarker</span><span class="p">],</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span>
+                 <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+
+     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{biomarker}</span><span class="s1">&#39;</span><span class="p">,</span>
+             <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+ <span class="c1"># Space out plots</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+ <span class="c1"># Show</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<img alt="Violin plot for complete profiles" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_pathology_exp_2_002.png" />
+</div>
+<div class="section" id="jarque-bera-jb-test-for-normality">
+<h2>Jarque-Bera (JB) test for normality<a class="headerlink" href="#jarque-bera-jb-test-for-normality" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Standardise data</span>
+ <span class="n">std_complete_profiles</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">)</span>
+
+ <span class="c1"># Create DataFrame of standardised data</span>
+ <span class="n">norm_profiles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">std_complete_profiles</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+ <span class="c1"># Dataframe to store JB Test</span>
+ <span class="n">norm_scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+ <span class="c1"># Note: JB test is only valid on datasets with n &gt; 2000 where n are samples</span>
+ <span class="c1"># in the dataset. The complete profile data set contains 56271 records.</span>
+
+ <span class="c1"># Loop</span>
+ <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+
+     <span class="c1"># Calculate and store JB test statistic and p-value for each biomarker</span>
+     <span class="n">jb_test</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">jarque_bera</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">[</span><span class="n">biomarker</span><span class="p">])</span>
+     <span class="n">norm_scores</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span> <span class="o">=</span> <span class="n">jb_test</span>
+
+ <span class="c1"># Rename norm_scores for compatibility</span>
+ <span class="n">norm_scores</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Test Statistic&#39;</span><span class="p">,</span> <span class="s1">&#39;P-Value&#39;</span><span class="p">]</span>
+
+ <span class="c1"># Display</span>
+ <span class="n">norm_scores</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</td></tr></table></div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Test Statistic</th>
+      <th>P-Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>BASO</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>EOS</th>
+      <td>13429.167720</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>HCT</th>
+      <td>1014.117837</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>HGB</th>
+      <td>848.836491</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>LY</th>
+      <td>1201.464250</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MCH</th>
+      <td>310.994030</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MCHC</th>
+      <td>140.936892</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MCV</th>
+      <td>206.280739</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MONO</th>
+      <td>4508.001342</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>MPV</th>
+      <td>880.109647</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>NEUT</th>
+      <td>6413.170125</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>NRBCA</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>PLT</th>
+      <td>909.825877</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>RBC</th>
+      <td>611.121763</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>RDW</th>
+      <td>7896.951619</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>WBC</th>
+      <td>2824.097411</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.064 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-load-dataset-plot-pathology-exp-2-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/8c92492fcb06a8c9e7d64f9e7f3a2bc9/plot_pathology_exp_2.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_pathology_exp_2.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/eb1a2ef041363115615b01e2e2ad54ce/plot_pathology_exp_2.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_pathology_exp_2.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="plot_pathology_exp_3.html" class="btn btn-neutral float-right" title="Experiment 3 (b)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plot_pathology_exp_1.html" class="btn btn-neutral float-left" title="Experiment 1" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Agrim Manchanda.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

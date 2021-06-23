@@ -7,38 +7,23 @@
 Iterative Imputer
 ====================
 
-This section will include different experiments with sklearn's IterativeImputer
+Aim: The aim of this experiment is to investigate Machine Learning Based imputation methods using an experimental feature from Scikit-learn called Iterative Imputer using two sub-experiments: (a) single and (b) multiple feature removal (10%, 30% and 50%).
+
+This page contains experiment results as follows:
+
+Experiment 1: Single Feature Removal (model learning and evaluation)
+
+Experiment 2: Multiple Feature Removal (model learning and evaluation)
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Single biomarker removal experiment with K-Fold Cross Validation.">
-
-.. only:: html
-
- .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp1_thumb.png
-     :alt: Iterative Imputer Experiment I
-
-     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /_examples/iterative_imputer/plot_iter_imputer_exp1
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Single biomarker removal using sklearn methods only.">
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove a single feature from the data set  and use the remain...">
 
 .. only:: html
 
  .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp1_1_thumb.png
-     :alt: Iterative Imputer Experiment I.I
+     :alt: Experiment 1: Model Learning
 
      :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1.py`
 
@@ -54,14 +39,77 @@ This section will include different experiments with sklearn's IterativeImputer
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove a single feature from the data set  and use the remain...">
+
+.. only:: html
+
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp1_1_1_thumb.png
+     :alt: Experiment 1: Model Evaluation
+
+     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/iterative_imputer/plot_iter_imputer_exp1_1_1
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove multiple features from the data set satisfying the Mis...">
+
+.. only:: html
+
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp2_1_thumb.png
+     :alt: Experiment 2: Model Learning
+
+     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp2_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/iterative_imputer/plot_iter_imputer_exp2_1
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove multiple features from the data set satisfying the Mis...">
+
+.. only:: html
+
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp2_1_1_thumb.png
+     :alt: Experiment 2: Model Evaluation
+
+     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp2_1_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/iterative_imputer/plot_iter_imputer_exp2_1_1
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Hyperparameter tuning using sklearn  GridSearchCV. ">
 
 .. only:: html
 
- .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp1_2_thumb.png
-     :alt: Iterative Imputer Experiment I.II
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp3_thumb.png
+     :alt: Experiment 1 and 2: Hyperparameter tuning
 
-     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_2.py`
+     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp3.py`
 
 .. raw:: html
 
@@ -71,18 +119,18 @@ This section will include different experiments with sklearn's IterativeImputer
 .. toctree::
    :hidden:
 
-   /_examples/iterative_imputer/plot_iter_imputer_exp1_2
+   /_examples/iterative_imputer/plot_iter_imputer_exp3
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Single biomarker removal using sklearn methods only.">
+    <div class="sphx-glr-thumbcontainer" tooltip="The following script is a supplementary script  which was developed during the project. The met...">
 
 .. only:: html
 
- .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp1_3_thumb.png
-     :alt: Iterative Imputer Experiment I.III
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_supplementary_script_exp_1_thumb.png
+     :alt: Iterative Imputer Supplementary Script 1
 
-     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_3.py`
+     :ref:`sphx_glr__examples_iterative_imputer_supplementary_script_exp_1.py`
 
 .. raw:: html
 
@@ -92,7 +140,7 @@ This section will include different experiments with sklearn's IterativeImputer
 .. toctree::
    :hidden:
 
-   /_examples/iterative_imputer/plot_iter_imputer_exp1_3
+   /_examples/iterative_imputer/supplementary_script_exp_1
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

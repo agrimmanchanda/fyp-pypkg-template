@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Experiment 1 and 2: Hyperparameter tuning &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-rendered-html.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Iterative Imputer Supplementary Script 1" href="supplementary_script_exp_1.html" />
+    <link rel="prev" title="Experiment 2: Model Evaluation" href="plot_iter_imputer_exp2_1_1.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> fyp2020-am9717
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/setup.html">Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Experiments</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Overview of pathology data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Iterative Imputer</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_1.html">Experiment 1: Model Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp1_1_1.html">Experiment 1: Model Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp2_1.html">Experiment 2: Model Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_iter_imputer_exp2_1_1.html">Experiment 2: Model Evaluation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Experiment 1 and 2: Hyperparameter tuning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#libraries-import">Libraries import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#define-parameter-grids">Define parameter grids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#correlation-matrix">Correlation matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-search-with-just-regressor">Grid Search (with just regressor)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#show-and-save">Show and save</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="supplementary_script_exp_1.html">Iterative Imputer Supplementary Script 1</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../bayesian_networks/index.html">Bayesian Networks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">fyp2020-am9717</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Iterative Imputer</a> &raquo;</li>
+        
+      <li>Experiment 1 and 2: Hyperparameter tuning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/_examples/iterative_imputer/plot_iter_imputer_exp3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp3-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="experiment-1-and-2-hyperparameter-tuning">
+<span id="sphx-glr-examples-iterative-imputer-plot-iter-imputer-exp3-py"></span><h1>Experiment 1 and 2: Hyperparameter tuning<a class="headerlink" href="#experiment-1-and-2-hyperparameter-tuning" title="Permalink to this headline">¶</a></h1>
+<p>Hyperparameter tuning using <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>
+<code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code>.</p>
+<div class="section" id="libraries-import">
+<h2>Libraries import<a class="headerlink" href="#libraries-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Libraries generic</span>
+ <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+ <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+ <span class="kn">import</span> <span class="nn">sklearn</span>
+
+ <span class="c1"># Libraries sklearn</span>
+ <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+ <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+ <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+ <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+
+ <span class="c1"># Regressors</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">BayesianRidge</span>
+ <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDRegressor</span>
+ <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsRegressor</span>
+
+ <span class="c1"># Metrics</span>
+ <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">make_scorer</span>
+ <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+
+ <span class="c1"># Custom Packages</span>
+ <span class="kn">from</span> <span class="nn">labimputer.utils.load_dataset</span> <span class="kn">import</span> <span class="n">remove_data_outliers</span>
+ <span class="kn">from</span> <span class="nn">labimputer.utils.iter_imp</span> <span class="kn">import</span> <span class="n">corr_pairs</span><span class="p">,</span> <span class="n">get_score_statistics</span>
+ <span class="kn">from</span> <span class="nn">labimputer.core.iter_imp</span> <span class="kn">import</span> <span class="n">IterativeImputerRegressor</span><span class="p">,</span> <span class="n">SimpleImputerRegressor</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="define-parameter-grids">
+<h2>Define parameter grids<a class="headerlink" href="#define-parameter-grids" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">param_grid_lr</span> <span class="o">=</span> <span class="p">{}</span>
+ <span class="n">param_grid_ridge</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;ridge__alpha&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span> <span class="o">/</span> <span class="mi">10</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)],</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_bridge</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;bridge__alpha_1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">],</span>
+     <span class="s1">&#39;bridge__alpha_2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">],</span>
+     <span class="s1">&#39;bridge__lambda_1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">],</span>
+     <span class="s1">&#39;bridge__lambda_2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">],</span>
+ <span class="p">}</span>
+ <span class="n">param_grid_iir</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;iir__estimator&#39;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="n">BayesianRidge</span><span class="p">()</span>
+     <span class="p">]</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_dt</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;dt__criterion&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="s2">&quot;mae&quot;</span><span class="p">],</span>
+     <span class="s1">&#39;dt__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+     <span class="s1">&#39;dt__min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+     <span class="s1">&#39;dt__min_samples_leaf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+     <span class="s1">&#39;dt__max_leaf_nodes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_etr</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;etr__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="mi">10</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)],</span>
+     <span class="s1">&#39;etr__criterion&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="s2">&quot;mae&quot;</span><span class="p">],</span>
+     <span class="s1">&#39;etr__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+     <span class="s1">&#39;etr__min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+     <span class="s1">&#39;etr__bootstrap&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+     <span class="s1">&#39;etr__warm_start&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_sgd</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;sgd__loss&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;squared_loss&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;huber&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;epsilon_insensitive&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;squared_epsilon_insensitive&quot;</span><span class="p">],</span>
+     <span class="s1">&#39;sgd__alpha&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">],</span>
+     <span class="s1">&#39;sgd__epsilon&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+     <span class="s1">&#39;sgd__learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;optimal&quot;</span><span class="p">,</span> <span class="s2">&quot;invscaling&quot;</span><span class="p">,</span> <span class="s2">&quot;adaptive&quot;</span><span class="p">],</span>
+     <span class="s1">&#39;sgd__early_stopping&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+     <span class="s1">&#39;sgd__warm_start&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_knn</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;knn__n_neighbors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+     <span class="s1">&#39;knn__weights&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;distance&quot;</span><span class="p">],</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_sir</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;sir__strategy&#39;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;median&#39;</span>
+     <span class="p">]</span>
+ <span class="p">}</span>
+
+ <span class="n">param_grid_rfr</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;rfr__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+ <span class="p">}</span>
+
+ <span class="n">_DEFAULT_PARAM_GRIDS</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="n">param_grid_lr</span><span class="p">,</span>
+     <span class="s1">&#39;ridge&#39;</span><span class="p">:</span> <span class="n">param_grid_ridge</span><span class="p">,</span>
+     <span class="s1">&#39;bridge&#39;</span><span class="p">:</span> <span class="n">param_grid_bridge</span><span class="p">,</span>
+     <span class="s1">&#39;iir&#39;</span><span class="p">:</span> <span class="n">param_grid_iir</span><span class="p">,</span>
+     <span class="s1">&#39;rfr&#39;</span><span class="p">:</span> <span class="n">param_grid_rfr</span><span class="p">,</span>
+     <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="n">param_grid_dt</span><span class="p">,</span>
+     <span class="s1">&#39;etr&#39;</span><span class="p">:</span> <span class="n">param_grid_etr</span><span class="p">,</span>
+     <span class="s1">&#39;sgd&#39;</span><span class="p">:</span> <span class="n">param_grid_sgd</span><span class="p">,</span>
+     <span class="s1">&#39;knn&#39;</span><span class="p">:</span> <span class="n">param_grid_knn</span><span class="p">,</span>
+     <span class="s1">&#39;sir&#39;</span><span class="p">:</span> <span class="n">param_grid_sir</span><span class="p">,</span>
+ <span class="p">}</span>
+
+ <span class="n">_DEFAULT_ESTIMATORS</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="n">LinearRegression</span><span class="p">(),</span>
+     <span class="s1">&#39;ridge&#39;</span><span class="p">:</span> <span class="n">Ridge</span><span class="p">(),</span>
+     <span class="s1">&#39;bridge&#39;</span><span class="p">:</span> <span class="n">BayesianRidge</span><span class="p">(),</span>
+     <span class="s1">&#39;iir&#39;</span><span class="p">:</span> <span class="n">IterativeImputerRegressor</span><span class="p">(),</span>
+     <span class="s1">&#39;rfr&#39;</span><span class="p">:</span> <span class="n">RandomForestRegressor</span><span class="p">(),</span>
+     <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
+     <span class="s1">&#39;etr&#39;</span><span class="p">:</span> <span class="n">ExtraTreesRegressor</span><span class="p">(),</span>
+     <span class="s1">&#39;sgd&#39;</span><span class="p">:</span> <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">),</span>
+     <span class="s1">&#39;knn&#39;</span><span class="p">:</span> <span class="n">KNeighborsRegressor</span><span class="p">(),</span>
+     <span class="s1">&#39;sir&#39;</span><span class="p">:</span> <span class="n">SimpleImputerRegressor</span><span class="p">(),</span>
+ <span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="data-import">
+<h2>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set relative data path and set FBC panel list</span>
+ <span class="n">path_data</span> <span class="o">=</span> <span class="s1">&#39;../resources/datasets/nhs/Transformed_First_FBC_dataset.csv&#39;</span>
+
+ <span class="n">FBC_CODES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;MONO&quot;</span><span class="p">,</span> <span class="s2">&quot;BASO&quot;</span><span class="p">,</span> <span class="s2">&quot;NEUT&quot;</span><span class="p">,</span> <span class="s2">&quot;RBC&quot;</span><span class="p">,</span> <span class="s2">&quot;WBC&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MCHC&quot;</span><span class="p">,</span> <span class="s2">&quot;MCV&quot;</span><span class="p">,</span> <span class="s2">&quot;LY&quot;</span><span class="p">,</span> <span class="s2">&quot;HCT&quot;</span><span class="p">,</span> <span class="s2">&quot;RDW&quot;</span><span class="p">,</span> <span class="s2">&quot;HGB&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MCH&quot;</span><span class="p">,</span> <span class="s2">&quot;PLT&quot;</span><span class="p">,</span> <span class="s2">&quot;MPV&quot;</span><span class="p">,</span> <span class="s2">&quot;NRBCA&quot;</span><span class="p">]</span>
+
+ <span class="c1"># Read data and drop Nan _uid records</span>
+ <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">])</span>
+
+ <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+ <span class="c1"># Obtain the biomarkers DataFrame only</span>
+ <span class="n">raw_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">FBC_CODES</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">FBC_CODES</span><span class="p">)</span>
+
+ <span class="c1"># Remove outliers from dataset</span>
+ <span class="n">complete_profiles</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">remove_data_outliers</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+
+ <span class="c1"># Constant variables to drop</span>
+ <span class="n">DROP_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BASO&#39;</span><span class="p">,</span> <span class="s1">&#39;NRBCA&#39;</span><span class="p">]</span>
+
+ <span class="n">complete_profiles</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">DROP_FEATURES</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="correlation-matrix">
+<h2>Correlation matrix<a class="headerlink" href="#correlation-matrix" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>171
+172
+173
+174
+175
+176
+177
+178</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Calculate correlation matrix using Pearson Correlation Coefficient</span>
+ <span class="n">corr_mat</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">)</span>
+
+ <span class="c1"># Show</span>
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data:&quot;</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="n">complete_profiles</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Correlation (pearson):&quot;</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="n">corr_mat</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Data:
+        EOS  MONO  NEUT   RBC   WBC   MCHC    MCV   LY   HCT   RDW    HGB   MCH    PLT   MPV
+0       0.0   0.4   3.9  4.23   5.0  320.0   92.6  0.7  0.39  15.1  125.0  29.6  202.0   8.6
+6       0.0   0.7   4.0  3.53   5.9  307.0  104.0  1.1  0.37  15.1  113.0  32.0  257.0   7.4
+7       0.1   0.3   3.0  3.40   4.2  320.0  101.0  0.8  0.34  13.8  110.0  32.2  282.0   8.0
+8       0.1   0.3   3.4  3.32   4.5  321.0  101.0  0.7  0.34  14.4  108.0  32.5  282.0   8.1
+9       0.2   0.6   4.6  3.34   6.1  320.0  102.0  0.7  0.34  14.1  109.0  32.7  298.0   8.7
+...     ...   ...   ...   ...   ...    ...    ...  ...   ...   ...    ...   ...    ...   ...
+101167  0.1   0.4   4.4  4.62   7.1  328.0   90.8  2.1  0.42  11.3  138.0  29.8  210.0   9.6
+101169  0.2   0.4   4.9  4.33   7.6  334.0   88.2  2.0  0.38  12.9  128.0  29.5  208.0   9.3
+101170  0.2   0.4   4.0  4.67   6.8  323.0   88.8  2.2  0.42  13.9  134.0  28.7  295.0   8.9
+101173  0.0   0.6   4.5  4.19   7.2  325.0   89.4  2.1  0.37  11.1  122.0  29.0  247.0  10.5
+101174  0.0   0.8   8.1  4.01  10.1  326.0   92.4  1.2  0.37  11.7  121.0  30.1  204.0   9.2
+
+[56271 rows x 14 columns]
+
+Correlation (pearson):
+           EOS      MONO      NEUT       RBC  ...       HGB       MCH       PLT       MPV
+EOS   1.000000  0.176592 -0.077021  0.076247  ...  0.063382 -0.046216  0.148320 -0.008346
+MONO  0.176592  1.000000  0.437707 -0.011525  ... -0.011822 -0.007282  0.191892  0.006449
+NEUT -0.077021  0.437707  1.000000 -0.125506  ... -0.142903 -0.036335  0.204307 -0.015518
+RBC   0.076247 -0.011525 -0.125506  1.000000  ...  0.921963 -0.301421  0.089001  0.169995
+WBC   0.063383  0.565965  0.946863 -0.009884  ... -0.030376 -0.058005  0.275886  0.021949
+MCHC -0.073132 -0.006352  0.014154  0.002774  ...  0.160611  0.391104 -0.087255 -0.041123
+MCV  -0.016068 -0.005156 -0.046127 -0.328603  ...  0.016983  0.902952 -0.143448 -0.061824
+LY    0.289178  0.228941 -0.067306  0.381424  ...  0.367455 -0.079429  0.227641  0.133033
+HCT   0.075691 -0.011767 -0.147780  0.932916  ...  0.983795  0.018124  0.044596  0.156687
+RDW  -0.029017  0.000838  0.043472 -0.317913  ... -0.479547 -0.354513 -0.050207 -0.129583
+HGB   0.063382 -0.011822 -0.142903  0.921963  ...  1.000000  0.084460  0.030526  0.148419
+MCH  -0.046216 -0.007282 -0.036335 -0.301421  ...  0.084460  1.000000 -0.169143 -0.073755
+PLT   0.148320  0.191892  0.204307  0.089001  ...  0.030526 -0.169143  1.000000 -0.329940
+MPV  -0.008346  0.006449 -0.015518  0.169995  ...  0.148419 -0.073755 -0.329940  1.000000
+
+[14 rows x 14 columns]
+</pre></div>
+</div>
+</div>
+<div class="section" id="grid-search-with-just-regressor">
+<h2>Grid Search (with just regressor)<a class="headerlink" href="#grid-search-with-just-regressor" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Number of splits</span>
+ <span class="n">n_splits</span> <span class="o">=</span> <span class="mi">5</span>
+
+ <span class="c1"># Create Kfold instance</span>
+ <span class="n">skf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+ <span class="c1"># Scoring</span>
+ <span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;nmae&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">,</span> <span class="c1"># MAE</span>
+     <span class="s1">&#39;nmse&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">,</span>       <span class="c1"># MSE</span>
+     <span class="s1">&#39;nrmse&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_root_mean_squared_error&#39;</span><span class="p">,</span> <span class="c1"># RMSE</span>
+     <span class="c1">#&#39;norm_rmse&#39;: make_scorer(norm_rmse) # NRMSE</span>
+ <span class="p">}</span>
+
+ <span class="c1"># Parameter Grid</span>
+ <span class="n">param_grid</span> <span class="o">=</span> <span class="p">{}</span>
+
+ <span class="c1"># Compendium of results</span>
+ <span class="n">compendium</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+ <span class="c1"># Create a list of estimators</span>
+ <span class="n">ESTIMATORS</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="c1"># &#39;lr&#39;,</span>
+     <span class="c1">#&#39;ridge&#39;,</span>
+     <span class="c1">#&#39;bridge&#39;,</span>
+     <span class="c1"># &#39;iir&#39;,</span>
+     <span class="c1"># &#39;dt&#39;,</span>
+     <span class="c1"># &#39;etr&#39;,</span>
+     <span class="c1"># &#39;sgd&#39;,</span>
+     <span class="c1"># &#39;knn&#39;,</span>
+     <span class="c1"># &#39;sir&#39;,</span>
+ <span class="p">]</span>
+
+ <span class="c1"># For each estimator</span>
+ <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">est</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ESTIMATORS</span><span class="p">):</span>
+
+     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+     <span class="c1"># Basic checks</span>
+     <span class="k">if</span> <span class="n">est</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_DEFAULT_ESTIMATORS</span><span class="p">:</span>
+         <span class="k">continue</span>
+     <span class="k">if</span> <span class="n">est</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_DEFAULT_PARAM_GRIDS</span><span class="p">:</span>
+         <span class="k">continue</span>
+
+     <span class="k">for</span> <span class="n">biomarker</span> <span class="ow">in</span> <span class="n">complete_profiles</span><span class="p">:</span>
+
+         <span class="n">aux</span> <span class="o">=</span> <span class="n">complete_profiles</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+         <span class="n">X</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">aux</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">biomarker</span><span class="p">]]</span>
+         <span class="n">y</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span>
+
+         <span class="c1"># Information</span>
+         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">%s</span><span class="s2">. Evaluating... </span><span class="si">%s</span><span class="s2"> for biomarker... </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">biomarker</span><span class="p">))</span>
+
+         <span class="c1"># Create pipeline</span>
+         <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span> <span class="p">(</span><span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+                                 <span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">_DEFAULT_ESTIMATORS</span><span class="p">[</span><span class="n">est</span><span class="p">])],</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+         <span class="c1"># Create grid search (another option is RandomSearchCV)</span>
+         <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">_DEFAULT_PARAM_GRIDS</span><span class="p">[</span><span class="n">est</span><span class="p">],</span>
+                             <span class="n">cv</span><span class="o">=</span><span class="n">skf</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+                             <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                             <span class="n">refit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+         <span class="c1"># Fit grid search</span>
+         <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+         <span class="c1"># Extract results</span>
+         <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span>
+         <span class="n">results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">biomarker</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+         <span class="c1"># Add to compendium</span>
+         <span class="n">compendium</span> <span class="o">=</span> <span class="n">compendium</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+         <span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;datasets/</span><span class="si">{est}</span><span class="s1">.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="show-and-save">
+<h2>Show and save<a class="headerlink" href="#show-and-save" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>268
+269
+270
+271
+272
+273</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># # Show grid search scores</span>
+ <span class="c1"># print(&quot;\n\nGrid Search result:&quot;)</span>
+ <span class="c1"># print(compendium.T)</span>
+
+ <span class="c1"># Save</span>
+ <span class="c1"># compendium.to_csv(&#39;datasets/compendium.csv&#39;)</span>
+</pre></div>
+</td></tr></table></div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.494 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp3-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/691582d2775c5df802ca9fd183bed601/plot_iter_imputer_exp3.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp3.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/aac03663d8546f60570478379e674d3c/plot_iter_imputer_exp3.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_iter_imputer_exp3.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="supplementary_script_exp_1.html" class="btn btn-neutral float-right" title="Iterative Imputer Supplementary Script 1" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plot_iter_imputer_exp2_1_1.html" class="btn btn-neutral float-left" title="Experiment 2: Model Evaluation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Agrim Manchanda.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -43,7 +43,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Bayesian Networks Experiment I.I" href="plot_bayesnet_exp_1_1.html" />
-    <link rel="prev" title="Bayesian Networks" href="index.html" /> 
+    <link rel="prev" title="Bayesian Network Supplementary Script" href="plot_bayes_net_supplementary.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -92,12 +92,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/setup.html">Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Example Galleries</span></p>
+<p class="caption"><span class="caption-text">Experiments</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">The tutorial gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Loading the data set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Overview of pathology data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../iterative_imputer/index.html">Iterative Imputer</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Bayesian Networks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_bayes_net_supplementary.html">Bayesian Network Supplementary Script</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Bayesian Networks Experiment I.I</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#libraries-import">Libraries import</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-import">Data import</a></li>
@@ -112,7 +112,6 @@
 <li class="toctree-l2"><a class="reference internal" href="plot_bayesnet_exp_1_1.html">Bayesian Networks Experiment I.I</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
 </ul>
 
             
@@ -230,8 +229,8 @@ Distributions (CPDs) and imputing missing values.</p>
  <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
  <span class="c1"># Custom Packages</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.load_dataset</span> <span class="kn">import</span> <span class="n">remove_data_outliers</span>
- <span class="kn">from</span> <span class="nn">pkgname.utils.bayes_net</span> <span class="kn">import</span> <span class="n">get_unique_edges</span><span class="p">,</span> <span class="n">get_row_from_df</span>
+ <span class="kn">from</span> <span class="nn">labimputer.utils.load_dataset</span> <span class="kn">import</span> <span class="n">remove_data_outliers</span>
+ <span class="kn">from</span> <span class="nn">labimputer.utils.bayes_net</span> <span class="kn">import</span> <span class="n">get_unique_edges</span><span class="p">,</span> <span class="n">get_row_from_df</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -2629,7 +2628,7 @@ Distributions (CPDs) and imputing missing values.</p>
     <tr>
       <th>75321</th>
       <td>0.0</td>
-      <td>NaN</td>
+      <td>0.23</td>
       <td>76.0</td>
       <td>0.7</td>
       <td>1.4</td>
@@ -2641,7 +2640,7 @@ Distributions (CPDs) and imputing missing values.</p>
     <tr>
       <th>75326</th>
       <td>0.0</td>
-      <td>0.23</td>
+      <td>NaN</td>
       <td>75.0</td>
       <td>0.5</td>
       <td>0.2</td>
@@ -2655,16 +2654,16 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.0</td>
       <td>0.32</td>
       <td>104.0</td>
+      <td>0.4</td>
       <td>NaN</td>
-      <td>0.2</td>
       <td>3.1</td>
       <td>3.62</td>
       <td>14.2</td>
-      <td>3.7</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>75328</th>
-      <td>NaN</td>
+      <td>0.1</td>
       <td>0.51</td>
       <td>163.0</td>
       <td>3.7</td>
@@ -2679,18 +2678,18 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.2</td>
       <td>0.44</td>
       <td>137.0</td>
-      <td>2.5</td>
+      <td>NaN</td>
       <td>0.6</td>
       <td>3.0</td>
-      <td>4.79</td>
       <td>NaN</td>
+      <td>11.6</td>
       <td>6.2</td>
     </tr>
     <tr>
       <th>75335</th>
+      <td>0.0</td>
       <td>NaN</td>
-      <td>0.38</td>
-      <td>NaN</td>
+      <td>124.0</td>
       <td>3.7</td>
       <td>0.5</td>
       <td>3.9</td>
@@ -2708,7 +2707,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>3.3</td>
       <td>4.11</td>
       <td>13.3</td>
-      <td>NaN</td>
+      <td>6.1</td>
     </tr>
     <tr>
       <th>75337</th>
@@ -2717,7 +2716,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>119.0</td>
       <td>2.6</td>
       <td>0.4</td>
-      <td>NaN</td>
+      <td>3.2</td>
       <td>4.20</td>
       <td>14.3</td>
       <td>6.2</td>
@@ -2728,11 +2727,11 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.35</td>
       <td>112.0</td>
       <td>2.1</td>
-      <td>NaN</td>
+      <td>0.4</td>
       <td>3.8</td>
       <td>3.85</td>
-      <td>13.4</td>
-      <td>6.4</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>75339</th>
@@ -2743,19 +2742,19 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.3</td>
       <td>3.0</td>
       <td>3.77</td>
-      <td>NaN</td>
+      <td>14.4</td>
       <td>4.9</td>
     </tr>
     <tr>
       <th>75340</th>
-      <td>0.1</td>
+      <td>NaN</td>
       <td>0.38</td>
       <td>121.0</td>
       <td>1.8</td>
       <td>0.4</td>
       <td>4.1</td>
+      <td>4.22</td>
       <td>NaN</td>
-      <td>14.0</td>
       <td>6.3</td>
     </tr>
     <tr>
@@ -2774,20 +2773,20 @@ Distributions (CPDs) and imputing missing values.</p>
       <th>75342</th>
       <td>0.0</td>
       <td>0.34</td>
-      <td>108.0</td>
+      <td>NaN</td>
       <td>1.4</td>
       <td>0.5</td>
-      <td>NaN</td>
+      <td>7.5</td>
       <td>3.76</td>
       <td>13.6</td>
-      <td>NaN</td>
+      <td>9.4</td>
     </tr>
     <tr>
       <th>75343</th>
       <td>0.2</td>
       <td>0.31</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>100.0</td>
+      <td>1.8</td>
       <td>0.4</td>
       <td>7.2</td>
       <td>3.37</td>
@@ -2797,12 +2796,12 @@ Distributions (CPDs) and imputing missing values.</p>
     <tr>
       <th>75344</th>
       <td>0.2</td>
-      <td>NaN</td>
+      <td>0.28</td>
       <td>96.0</td>
       <td>1.7</td>
       <td>0.3</td>
-      <td>5.4</td>
-      <td>3.11</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>13.6</td>
       <td>7.6</td>
     </tr>
@@ -2825,8 +2824,8 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>100.0</td>
       <td>2.1</td>
       <td>0.6</td>
-      <td>4.7</td>
       <td>NaN</td>
+      <td>3.50</td>
       <td>13.9</td>
       <td>7.5</td>
     </tr>
@@ -2834,9 +2833,9 @@ Distributions (CPDs) and imputing missing values.</p>
       <th>75376</th>
       <td>0.0</td>
       <td>0.28</td>
-      <td>89.0</td>
+      <td>NaN</td>
       <td>0.9</td>
-      <td>0.3</td>
+      <td>NaN</td>
       <td>7.6</td>
       <td>3.03</td>
       <td>16.1</td>
@@ -2844,11 +2843,11 @@ Distributions (CPDs) and imputing missing values.</p>
     </tr>
     <tr>
       <th>75408</th>
-      <td>0.2</td>
+      <td>NaN</td>
       <td>0.26</td>
       <td>86.0</td>
       <td>1.9</td>
-      <td>NaN</td>
+      <td>0.8</td>
       <td>6.2</td>
       <td>2.99</td>
       <td>18.2</td>
@@ -2859,7 +2858,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.2</td>
       <td>0.27</td>
       <td>90.0</td>
-      <td>3.3</td>
+      <td>NaN</td>
       <td>0.9</td>
       <td>5.9</td>
       <td>3.12</td>
@@ -3003,7 +3002,7 @@ Distributions (CPDs) and imputing missing values.</p>
     <tr>
       <th>0</th>
       <td>0.0</td>
-      <td>0.24</td>
+      <td>0.23</td>
       <td>76.0</td>
       <td>0.7</td>
       <td>1.4</td>
@@ -3015,7 +3014,7 @@ Distributions (CPDs) and imputing missing values.</p>
     <tr>
       <th>1</th>
       <td>0.0</td>
-      <td>0.23</td>
+      <td>0.24</td>
       <td>75.0</td>
       <td>0.5</td>
       <td>0.2</td>
@@ -3029,16 +3028,16 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.0</td>
       <td>0.32</td>
       <td>104.0</td>
-      <td>0.1</td>
-      <td>0.2</td>
+      <td>0.4</td>
+      <td>0.4</td>
       <td>3.1</td>
       <td>3.62</td>
       <td>14.2</td>
-      <td>3.7</td>
+      <td>5.3</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.2</td>
+      <td>0.1</td>
       <td>0.51</td>
       <td>163.0</td>
       <td>3.7</td>
@@ -3053,17 +3052,17 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.2</td>
       <td>0.44</td>
       <td>137.0</td>
-      <td>2.5</td>
+      <td>1.9</td>
       <td>0.6</td>
       <td>3.0</td>
-      <td>4.79</td>
-      <td>12.7</td>
+      <td>4.85</td>
+      <td>11.6</td>
       <td>6.2</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.2</td>
-      <td>0.38</td>
+      <td>0.0</td>
+      <td>0.40</td>
       <td>124.0</td>
       <td>3.7</td>
       <td>0.5</td>
@@ -3082,7 +3081,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>3.3</td>
       <td>4.11</td>
       <td>13.3</td>
-      <td>5.7</td>
+      <td>6.1</td>
     </tr>
     <tr>
       <th>7</th>
@@ -3091,7 +3090,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>119.0</td>
       <td>2.6</td>
       <td>0.4</td>
-      <td>3.8</td>
+      <td>3.2</td>
       <td>4.20</td>
       <td>14.3</td>
       <td>6.2</td>
@@ -3102,11 +3101,11 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.35</td>
       <td>112.0</td>
       <td>2.1</td>
-      <td>0.5</td>
+      <td>0.4</td>
       <td>3.8</td>
       <td>3.85</td>
-      <td>13.4</td>
-      <td>6.4</td>
+      <td>12.3</td>
+      <td>5.6</td>
     </tr>
     <tr>
       <th>9</th>
@@ -3117,7 +3116,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.3</td>
       <td>3.0</td>
       <td>3.77</td>
-      <td>12.3</td>
+      <td>14.4</td>
       <td>4.9</td>
     </tr>
     <tr>
@@ -3128,8 +3127,8 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>1.8</td>
       <td>0.4</td>
       <td>4.1</td>
-      <td>4.12</td>
-      <td>14.0</td>
+      <td>4.22</td>
+      <td>12.1</td>
       <td>6.3</td>
     </tr>
     <tr>
@@ -3148,20 +3147,20 @@ Distributions (CPDs) and imputing missing values.</p>
       <th>12</th>
       <td>0.0</td>
       <td>0.34</td>
-      <td>108.0</td>
+      <td>110.0</td>
       <td>1.4</td>
       <td>0.5</td>
-      <td>3.2</td>
+      <td>7.5</td>
       <td>3.76</td>
       <td>13.6</td>
-      <td>5.7</td>
+      <td>9.4</td>
     </tr>
     <tr>
       <th>13</th>
       <td>0.2</td>
       <td>0.31</td>
-      <td>101.0</td>
-      <td>1.5</td>
+      <td>100.0</td>
+      <td>1.8</td>
       <td>0.4</td>
       <td>7.2</td>
       <td>3.37</td>
@@ -3171,12 +3170,12 @@ Distributions (CPDs) and imputing missing values.</p>
     <tr>
       <th>14</th>
       <td>0.2</td>
-      <td>0.30</td>
+      <td>0.28</td>
       <td>96.0</td>
       <td>1.7</td>
       <td>0.3</td>
-      <td>5.4</td>
-      <td>3.11</td>
+      <td>5.0</td>
+      <td>2.98</td>
       <td>13.6</td>
       <td>7.6</td>
     </tr>
@@ -3199,8 +3198,8 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>100.0</td>
       <td>2.1</td>
       <td>0.6</td>
-      <td>4.7</td>
-      <td>3.20</td>
+      <td>5.5</td>
+      <td>3.50</td>
       <td>13.9</td>
       <td>7.5</td>
     </tr>
@@ -3208,9 +3207,9 @@ Distributions (CPDs) and imputing missing values.</p>
       <th>17</th>
       <td>0.0</td>
       <td>0.28</td>
-      <td>89.0</td>
+      <td>90.0</td>
       <td>0.9</td>
-      <td>0.3</td>
+      <td>0.6</td>
       <td>7.6</td>
       <td>3.03</td>
       <td>16.1</td>
@@ -3218,11 +3217,11 @@ Distributions (CPDs) and imputing missing values.</p>
     </tr>
     <tr>
       <th>18</th>
-      <td>0.2</td>
+      <td>0.1</td>
       <td>0.26</td>
       <td>86.0</td>
       <td>1.9</td>
-      <td>0.6</td>
+      <td>0.8</td>
       <td>6.2</td>
       <td>2.99</td>
       <td>18.2</td>
@@ -3233,7 +3232,7 @@ Distributions (CPDs) and imputing missing values.</p>
       <td>0.2</td>
       <td>0.27</td>
       <td>90.0</td>
-      <td>3.3</td>
+      <td>0.7</td>
       <td>0.9</td>
       <td>5.9</td>
       <td>3.12</td>
@@ -3245,7 +3244,7 @@ Distributions (CPDs) and imputing missing values.</p>
 </div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.507 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.710 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-bayesian-networks-plot-bayesnet-exp-1-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ffa0e15980f0d185e353f73898729334/plot_bayesnet_exp_1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_bayesnet_exp_1.py</span></code></a></p>
@@ -3265,7 +3264,7 @@ Distributions (CPDs) and imputing missing values.</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="plot_bayesnet_exp_1_1.html" class="btn btn-neutral float-right" title="Bayesian Networks Experiment I.I" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Bayesian Networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_bayes_net_supplementary.html" class="btn btn-neutral float-left" title="Bayesian Network Supplementary Script" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

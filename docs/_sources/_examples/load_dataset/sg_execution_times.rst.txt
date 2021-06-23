@@ -5,12 +5,14 @@
 
 Computation times
 =================
-**00:22.210** total execution time for **_examples_load_dataset** files:
+**01:41.102** total execution time for **_examples_load_dataset** files:
 
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_pathology_data_summary.py` (``plot_pathology_data_summary.py``) | 00:11.484 | 0.0 MB |
+| :ref:`sphx_glr__examples_load_dataset_plot_pathology_exp_1.py` (``plot_pathology_exp_1.py``)               | 01:19.997 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_biomarkers_dist.py` (``plot_biomarkers_dist.py``)               | 00:09.322 | 0.0 MB |
+| :ref:`sphx_glr__examples_load_dataset_plot_pathology_data_summary.py` (``plot_pathology_data_summary.py``) | 00:09.912 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_load_dataset_plot_corr_networks.py` (``plot_corr_networks.py``)                   | 00:01.404 | 0.0 MB |
+| :ref:`sphx_glr__examples_load_dataset_plot_pathology_exp_2.py` (``plot_pathology_exp_2.py``)               | 00:09.064 | 0.0 MB |
++------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr__examples_load_dataset_plot_pathology_exp_3.py` (``plot_pathology_exp_3.py``)               | 00:02.128 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+

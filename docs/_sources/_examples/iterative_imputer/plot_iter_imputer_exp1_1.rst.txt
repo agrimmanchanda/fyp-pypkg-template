@@ -18,35 +18,40 @@
 .. _sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1.py:
 
 
-Iterative Imputer Experiment I.I
+Experiment 1: Model Learning
 ===========================================
 
-Single biomarker removal using ``sklearn``
-methods only.
+The aim of this experiment was to remove a single feature from the data set 
+and use the remaining features to predict its values to emulate a simple 
+regression model. This script has results from model learning.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-14
+.. GENERATED FROM PYTHON SOURCE LINES 12-15
 
 -------------------------------------
 Libraries import
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-48
+.. GENERATED FROM PYTHON SOURCE LINES 15-53
 
 .. code-block:: default
-   :lineno-start: 15
+   :lineno-start: 16
 
 
     # Libraries generic
     import numpy as np
     import pandas as pd
     import sklearn
+    import seaborn as sns
     import matplotlib.pyplot as plt
+    import warnings
+    warnings.filterwarnings("ignore")
 
     # Libraries sklearn
     from sklearn.pipeline import Pipeline
     from sklearn.model_selection import KFold
     from sklearn.model_selection import cross_validate
     from sklearn.preprocessing import StandardScaler
+    from sklearn.model_selection import train_test_split
 
     # Regressors
     from sklearn.linear_model import LinearRegression
@@ -65,9 +70,9 @@ Libraries import
     from sklearn.metrics import mean_squared_error
 
     # Custom Packages
-    from pkgname.utils.load_dataset import remove_data_outliers
-    from pkgname.utils.iter_imp import corr_pairs, get_score_statistics
-    from pkgname.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
+    from labimputer.utils.load_dataset import remove_data_outliers
+    from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores, nae, get_best_models, get_cvts_delta
+    from labimputer.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
 
 
 
@@ -76,25 +81,19 @@ Libraries import
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-52
+.. GENERATED FROM PYTHON SOURCE LINES 54-57
 
 -------------------------------------
 Define tuned estimators
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-110
+.. GENERATED FROM PYTHON SOURCE LINES 57-108
 
 .. code-block:: default
-   :lineno-start: 52
+   :lineno-start: 57
 
     _TUNED_ESTIMATORS = {
-        'lr': LinearRegression(),
-        'bridge': BayesianRidge(
-            alpha_1=1e-05,
-            alpha_2=1e-07,
-            lambda_1=1e-07,
-            lambda_2=1e-05,
-        ),
+        'lr': LinearRegression(n_jobs=-1),
         'dt': DecisionTreeRegressor(
             criterion='mse',
             splitter='best',
@@ -103,24 +102,17 @@ Define tuned estimators
             min_samples_leaf=8,
             min_samples_split=8,
         ),
-        'etr': ExtraTreesRegressor(
+        'rf': ExtraTreesRegressor(
             n_estimators=100,
             criterion='mse',
+            max_depth=8,
             bootstrap=False,
             warm_start=False,
             n_jobs=-1,
         ),
-        'sgd-ls': SGDRegressor(
+        'svr': SGDRegressor(
             alpha=1e-4,
             epsilon=0.05,
-            learning_rate='adaptive',
-            loss='squared_loss',
-            early_stopping=True,
-            warm_start=True,
-        ),
-        'sgd-sv': SGDRegressor(
-            alpha=1e-4,
-            epsilon=0.01,
             learning_rate='adaptive',
             loss='squared_epsilon_insensitive',
             early_stopping=True,
@@ -131,7 +123,13 @@ Define tuned estimators
             weights='distance',
             n_jobs=-1,
         ),
-        'xgb': XGBRegressor(),
+        'xgb': XGBRegressor(
+            n_estimators=100,
+            eval_metric='rmse',
+            max_depth=10,
+            eta=0.2,
+            gamma=0.1,
+        ),
         'mlp': MLPRegressor(
             alpha=1e-4,
             hidden_layer_sizes=32,
@@ -140,7 +138,7 @@ Define tuned estimators
             warm_start=True,
             early_stopping=True,
         ),
-        'sir': SimpleImputerRegressor(
+        'median': SimpleImputerRegressor(
             strategy='median'
         ),
     }
@@ -152,28 +150,30 @@ Define tuned estimators
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-114
+.. GENERATED FROM PYTHON SOURCE LINES 109-112
 
 -------------------------------------
 Data import 
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-139
+.. GENERATED FROM PYTHON SOURCE LINES 112-141
 
 .. code-block:: default
-   :lineno-start: 115
+   :lineno-start: 113
 
 
     # Set relative data path and set FBC panel list
     path_data = '../resources/datasets/nhs/Transformed_First_FBC_dataset.csv'
 
-    FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
+    # Define FBC panel for the experiment
+    FBC_CODES = sorted(["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                     "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
-                    "MCH", "PLT", "MPV", "NRBCA"]
+                    "MCH", "PLT", "MPV", "NRBCA"])
 
     # Read data and drop Nan _uid records
     df = pd.read_csv(path_data).dropna(subset=['pid'])
 
+    # Reset the index to easily count all test records
     df.reset_index(drop=True, inplace=True)
 
     # Obtain the biomarkers DataFrame only
@@ -188,6 +188,7 @@ Data import
     # Complete profiles for complete case analysis
     complete_profiles = complete_profiles.drop(DROP_FEATURES, axis=1)
 
+    FBC_PANEL = complete_profiles.columns
 
 
 
@@ -195,16 +196,17 @@ Data import
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-143
+
+.. GENERATED FROM PYTHON SOURCE LINES 142-145
 
 -------------------------------------
 Correlation matrix
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-153
+.. GENERATED FROM PYTHON SOURCE LINES 145-155
 
 .. code-block:: default
-   :lineno-start: 144
+   :lineno-start: 146
 
 
     # Calculate correlation matrix using Pearson Correlation Coefficient
@@ -228,53 +230,77 @@ Correlation matrix
 
 
     Data:
-            EOS  MONO  NEUT   RBC   WBC   MCHC    MCV   LY   HCT   RDW    HGB   MCH    PLT   MPV
-    0       0.0   0.4   3.9  4.23   5.0  320.0   92.6  0.7  0.39  15.1  125.0  29.6  202.0   8.6
-    6       0.0   0.7   4.0  3.53   5.9  307.0  104.0  1.1  0.37  15.1  113.0  32.0  257.0   7.4
-    7       0.1   0.3   3.0  3.40   4.2  320.0  101.0  0.8  0.34  13.8  110.0  32.2  282.0   8.0
-    8       0.1   0.3   3.4  3.32   4.5  321.0  101.0  0.7  0.34  14.4  108.0  32.5  282.0   8.1
-    9       0.2   0.6   4.6  3.34   6.1  320.0  102.0  0.7  0.34  14.1  109.0  32.7  298.0   8.7
-    ...     ...   ...   ...   ...   ...    ...    ...  ...   ...   ...    ...   ...    ...   ...
-    101167  0.1   0.4   4.4  4.62   7.1  328.0   90.8  2.1  0.42  11.3  138.0  29.8  210.0   9.6
-    101169  0.2   0.4   4.9  4.33   7.6  334.0   88.2  2.0  0.38  12.9  128.0  29.5  208.0   9.3
-    101170  0.2   0.4   4.0  4.67   6.8  323.0   88.8  2.2  0.42  13.9  134.0  28.7  295.0   8.9
-    101173  0.0   0.6   4.5  4.19   7.2  325.0   89.4  2.1  0.37  11.1  122.0  29.0  247.0  10.5
-    101174  0.0   0.8   8.1  4.01  10.1  326.0   92.4  1.2  0.37  11.7  121.0  30.1  204.0   9.2
+            EOS   HCT    HGB   LY   MCH   MCHC    MCV  MONO   MPV  NEUT    PLT   RBC   RDW   WBC
+    0       0.0  0.39  125.0  0.7  29.6  320.0   92.6   0.4   8.6   3.9  202.0  4.23  15.1   5.0
+    6       0.0  0.37  113.0  1.1  32.0  307.0  104.0   0.7   7.4   4.0  257.0  3.53  15.1   5.9
+    7       0.1  0.34  110.0  0.8  32.2  320.0  101.0   0.3   8.0   3.0  282.0  3.40  13.8   4.2
+    8       0.1  0.34  108.0  0.7  32.5  321.0  101.0   0.3   8.1   3.4  282.0  3.32  14.4   4.5
+    9       0.2  0.34  109.0  0.7  32.7  320.0  102.0   0.6   8.7   4.6  298.0  3.34  14.1   6.1
+    ...     ...   ...    ...  ...   ...    ...    ...   ...   ...   ...    ...   ...   ...   ...
+    101167  0.1  0.42  138.0  2.1  29.8  328.0   90.8   0.4   9.6   4.4  210.0  4.62  11.3   7.1
+    101169  0.2  0.38  128.0  2.0  29.5  334.0   88.2   0.4   9.3   4.9  208.0  4.33  12.9   7.6
+    101170  0.2  0.42  134.0  2.2  28.7  323.0   88.8   0.4   8.9   4.0  295.0  4.67  13.9   6.8
+    101173  0.0  0.37  122.0  2.1  29.0  325.0   89.4   0.6  10.5   4.5  247.0  4.19  11.1   7.2
+    101174  0.0  0.37  121.0  1.2  30.1  326.0   92.4   0.8   9.2   8.1  204.0  4.01  11.7  10.1
 
     [56271 rows x 14 columns]
 
     Correlation (pearson):
-               EOS      MONO      NEUT       RBC       WBC  ...       RDW       HGB       MCH       PLT       MPV
-    EOS   1.000000  0.176592 -0.077021  0.076247  0.063383  ... -0.029017  0.063382 -0.046216  0.148320 -0.008346
-    MONO  0.176592  1.000000  0.437707 -0.011525  0.565965  ...  0.000838 -0.011822 -0.007282  0.191892  0.006449
-    NEUT -0.077021  0.437707  1.000000 -0.125506  0.946863  ...  0.043472 -0.142903 -0.036335  0.204307 -0.015518
-    RBC   0.076247 -0.011525 -0.125506  1.000000 -0.009884  ... -0.317913  0.921963 -0.301421  0.089001  0.169995
-    WBC   0.063383  0.565965  0.946863 -0.009884  1.000000  ... -0.031387 -0.030376 -0.058005  0.275886  0.021949
-    MCHC -0.073132 -0.006352  0.014154  0.002774  0.015221  ... -0.237056  0.160611  0.391104 -0.087255 -0.041123
-    MCV  -0.016068 -0.005156 -0.046127 -0.328603 -0.070355  ... -0.273143  0.016983  0.902952 -0.143448 -0.061824
-    LY    0.289178  0.228941 -0.067306  0.381424  0.242921  ... -0.258299  0.367455 -0.079429  0.227641  0.133033
-    HCT   0.075691 -0.011767 -0.147780  0.932916 -0.034098  ... -0.445215  0.983795  0.018124  0.044596  0.156687
-    RDW  -0.029017  0.000838  0.043472 -0.317913 -0.031387  ...  1.000000 -0.479547 -0.354513 -0.050207 -0.129583
-    HGB   0.063382 -0.011822 -0.142903  0.921963 -0.030376  ... -0.479547  1.000000  0.084460  0.030526  0.148419
-    MCH  -0.046216 -0.007282 -0.036335 -0.301421 -0.058005  ... -0.354513  0.084460  1.000000 -0.169143 -0.073755
-    PLT   0.148320  0.191892  0.204307  0.089001  0.275886  ... -0.050207  0.030526 -0.169143  1.000000 -0.329940
-    MPV  -0.008346  0.006449 -0.015518  0.169995  0.021949  ... -0.129583  0.148419 -0.073755 -0.329940  1.000000
+               EOS       HCT       HGB        LY  ...       PLT       RBC       RDW       WBC
+    EOS   1.000000  0.075691  0.063382  0.289178  ...  0.148320  0.076247 -0.029017  0.063383
+    HCT   0.075691  1.000000  0.983795  0.368346  ...  0.044596  0.932916 -0.445215 -0.034098
+    HGB   0.063382  0.983795  1.000000  0.367455  ...  0.030526  0.921963 -0.479547 -0.030376
+    LY    0.289178  0.368346  0.367455  1.000000  ...  0.227641  0.381424 -0.258299  0.242921
+    MCH  -0.046216  0.018124  0.084460 -0.079429  ... -0.169143 -0.301421 -0.354513 -0.058005
+    MCHC -0.073132 -0.009970  0.160611  0.021764  ... -0.087255  0.002774 -0.237056  0.015221
+    MCV  -0.016068  0.024410  0.016983 -0.097091  ... -0.143448 -0.328603 -0.273143 -0.070355
+    MONO  0.176592 -0.011767 -0.011822  0.228941  ...  0.191892 -0.011525  0.000838  0.565965
+    MPV  -0.008346  0.156687  0.148419  0.133033  ... -0.329940  0.169995 -0.129583  0.021949
+    NEUT -0.077021 -0.147780 -0.142903 -0.067306  ...  0.204307 -0.125506  0.043472  0.946863
+    PLT   0.148320  0.044596  0.030526  0.227641  ...  1.000000  0.089001 -0.050207  0.275886
+    RBC   0.076247  0.932916  0.921963  0.381424  ...  0.089001  1.000000 -0.317913 -0.009884
+    RDW  -0.029017 -0.445215 -0.479547 -0.258299  ... -0.050207 -0.317913  1.000000 -0.031387
+    WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387  1.000000
 
     [14 rows x 14 columns]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-157
+.. GENERATED FROM PYTHON SOURCE LINES 156-159
 
 -------------------------------------
-Obtain evaluation scores
+Split into train-test
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-239
+.. GENERATED FROM PYTHON SOURCE LINES 159-165
 
 .. code-block:: default
-   :lineno-start: 158
+   :lineno-start: 160
+
+
+    SEED = 8
+
+    # Train-test split of 80:20
+    train_set, test_set = train_test_split(complete_profiles, shuffle=False, test_size=0.2, random_state=8)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 166-169
+
+-------------------------------------
+Five fold cross validation (CVTS)
+-------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 169-276
+
+.. code-block:: default
+   :lineno-start: 170
 
 
     # Number of splits
@@ -288,7 +314,8 @@ Obtain evaluation scores
         'nmae': 'neg_mean_absolute_error', # MAE
         'nmse': 'neg_mean_squared_error',       # MSE
         'nrmse': 'neg_root_mean_squared_error', # RMSE
-        #'norm_rmse': make_scorer(norm_rmse) # NRMSE
+        'rmsle': make_scorer(rmsle), # RMSLE
+        'norm_rmse': make_scorer(norm_rmse), # NRMSE
     }
 
     # Compendium of results
@@ -297,37 +324,52 @@ Obtain evaluation scores
     # Create a list of estimators
     ESTIMATORS = [
         # 'lr',
-        # 'bridge',
         # 'dt',
-        # 'etr',
-        # 'sgd-ls',
-        # 'sgd-sv',
+        # 'rf',
+        # 'svr',
         # 'knn',
+        # 'mlp',
         # 'xgb',
-        # 'sir',
+        # 'median',
     ]
 
-    # For each estimator
+    # Concat scores for each CVTS run
+    test_data = pd.DataFrame()
+
+    # Loop over each estimator
     for i, est in enumerate(ESTIMATORS):
 
-        data = pd.DataFrame()
+        # Dictionary for storing all test scores on hold
+        test_scores = {}
 
         # Check if estimator has been defined else skip
         if est not in _TUNED_ESTIMATORS:
             continue
     
+        # Select estimator
         estimator = _TUNED_ESTIMATORS[est]
     
-        if estimator != 'sir':
-            imputer = IterativeImputerRegressor(estimator=estimator)
+        if est != 'median':
+            imputer = IterativeImputerRegressor(estimator=estimator,
+                                                min_value=0, 
+                                                max_iter=10000)
         else:
             imputer = estimator
 
-        for biomarker in complete_profiles:
+        # Loop over each analyte
+        for biomarker in train_set:
 
-            aux = complete_profiles.copy(deep=True)
-            X = aux[[x for x in aux.columns if x != biomarker]]
-            y = aux[biomarker]
+            # Generate new train-test for each run
+            aux_train = train_set.copy()
+            aux_test = test_set.copy()
+
+            # Define independent (X_train) and dependent (y_train) variables
+            X_train = aux_train[[x for x in aux_train.columns if x != biomarker]]
+            y_train = aux_train[biomarker]
+
+            # Define same variables with test set
+            X_test = aux_test[[x for x in aux_test.columns if x != biomarker]]
+            y_test = aux_test[biomarker]
 
             # Information
             print("\n%s. Evaluating... %s for biomarker... %s" % (i, est, biomarker))
@@ -339,23 +381,33 @@ Obtain evaluation scores
 
             # Obtain scores for each fold using cross_validate
             scores = cross_validate(pipe, 
-                                    X, 
-                                    y, 
+                                    X_train, 
+                                    y_train, 
                                     scoring=scoring, 
                                     cv=skf, 
                                     return_train_score=True, 
                                     n_jobs=-1, 
                                     verbose=0)
-        
+
+            # Fit on training set 
+            pipe.fit(X_train, y_train)
+
+            # Generate x, y test 
+            y_pred = pipe.predict(X_test)
+
+            # Compendium of all test scores
+            test_scores[biomarker] = get_test_scores(y_test, y_pred)
+
             # Extract results
             results = pd.DataFrame(scores)
             results.index = ['%s_%s_%s' % (biomarker, est, j)
                 for j in range(results.shape[0])]
         
-            # Add to compendium and data
+            # Add to compendium of results
             iir_results = iir_results.append(results)
-            data = data.append(results)
-            # data.to_csv(f'datasets/iir_{est}.csv')
+    
+        # Concatenate scores for the estimator to all other test scores
+        test_data = pd.concat([test_data, pd.Series(test_scores, name=est)], axis=1)
 
 
 
@@ -364,21 +416,21 @@ Obtain evaluation scores
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 240-243
+.. GENERATED FROM PYTHON SOURCE LINES 277-280
 
 -------------------------------------
 Save results
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 243-248
+.. GENERATED FROM PYTHON SOURCE LINES 280-285
 
 .. code-block:: default
-   :lineno-start: 244
+   :lineno-start: 281
 
 
     # Save
-    # iir_results.to_csv('datasets/iir_results.csv')
+    # iir_results.to_csv('datasets/iir_simple_cv_results.csv')
+    # test_data.to_csv('datasets/iir_simple_test_results.csv')
 
 
 
@@ -387,47 +439,43 @@ Save results
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 249-252
+.. GENERATED FROM PYTHON SOURCE LINES 286-289
 
 -------------------------------------
-Analyse scores and test results
+Analysis of results from CVTS
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-294
+.. GENERATED FROM PYTHON SOURCE LINES 289-331
 
 .. code-block:: default
-   :lineno-start: 253
+   :lineno-start: 290
 
 
-    # Create a list of estimators
     METHODS = [
-        'lr',
-        'bridge',
-        'dt',
-        'etr',
-        'sgd-ls',
-        'sgd-sv',
-        'knn',
-        'mlp',
-        # 'xgb',
-        'sir',
+        'LR',
+        'DT',
+        'RF',
+        'SVR',
+        'KNN',
+        'MLP',
+        'XGB',
+        'Median',
     ]
 
-
-    compendium = pd.read_csv('datasets/iir_results.csv', index_col=0)
+    # Read CVTS results
+    cvts = pd.read_csv('datasets/iir_simple_cv_results.csv', index_col=0)
 
     # Get mean and variance of RMSE scores
-    all_scores = get_score_statistics(compendium, 'rmse')
+    all_scores = get_score_statistics(cvts, metric='rmse')
 
     # Split scores to obtain score for each estimator
-    split_scores = np.array_split(all_scores, len(METHODS))
+    split_scores = np.array_split(all_scores, 8)
 
     # Stack scores horizontally for easier plotting
     hsplit_scores = np.hstack((split_scores))
 
     # Create DataFrame for mean and std dev statistics
-    statistics = pd.DataFrame(hsplit_scores, index=complete_profiles.columns)
+    statistics = pd.DataFrame(hsplit_scores, index=FBC_PANEL)
 
     # Split mean and std dev statistics
     mean_stats, std_stats = statistics.iloc[:,::2], statistics.iloc[:,1::2]
@@ -435,7 +483,10 @@ Analyse scores and test results
     # Rename columns to match algorithms
     mean_stats.columns, std_stats.columns = METHODS, METHODS
 
-    print("Mean RMSE Statistics: ")
+    # Find the mean RMSE score for each method
+    mean_stats.loc["Mean"] = mean_stats.mean()
+
+    print("Mean CVTS RMSE statistics (lowest score highlighted in green)")
 
     # Highlighting the minimum values of last 2 columns
     mean_stats.style.highlight_min(color = 'lightgreen', 
@@ -451,223 +502,219 @@ Analyse scores and test results
 
  .. code-block:: none
 
-    Mean RMSE Statistics: 
+    Mean CVTS RMSE statistics (lowest score highlighted in green)
 
 
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
     <style  type="text/css" >
-    #T_b8e7a_row0_col0,#T_b8e7a_row1_col0,#T_b8e7a_row2_col0,#T_b8e7a_row3_col7,#T_b8e7a_row4_col4,#T_b8e7a_row5_col3,#T_b8e7a_row6_col3,#T_b8e7a_row7_col0,#T_b8e7a_row8_col3,#T_b8e7a_row9_col7,#T_b8e7a_row10_col7,#T_b8e7a_row11_col3,#T_b8e7a_row12_col7,#T_b8e7a_row13_col7{
+    #T_37133_row0_col0,#T_37133_row1_col0,#T_37133_row2_col5,#T_37133_row3_col0,#T_37133_row4_col5,#T_37133_row5_col5,#T_37133_row6_col5,#T_37133_row7_col0,#T_37133_row8_col5,#T_37133_row9_col0,#T_37133_row10_col5,#T_37133_row11_col5,#T_37133_row12_col5,#T_37133_row13_col0,#T_37133_row14_col5{
                 background-color:  lightgreen;
-            }</style><table id="T_b8e7a_" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >lr</th>        <th class="col_heading level0 col1" >bridge</th>        <th class="col_heading level0 col2" >dt</th>        <th class="col_heading level0 col3" >etr</th>        <th class="col_heading level0 col4" >sgd-ls</th>        <th class="col_heading level0 col5" >sgd-sv</th>        <th class="col_heading level0 col6" >knn</th>        <th class="col_heading level0 col7" >mlp</th>        <th class="col_heading level0 col8" >sir</th>    </tr></thead><tbody>
+            }</style><table id="T_37133_" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >LR</th>        <th class="col_heading level0 col1" >DT</th>        <th class="col_heading level0 col2" >RF</th>        <th class="col_heading level0 col3" >SVR</th>        <th class="col_heading level0 col4" >KNN</th>        <th class="col_heading level0 col5" >MLP</th>        <th class="col_heading level0 col6" >XGB</th>        <th class="col_heading level0 col7" >Median</th>    </tr></thead><tbody>
                     <tr>
-                            <th id="T_b8e7a_level0_row0" class="row_heading level0 row0" >EOS</th>
-                            <td id="T_b8e7a_row0_col0" class="data row0 col0" >0.058488</td>
-                            <td id="T_b8e7a_row0_col1" class="data row0 col1" >0.058488</td>
-                            <td id="T_b8e7a_row0_col2" class="data row0 col2" >0.108792</td>
-                            <td id="T_b8e7a_row0_col3" class="data row0 col3" >0.095702</td>
-                            <td id="T_b8e7a_row0_col4" class="data row0 col4" >0.059439</td>
-                            <td id="T_b8e7a_row0_col5" class="data row0 col5" >0.058766</td>
-                            <td id="T_b8e7a_row0_col6" class="data row0 col6" >0.113106</td>
-                            <td id="T_b8e7a_row0_col7" class="data row0 col7" >0.059043</td>
-                            <td id="T_b8e7a_row0_col8" class="data row0 col8" >0.116911</td>
+                            <th id="T_37133_level0_row0" class="row_heading level0 row0" >EOS</th>
+                            <td id="T_37133_row0_col0" class="data row0 col0" >0.057369</td>
+                            <td id="T_37133_row0_col1" class="data row0 col1" >0.108619</td>
+                            <td id="T_37133_row0_col2" class="data row0 col2" >0.106307</td>
+                            <td id="T_37133_row0_col3" class="data row0 col3" >0.057952</td>
+                            <td id="T_37133_row0_col4" class="data row0 col4" >0.113453</td>
+                            <td id="T_37133_row0_col5" class="data row0 col5" >0.058125</td>
+                            <td id="T_37133_row0_col6" class="data row0 col6" >0.111427</td>
+                            <td id="T_37133_row0_col7" class="data row0 col7" >0.117211</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row1" class="row_heading level0 row1" >MONO</th>
-                            <td id="T_b8e7a_row1_col0" class="data row1 col0" >0.063966</td>
-                            <td id="T_b8e7a_row1_col1" class="data row1 col1" >0.063966</td>
-                            <td id="T_b8e7a_row1_col2" class="data row1 col2" >0.201050</td>
-                            <td id="T_b8e7a_row1_col3" class="data row1 col3" >0.111960</td>
-                            <td id="T_b8e7a_row1_col4" class="data row1 col4" >0.064266</td>
-                            <td id="T_b8e7a_row1_col5" class="data row1 col5" >0.064135</td>
-                            <td id="T_b8e7a_row1_col6" class="data row1 col6" >0.211939</td>
-                            <td id="T_b8e7a_row1_col7" class="data row1 col7" >0.064650</td>
-                            <td id="T_b8e7a_row1_col8" class="data row1 col8" >0.260395</td>
+                            <th id="T_37133_level0_row1" class="row_heading level0 row1" >HCT</th>
+                            <td id="T_37133_row1_col0" class="data row1 col0" >0.003539</td>
+                            <td id="T_37133_row1_col1" class="data row1 col1" >0.012619</td>
+                            <td id="T_37133_row1_col2" class="data row1 col2" >0.006352</td>
+                            <td id="T_37133_row1_col3" class="data row1 col3" >0.003772</td>
+                            <td id="T_37133_row1_col4" class="data row1 col4" >0.013420</td>
+                            <td id="T_37133_row1_col5" class="data row1 col5" >0.003772</td>
+                            <td id="T_37133_row1_col6" class="data row1 col6" >0.016802</td>
+                            <td id="T_37133_row1_col7" class="data row1 col7" >0.064774</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row2" class="row_heading level0 row2" >NEUT</th>
-                            <td id="T_b8e7a_row2_col0" class="data row2 col0" >0.066160</td>
-                            <td id="T_b8e7a_row2_col1" class="data row2 col1" >0.066160</td>
-                            <td id="T_b8e7a_row2_col2" class="data row2 col2" >0.656279</td>
-                            <td id="T_b8e7a_row2_col3" class="data row2 col3" >0.098258</td>
-                            <td id="T_b8e7a_row2_col4" class="data row2 col4" >0.066161</td>
-                            <td id="T_b8e7a_row2_col5" class="data row2 col5" >0.066290</td>
-                            <td id="T_b8e7a_row2_col6" class="data row2 col6" >0.748481</td>
-                            <td id="T_b8e7a_row2_col7" class="data row2 col7" >0.072136</td>
-                            <td id="T_b8e7a_row2_col8" class="data row2 col8" >2.602406</td>
+                            <th id="T_37133_level0_row2" class="row_heading level0 row2" >HGB</th>
+                            <td id="T_37133_row2_col0" class="data row2 col0" >1.040319</td>
+                            <td id="T_37133_row2_col1" class="data row2 col1" >3.998371</td>
+                            <td id="T_37133_row2_col2" class="data row2 col2" >1.988897</td>
+                            <td id="T_37133_row2_col3" class="data row2 col3" >1.040565</td>
+                            <td id="T_37133_row2_col4" class="data row2 col4" >4.240223</td>
+                            <td id="T_37133_row2_col5" class="data row2 col5" >0.643098</td>
+                            <td id="T_37133_row2_col6" class="data row2 col6" >13.267417</td>
+                            <td id="T_37133_row2_col7" class="data row2 col7" >21.186938</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row3" class="row_heading level0 row3" >RBC</th>
-                            <td id="T_b8e7a_row3_col0" class="data row3 col0" >0.051247</td>
-                            <td id="T_b8e7a_row3_col1" class="data row3 col1" >0.051247</td>
-                            <td id="T_b8e7a_row3_col2" class="data row3 col2" >0.205544</td>
-                            <td id="T_b8e7a_row3_col3" class="data row3 col3" >0.019375</td>
-                            <td id="T_b8e7a_row3_col4" class="data row3 col4" >0.051210</td>
-                            <td id="T_b8e7a_row3_col5" class="data row3 col5" >0.051289</td>
-                            <td id="T_b8e7a_row3_col6" class="data row3 col6" >0.141072</td>
-                            <td id="T_b8e7a_row3_col7" class="data row3 col7" >0.016111</td>
-                            <td id="T_b8e7a_row3_col8" class="data row3 col8" >0.751817</td>
+                            <th id="T_37133_level0_row3" class="row_heading level0 row3" >LY</th>
+                            <td id="T_37133_row3_col0" class="data row3 col0" >0.065692</td>
+                            <td id="T_37133_row3_col1" class="data row3 col1" >0.579395</td>
+                            <td id="T_37133_row3_col2" class="data row3 col2" >0.519606</td>
+                            <td id="T_37133_row3_col3" class="data row3 col3" >0.065806</td>
+                            <td id="T_37133_row3_col4" class="data row3 col4" >0.573582</td>
+                            <td id="T_37133_row3_col5" class="data row3 col5" >0.067677</td>
+                            <td id="T_37133_row3_col6" class="data row3 col6" >0.331473</td>
+                            <td id="T_37133_row3_col7" class="data row3 col7" >0.758803</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row4" class="row_heading level0 row4" >WBC</th>
-                            <td id="T_b8e7a_row4_col0" class="data row4 col0" >0.066188</td>
-                            <td id="T_b8e7a_row4_col1" class="data row4 col1" >0.066188</td>
-                            <td id="T_b8e7a_row4_col2" class="data row4 col2" >0.716875</td>
-                            <td id="T_b8e7a_row4_col3" class="data row4 col3" >0.097273</td>
-                            <td id="T_b8e7a_row4_col4" class="data row4 col4" >0.066186</td>
-                            <td id="T_b8e7a_row4_col5" class="data row4 col5" >0.066316</td>
-                            <td id="T_b8e7a_row4_col6" class="data row4 col6" >0.691134</td>
-                            <td id="T_b8e7a_row4_col7" class="data row4 col7" >0.072144</td>
-                            <td id="T_b8e7a_row4_col8" class="data row4 col8" >2.768599</td>
+                            <th id="T_37133_level0_row4" class="row_heading level0 row4" >MCH</th>
+                            <td id="T_37133_row4_col0" class="data row4 col0" >0.077220</td>
+                            <td id="T_37133_row4_col1" class="data row4 col1" >0.649949</td>
+                            <td id="T_37133_row4_col2" class="data row4 col2" >0.235312</td>
+                            <td id="T_37133_row4_col3" class="data row4 col3" >0.077213</td>
+                            <td id="T_37133_row4_col4" class="data row4 col4" >0.571111</td>
+                            <td id="T_37133_row4_col5" class="data row4 col5" >0.062828</td>
+                            <td id="T_37133_row4_col6" class="data row4 col6" >3.179216</td>
+                            <td id="T_37133_row4_col7" class="data row4 col7" >2.120342</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row5" class="row_heading level0 row5" >MCHC</th>
-                            <td id="T_b8e7a_row5_col0" class="data row5 col0" >0.804123</td>
-                            <td id="T_b8e7a_row5_col1" class="data row5 col1" >0.804123</td>
-                            <td id="T_b8e7a_row5_col2" class="data row5 col2" >6.098773</td>
-                            <td id="T_b8e7a_row5_col3" class="data row5 col3" >0.594074</td>
-                            <td id="T_b8e7a_row5_col4" class="data row5 col4" >0.804267</td>
-                            <td id="T_b8e7a_row5_col5" class="data row5 col5" >0.804433</td>
-                            <td id="T_b8e7a_row5_col6" class="data row5 col6" >6.843804</td>
-                            <td id="T_b8e7a_row5_col7" class="data row5 col7" >0.670137</td>
-                            <td id="T_b8e7a_row5_col8" class="data row5 col8" >9.788781</td>
+                            <th id="T_37133_level0_row5" class="row_heading level0 row5" >MCHC</th>
+                            <td id="T_37133_row5_col0" class="data row5 col0" >0.812900</td>
+                            <td id="T_37133_row5_col1" class="data row5 col1" >6.130034</td>
+                            <td id="T_37133_row5_col2" class="data row5 col2" >3.797583</td>
+                            <td id="T_37133_row5_col3" class="data row5 col3" >0.813211</td>
+                            <td id="T_37133_row5_col4" class="data row5 col4" >6.986281</td>
+                            <td id="T_37133_row5_col5" class="data row5 col5" >0.702397</td>
+                            <td id="T_37133_row5_col6" class="data row5 col6" >35.032392</td>
+                            <td id="T_37133_row5_col7" class="data row5 col7" >9.728558</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row6" class="row_heading level0 row6" >MCV</th>
-                            <td id="T_b8e7a_row6_col0" class="data row6 col0" >0.231830</td>
-                            <td id="T_b8e7a_row6_col1" class="data row6 col1" >0.231830</td>
-                            <td id="T_b8e7a_row6_col2" class="data row6 col2" >1.903430</td>
-                            <td id="T_b8e7a_row6_col3" class="data row6 col3" >0.169743</td>
-                            <td id="T_b8e7a_row6_col4" class="data row6 col4" >0.231860</td>
-                            <td id="T_b8e7a_row6_col5" class="data row6 col5" >0.231743</td>
-                            <td id="T_b8e7a_row6_col6" class="data row6 col6" >1.840807</td>
-                            <td id="T_b8e7a_row6_col7" class="data row6 col7" >0.211474</td>
-                            <td id="T_b8e7a_row6_col8" class="data row6 col8" >5.900812</td>
+                            <th id="T_37133_level0_row6" class="row_heading level0 row6" >MCV</th>
+                            <td id="T_37133_row6_col0" class="data row6 col0" >0.235258</td>
+                            <td id="T_37133_row6_col1" class="data row6 col1" >1.918443</td>
+                            <td id="T_37133_row6_col2" class="data row6 col2" >0.864965</td>
+                            <td id="T_37133_row6_col3" class="data row6 col3" >0.235296</td>
+                            <td id="T_37133_row6_col4" class="data row6 col4" >1.921319</td>
+                            <td id="T_37133_row6_col5" class="data row6 col5" >0.221094</td>
+                            <td id="T_37133_row6_col6" class="data row6 col6" >9.888564</td>
+                            <td id="T_37133_row6_col7" class="data row6 col7" >6.016572</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row7" class="row_heading level0 row7" >LY</th>
-                            <td id="T_b8e7a_row7_col0" class="data row7 col0" >0.065669</td>
-                            <td id="T_b8e7a_row7_col1" class="data row7 col1" >0.065669</td>
-                            <td id="T_b8e7a_row7_col2" class="data row7 col2" >0.576354</td>
-                            <td id="T_b8e7a_row7_col3" class="data row7 col3" >0.189363</td>
-                            <td id="T_b8e7a_row7_col4" class="data row7 col4" >0.065711</td>
-                            <td id="T_b8e7a_row7_col5" class="data row7 col5" >0.065783</td>
-                            <td id="T_b8e7a_row7_col6" class="data row7 col6" >0.569163</td>
-                            <td id="T_b8e7a_row7_col7" class="data row7 col7" >0.066641</td>
-                            <td id="T_b8e7a_row7_col8" class="data row7 col8" >0.753773</td>
+                            <th id="T_37133_level0_row7" class="row_heading level0 row7" >MONO</th>
+                            <td id="T_37133_row7_col0" class="data row7 col0" >0.064067</td>
+                            <td id="T_37133_row7_col1" class="data row7 col1" >0.201861</td>
+                            <td id="T_37133_row7_col2" class="data row7 col2" >0.186040</td>
+                            <td id="T_37133_row7_col3" class="data row7 col3" >0.064244</td>
+                            <td id="T_37133_row7_col4" class="data row7 col4" >0.213706</td>
+                            <td id="T_37133_row7_col5" class="data row7 col5" >0.064694</td>
+                            <td id="T_37133_row7_col6" class="data row7 col6" >0.157770</td>
+                            <td id="T_37133_row7_col7" class="data row7 col7" >0.260713</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row8" class="row_heading level0 row8" >HCT</th>
-                            <td id="T_b8e7a_row8_col0" class="data row8 col0" >0.003551</td>
-                            <td id="T_b8e7a_row8_col1" class="data row8 col1" >0.003551</td>
-                            <td id="T_b8e7a_row8_col2" class="data row8 col2" >0.012595</td>
-                            <td id="T_b8e7a_row8_col3" class="data row8 col3" >0.002508</td>
-                            <td id="T_b8e7a_row8_col4" class="data row8 col4" >0.003551</td>
-                            <td id="T_b8e7a_row8_col5" class="data row8 col5" >0.003762</td>
-                            <td id="T_b8e7a_row8_col6" class="data row8 col6" >0.013079</td>
-                            <td id="T_b8e7a_row8_col7" class="data row8 col7" >0.003458</td>
-                            <td id="T_b8e7a_row8_col8" class="data row8 col8" >0.065571</td>
+                            <th id="T_37133_level0_row8" class="row_heading level0 row8" >MPV</th>
+                            <td id="T_37133_row8_col0" class="data row8 col0" >1.017829</td>
+                            <td id="T_37133_row8_col1" class="data row8 col1" >1.042273</td>
+                            <td id="T_37133_row8_col2" class="data row8 col2" >1.016767</td>
+                            <td id="T_37133_row8_col3" class="data row8 col3" >1.017834</td>
+                            <td id="T_37133_row8_col4" class="data row8 col4" >1.074738</td>
+                            <td id="T_37133_row8_col5" class="data row8 col5" >1.011652</td>
+                            <td id="T_37133_row8_col6" class="data row8 col6" >1.310688</td>
+                            <td id="T_37133_row8_col7" class="data row8 col7" >1.141573</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row9" class="row_heading level0 row9" >RDW</th>
-                            <td id="T_b8e7a_row9_col0" class="data row9 col0" >1.451828</td>
-                            <td id="T_b8e7a_row9_col1" class="data row9 col1" >1.451846</td>
-                            <td id="T_b8e7a_row9_col2" class="data row9 col2" >1.479226</td>
-                            <td id="T_b8e7a_row9_col3" class="data row9 col3" >1.416980</td>
-                            <td id="T_b8e7a_row9_col4" class="data row9 col4" >1.451754</td>
-                            <td id="T_b8e7a_row9_col5" class="data row9 col5" >1.452074</td>
-                            <td id="T_b8e7a_row9_col6" class="data row9 col6" >1.484753</td>
-                            <td id="T_b8e7a_row9_col7" class="data row9 col7" >1.397548</td>
-                            <td id="T_b8e7a_row9_col8" class="data row9 col8" >1.879196</td>
+                            <th id="T_37133_level0_row9" class="row_heading level0 row9" >NEUT</th>
+                            <td id="T_37133_row9_col0" class="data row9 col0" >0.066214</td>
+                            <td id="T_37133_row9_col1" class="data row9 col1" >0.658386</td>
+                            <td id="T_37133_row9_col2" class="data row9 col2" >0.365045</td>
+                            <td id="T_37133_row9_col3" class="data row9 col3" >0.066343</td>
+                            <td id="T_37133_row9_col4" class="data row9 col4" >0.771516</td>
+                            <td id="T_37133_row9_col5" class="data row9 col5" >0.076130</td>
+                            <td id="T_37133_row9_col6" class="data row9 col6" >0.569750</td>
+                            <td id="T_37133_row9_col7" class="data row9 col7" >2.588842</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row10" class="row_heading level0 row10" >HGB</th>
-                            <td id="T_b8e7a_row10_col0" class="data row10 col0" >1.046061</td>
-                            <td id="T_b8e7a_row10_col1" class="data row10 col1" >1.046061</td>
-                            <td id="T_b8e7a_row10_col2" class="data row10 col2" >4.047838</td>
-                            <td id="T_b8e7a_row10_col3" class="data row10 col3" >0.898766</td>
-                            <td id="T_b8e7a_row10_col4" class="data row10 col4" >1.045922</td>
-                            <td id="T_b8e7a_row10_col5" class="data row10 col5" >1.046057</td>
-                            <td id="T_b8e7a_row10_col6" class="data row10 col6" >4.127998</td>
-                            <td id="T_b8e7a_row10_col7" class="data row10 col7" >0.597006</td>
-                            <td id="T_b8e7a_row10_col8" class="data row10 col8" >21.515179</td>
+                            <th id="T_37133_level0_row10" class="row_heading level0 row10" >PLT</th>
+                            <td id="T_37133_row10_col0" class="data row10 col0" >68.769493</td>
+                            <td id="T_37133_row10_col1" class="data row10 col1" >71.613924</td>
+                            <td id="T_37133_row10_col2" class="data row10 col2" >68.439723</td>
+                            <td id="T_37133_row10_col3" class="data row10 col3" >68.762286</td>
+                            <td id="T_37133_row10_col4" class="data row10 col4" >71.805615</td>
+                            <td id="T_37133_row10_col5" class="data row10 col5" >67.418019</td>
+                            <td id="T_37133_row10_col6" class="data row10 col6" >72.196164</td>
+                            <td id="T_37133_row10_col7" class="data row10 col7" >81.135348</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row11" class="row_heading level0 row11" >MCH</th>
-                            <td id="T_b8e7a_row11_col0" class="data row11 col0" >0.075980</td>
-                            <td id="T_b8e7a_row11_col1" class="data row11 col1" >0.075980</td>
-                            <td id="T_b8e7a_row11_col2" class="data row11 col2" >0.645027</td>
-                            <td id="T_b8e7a_row11_col3" class="data row11 col3" >0.055803</td>
-                            <td id="T_b8e7a_row11_col4" class="data row11 col4" >0.075975</td>
-                            <td id="T_b8e7a_row11_col5" class="data row11 col5" >0.075964</td>
-                            <td id="T_b8e7a_row11_col6" class="data row11 col6" >0.546108</td>
-                            <td id="T_b8e7a_row11_col7" class="data row11 col7" >0.064752</td>
-                            <td id="T_b8e7a_row11_col8" class="data row11 col8" >2.081556</td>
+                            <th id="T_37133_level0_row11" class="row_heading level0 row11" >RBC</th>
+                            <td id="T_37133_row11_col0" class="data row11 col0" >0.051611</td>
+                            <td id="T_37133_row11_col1" class="data row11 col1" >0.205837</td>
+                            <td id="T_37133_row11_col2" class="data row11 col2" >0.057061</td>
+                            <td id="T_37133_row11_col3" class="data row11 col3" >0.051670</td>
+                            <td id="T_37133_row11_col4" class="data row11 col4" >0.144266</td>
+                            <td id="T_37133_row11_col5" class="data row11 col5" >0.018352</td>
+                            <td id="T_37133_row11_col6" class="data row11 col6" >0.395552</td>
+                            <td id="T_37133_row11_col7" class="data row11 col7" >0.743132</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row12" class="row_heading level0 row12" >PLT</th>
-                            <td id="T_b8e7a_row12_col0" class="data row12 col0" >68.079100</td>
-                            <td id="T_b8e7a_row12_col1" class="data row12 col1" >68.079544</td>
-                            <td id="T_b8e7a_row12_col2" class="data row12 col2" >70.988611</td>
-                            <td id="T_b8e7a_row12_col3" class="data row12 col3" >67.699751</td>
-                            <td id="T_b8e7a_row12_col4" class="data row12 col4" >68.088919</td>
-                            <td id="T_b8e7a_row12_col5" class="data row12 col5" >68.065699</td>
-                            <td id="T_b8e7a_row12_col6" class="data row12 col6" >71.329544</td>
-                            <td id="T_b8e7a_row12_col7" class="data row12 col7" >66.628538</td>
-                            <td id="T_b8e7a_row12_col8" class="data row12 col8" >80.604096</td>
+                            <th id="T_37133_level0_row12" class="row_heading level0 row12" >RDW</th>
+                            <td id="T_37133_row12_col0" class="data row12 col0" >1.488606</td>
+                            <td id="T_37133_row12_col1" class="data row12 col1" >1.530749</td>
+                            <td id="T_37133_row12_col2" class="data row12 col2" >1.458849</td>
+                            <td id="T_37133_row12_col3" class="data row12 col3" >1.488826</td>
+                            <td id="T_37133_row12_col4" class="data row12 col4" >1.525209</td>
+                            <td id="T_37133_row12_col5" class="data row12 col5" >1.438594</td>
+                            <td id="T_37133_row12_col6" class="data row12 col6" >2.012387</td>
+                            <td id="T_37133_row12_col7" class="data row12 col7" >1.917320</td>
                 </tr>
                 <tr>
-                            <th id="T_b8e7a_level0_row13" class="row_heading level0 row13" >MPV</th>
-                            <td id="T_b8e7a_row13_col0" class="data row13 col0" >1.009346</td>
-                            <td id="T_b8e7a_row13_col1" class="data row13 col1" >1.009359</td>
-                            <td id="T_b8e7a_row13_col2" class="data row13 col2" >1.030925</td>
-                            <td id="T_b8e7a_row13_col3" class="data row13 col3" >1.009860</td>
-                            <td id="T_b8e7a_row13_col4" class="data row13 col4" >1.009302</td>
-                            <td id="T_b8e7a_row13_col5" class="data row13 col5" >1.009492</td>
-                            <td id="T_b8e7a_row13_col6" class="data row13 col6" >1.063030</td>
-                            <td id="T_b8e7a_row13_col7" class="data row13 col7" >0.998184</td>
-                            <td id="T_b8e7a_row13_col8" class="data row13 col8" >1.137396</td>
+                            <th id="T_37133_level0_row13" class="row_heading level0 row13" >WBC</th>
+                            <td id="T_37133_row13_col0" class="data row13 col0" >0.066250</td>
+                            <td id="T_37133_row13_col1" class="data row13 col1" >0.723255</td>
+                            <td id="T_37133_row13_col2" class="data row13 col2" >0.301337</td>
+                            <td id="T_37133_row13_col3" class="data row13 col3" >0.066381</td>
+                            <td id="T_37133_row13_col4" class="data row13 col4" >0.707036</td>
+                            <td id="T_37133_row13_col5" class="data row13 col5" >0.073947</td>
+                            <td id="T_37133_row13_col6" class="data row13 col6" >0.789167</td>
+                            <td id="T_37133_row13_col7" class="data row13 col7" >2.765770</td>
+                </tr>
+                <tr>
+                            <th id="T_37133_level0_row14" class="row_heading level0 row14" >Mean</th>
+                            <td id="T_37133_row14_col0" class="data row14 col0" >5.272598</td>
+                            <td id="T_37133_row14_col1" class="data row14 col1" >6.383837</td>
+                            <td id="T_37133_row14_col2" class="data row14 col2" >5.667418</td>
+                            <td id="T_37133_row14_col3" class="data row14 col3" >5.272243</td>
+                            <td id="T_37133_row14_col4" class="data row14 col4" >6.475820</td>
+                            <td id="T_37133_row14_col5" class="data row14 col5" >5.132884</td>
+                            <td id="T_37133_row14_col6" class="data row14 col6" >9.947055</td>
+                            <td id="T_37133_row14_col7" class="data row14 col7" >9.324707</td>
                 </tr>
         </tbody></table>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-298
+.. GENERATED FROM PYTHON SOURCE LINES 332-335
 
 -------------------------------------
-Plot results
+Plotting CVTS scores
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 298-325
+.. GENERATED FROM PYTHON SOURCE LINES 335-363
 
 .. code-block:: default
-   :lineno-start: 299
+   :lineno-start: 336
 
 
+    # Define figure size
     plt.figure(figsize=(20,40))
 
-    # Set single title for all figures
-    # plt.suptitle('Iterative Imputer RMSE scores for complete profiles', 
-    #             fontweight='bold', 
-    #             fontsize=12)
+    # Create new mean_stats df without the final row
+    mean_stats_plot = mean_stats.head(mean_stats.shape[0] - 1)
 
-
-    for idx, (biomarker, scores) in enumerate(mean_stats.iterrows(), start=1):
+    # Loop for each plot
+    for idx, (biomarker, scores) in enumerate(mean_stats_plot.iterrows(), start=1):
         plt.subplot(7,2,idx)
-        plt.title(f'RMSE for {biomarker}', 
-        fontweight='bold', 
+        plt.title(f'RMSE for {biomarker}',
+        fontweight='bold',
         fontsize=14)
         cmap = ['green' if (x == min(scores)) else 'royalblue' for x in scores]
-        scores.plot.barh(grid=True, 
-                    xerr=list(std_stats.loc[biomarker, :]), 
-                    align='center', 
+        scores.plot.barh(grid=True,
+                    xerr=list(std_stats.loc[biomarker, :]),
+                    align='center',
                     color=cmap)
         plt.xticks(fontsize=16)
         plt.yticks(fontsize=16)
         plt.xlabel('RMSE Score', fontsize=16)
-    
+
     # Space plots out
     plt.tight_layout()
 
@@ -675,8 +722,48 @@ Plot results
     plt.show()
 
 
+
+
 .. image:: /_examples/iterative_imputer/images/sphx_glr_plot_iter_imputer_exp1_1_001.png
-    :alt: RMSE for EOS, RMSE for MONO, RMSE for NEUT, RMSE for RBC, RMSE for WBC, RMSE for MCHC, RMSE for MCV, RMSE for LY, RMSE for HCT, RMSE for RDW, RMSE for HGB, RMSE for MCH, RMSE for PLT, RMSE for MPV
+    :alt: RMSE for EOS, RMSE for HCT, RMSE for HGB, RMSE for LY, RMSE for MCH, RMSE for MCHC, RMSE for MCV, RMSE for MONO, RMSE for MPV, RMSE for NEUT, RMSE for PLT, RMSE for RBC, RMSE for RDW, RMSE for WBC
+    :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 364-367
+
+--------------------------------------------------
+Compare best CVTS with Simple Median Imputation
+--------------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 367-383
+
+.. code-block:: default
+   :lineno-start: 368
+
+
+    # Select best models based on best CVTS score for each analyte
+    BEST_MODELS = get_best_models(mean_stats)
+
+    cvts_best_df = get_cvts_delta(mean_stats, BEST_MODELS)
+
+    # Plot figure
+    plt.figure(figsize=(15,5))
+
+    # Create barplot
+    plot = sns.barplot(x=cvts_best_df.index, y=cvts_best_df['$\Delta$ (%)'], hue=cvts_best_df['Model'], dodge=False)
+
+    # Set xlabel as appropriate
+    plot.set_xlabel("Analyte")
+
+    # Show
+    plt.show()
+
+
+.. image:: /_examples/iterative_imputer/images/sphx_glr_plot_iter_imputer_exp1_1_002.png
+    :alt: plot iter imputer exp1 1
     :class: sphx-glr-single-img
 
 
@@ -686,7 +773,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.859 seconds)
+   **Total running time of the script:** ( 0 minutes  3.871 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp1_1.py:

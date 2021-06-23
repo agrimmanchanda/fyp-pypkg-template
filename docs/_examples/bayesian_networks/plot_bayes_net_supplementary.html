@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Bayesian Network Supplementary Script &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-rendered-html.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Bayesian Networks Experiment I.I" href="plot_bayesnet_exp_1.html" />
+    <link rel="prev" title="Bayesian Networks" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> fyp2020-am9717
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/setup.html">Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Experiments</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../load_dataset/index.html">Overview of pathology data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../iterative_imputer/index.html">Iterative Imputer</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Bayesian Networks</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Bayesian Network Supplementary Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_bayesnet_exp_1.html">Bayesian Networks Experiment I.I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_bayesnet_exp_1_1.html">Bayesian Networks Experiment I.I</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">fyp2020-am9717</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Bayesian Networks</a> &raquo;</li>
+        
+      <li>Bayesian Network Supplementary Script</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/_examples/bayesian_networks/plot_bayes_net_supplementary.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-bayesian-networks-plot-bayes-net-supplementary-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="bayesian-network-supplementary-script">
+<span id="sphx-glr-examples-bayesian-networks-plot-bayes-net-supplementary-py"></span><h1>Bayesian Network Supplementary Script<a class="headerlink" href="#bayesian-network-supplementary-script" title="Permalink to this headline">¶</a></h1>
+<p>Provides all supplementary code for experiments.</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># #######################################</span>
+ <span class="c1"># # -------------------------------------</span>
+ <span class="c1"># # Libraries import</span>
+ <span class="c1"># # -------------------------------------</span>
+
+ <span class="c1"># # Libraries generic</span>
+ <span class="c1"># import numpy as np</span>
+ <span class="c1"># import pandas as pd</span>
+ <span class="c1"># import sklearn</span>
+ <span class="c1"># import matplotlib.pyplot as plt</span>
+ <span class="c1"># import seaborn as sns</span>
+ <span class="c1"># from scipy import stats</span>
+
+ <span class="c1"># # Libraries sklearn</span>
+ <span class="c1"># from sklearn.pipeline import Pipeline</span>
+ <span class="c1"># from sklearn.model_selection import KFold</span>
+ <span class="c1"># from sklearn.model_selection import cross_validate</span>
+ <span class="c1"># from sklearn.preprocessing import StandardScaler</span>
+ <span class="c1"># from sklearn.model_selection import train_test_split</span>
+
+ <span class="c1"># # Regressors</span>
+ <span class="c1"># from sklearn.linear_model import LinearRegression</span>
+ <span class="c1"># from sklearn.linear_model import Ridge</span>
+ <span class="c1"># from sklearn.linear_model import BayesianRidge</span>
+ <span class="c1"># from sklearn.ensemble import RandomForestRegressor</span>
+ <span class="c1"># from sklearn.tree import DecisionTreeRegressor</span>
+ <span class="c1"># from sklearn.ensemble import ExtraTreesRegressor</span>
+ <span class="c1"># from sklearn.linear_model import SGDRegressor</span>
+ <span class="c1"># from sklearn.neighbors import KNeighborsRegressor</span>
+ <span class="c1"># from sklearn.neural_network import MLPRegressor</span>
+ <span class="c1"># from xgboost import XGBRegressor</span>
+
+ <span class="c1"># # Metrics</span>
+ <span class="c1"># from sklearn.metrics import make_scorer</span>
+ <span class="c1"># from sklearn.metrics import mean_squared_error</span>
+
+ <span class="c1"># # Custom Packages</span>
+ <span class="c1"># from labimputer.utils.load_dataset import remove_data_outliers</span>
+ <span class="c1"># from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores, get_best_models, nae</span>
+ <span class="c1"># from labimputer.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor</span>
+ <span class="c1"># from labimputer.core.bayes_net import BNRegressor, BNImputer</span>
+
+ <span class="c1"># METHODS = [</span>
+ <span class="c1">#     &#39;LR&#39;,</span>
+ <span class="c1">#     &#39;DT&#39;,</span>
+ <span class="c1">#     &#39;RF&#39;,</span>
+ <span class="c1">#     &#39;SVR&#39;,</span>
+ <span class="c1">#     &#39;KNN&#39;,</span>
+ <span class="c1">#     &#39;MLP&#39;,</span>
+ <span class="c1">#     &#39;XGB&#39;,</span>
+ <span class="c1">#     &#39;Median&#39;,</span>
+ <span class="c1"># ]</span>
+
+ <span class="c1"># FBC_CODES = sorted([&quot;EOS&quot;, &quot;MONO&quot;, &quot;NEUT&quot;, &quot;RBC&quot;, &quot;WBC&quot;,</span>
+ <span class="c1">#                 &quot;MCHC&quot;, &quot;MCV&quot;, &quot;LY&quot;, &quot;HCT&quot;, &quot;RDW&quot;, &quot;HGB&quot;,</span>
+ <span class="c1">#                 &quot;MCH&quot;, &quot;PLT&quot;, &quot;MPV&quot;])</span>
+
+
+ <span class="c1"># ## Test results</span>
+
+ <span class="c1"># df1 = pd.read_csv(&#39;ML_mult_test_results_30.csv&#39;, index_col=0)</span>
+
+ <span class="c1"># df1</span>
+
+ <span class="c1"># data = np.split(df1.T.to_numpy(), len(df1.T.to_numpy())/3)</span>
+
+ <span class="c1"># d = pd.DataFrame()</span>
+
+ <span class="c1"># for idx, values in enumerate(zip(data, FBC_CODES)):</span>
+
+ <span class="c1">#     y_true, y_pred, y_med = values[0][0], values[0][1], values[0][2]</span>
+
+ <span class="c1">#     rmse_tp, rmse_tm = rmse(y_true, y_pred), rmse(y_true, y_med)</span>
+
+ <span class="c1">#     join = pd.concat([pd.Series(rmse_tp), pd.Series(rmse_tm)], axis=1)</span>
+
+ <span class="c1">#     d = d.append(join)</span>
+
+ <span class="c1"># d.columns, d.index = [&#39;Best&#39;, &#39;Median&#39;], FBC_CODES</span>
+
+ <span class="c1"># d[&#39;$\Delta$ (%)&#39;] = 100 - (100* (d[&#39;Best&#39;]/d[&#39;Median&#39;]))</span>
+
+ <span class="c1"># d.loc[&#39;Mean&#39;] = d.mean()</span>
+
+ <span class="c1"># for idx, values in enumerate(zip(data, FBC_CODES)):</span>
+
+ <span class="c1">#     y_true, y_pred, y_med = values[0][0], values[0][1], values[0][2]</span>
+
+ <span class="c1">#     t1 = stats.mannwhitneyu(y_true, y_med)</span>
+
+ <span class="c1">#     print(values[1], t1)</span>
+
+
+ <span class="c1"># d = pd.DataFrame()</span>
+
+ <span class="c1"># for idx, values in enumerate(zip(data, FBC_CODES)):</span>
+
+ <span class="c1">#     y_true, y_pred, y_med = values[0][0], values[0][1], values[0][2]</span>
+
+ <span class="c1">#     nae_tp, nae_tm = nae(y_true, y_pred), nae(y_true, y_med)</span>
+
+ <span class="c1">#     nae_vals = pd.DataFrame([nae_tp, [&#39;Best&#39; for _ in range(len(nae_tp))], [values[1] for _ in range(len(nae_tp))]]).T</span>
+
+ <span class="c1">#     nae_vals_med = pd.DataFrame([nae_tm, [&#39;Median&#39; for _ in range(len(nae_tm))], [values[1] for _ in range(len(nae_tm))]]).T</span>
+
+ <span class="c1">#     join = pd.concat([nae_vals, nae_vals_med], axis=0)</span>
+
+ <span class="c1">#     d = d.append(join)</span>
+
+ <span class="c1"># d.columns = [&#39;NAE&#39;, &#39;Model&#39;, &#39;Analyte&#39;]</span>
+
+ <span class="c1"># plt.figure(figsize=(15,5))</span>
+
+ <span class="c1"># # create grouped boxplot</span>
+ <span class="c1"># sns.boxplot(x = d[&#39;Analyte&#39;],</span>
+ <span class="c1">#         y = d[&#39;NAE&#39;],</span>
+ <span class="c1">#         hue = d[&#39;Model&#39;],</span>
+ <span class="c1">#         showfliers=False</span>
+ <span class="c1">#         )</span>
+
+ <span class="c1"># plt.show()</span>
+</pre></div>
+</td></tr></table></div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.001 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-bayesian-networks-plot-bayes-net-supplementary-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/aca0916b0f8deab61e64ed81a36ec238/plot_bayes_net_supplementary.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_bayes_net_supplementary.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/84f08911e9d11c98b8ff39db0eece97d/plot_bayes_net_supplementary.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_bayes_net_supplementary.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="plot_bayesnet_exp_1.html" class="btn btn-neutral float-right" title="Bayesian Networks Experiment I.I" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Bayesian Networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Agrim Manchanda.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

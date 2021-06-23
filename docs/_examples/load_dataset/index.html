@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Loading the data set &mdash; fyp2020-am9717 0.0.1 documentation</title>
+  <title>Overview of pathology data &mdash; fyp2020-am9717 0.0.1 documentation</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Biomarker distributions in dataset" href="plot_biomarkers_dist.html" />
-    <link rel="prev" title="Plotting a gaussian (tutorial)" href="../tutorial/plot_sample_02.html" /> 
+    <link rel="next" title="Summary report of NHS Pathology Data" href="plot_pathology_data_summary.html" />
+    <link rel="prev" title="Tutorial" href="../../tutorials/setup.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -92,18 +92,17 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/setup.html">Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Example Galleries</span></p>
+<p class="caption"><span class="caption-text">Experiments</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">The tutorial gallery</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Loading the data set</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="plot_biomarkers_dist.html">Biomarker distributions in dataset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plot_corr_networks.html">Network graphs to visualise correlations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of pathology data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="plot_pathology_data_summary.html">Summary report of NHS Pathology Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_pathology_exp_1.html">Experiment 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_pathology_exp_2.html">Experiment 2 and 3 (a)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_pathology_exp_3.html">Experiment 3 (b)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../iterative_imputer/index.html">Iterative Imputer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bayesian_networks/index.html">Bayesian Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">The Widgets’ gallery</a></li>
 </ul>
 
             
@@ -152,7 +151,7 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Loading the data set</li>
+      <li>Overview of pathology data</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -171,24 +170,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="loading-the-data-set">
-<span id="sphx-glr-examples-load-dataset"></span><h1>Loading the data set<a class="headerlink" href="#loading-the-data-set" title="Permalink to this headline">¶</a></h1>
-<p>This section will be used to visualise interesting results from the (raw) data set.</p>
-<div class="sphx-glr-thumbcontainer" tooltip="Using seaborn library to visualise biomarker distributions"><div class="figure align-default" id="id1">
-<img alt="Biomarker distributions in dataset" src="../../_images/sphx_glr_plot_biomarkers_dist_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_biomarkers_dist.html#sphx-glr-examples-load-dataset-plot-biomarkers-dist-py"><span class="std std-ref">Biomarker distributions in dataset</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="Using networkx library to visualise biomarker correlations"><div class="figure align-default" id="id2">
-<img alt="Network graphs to visualise correlations" src="../../_images/sphx_glr_plot_corr_networks_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_corr_networks.html#sphx-glr-examples-load-dataset-plot-corr-networks-py"><span class="std std-ref">Network graphs to visualise correlations</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="Using dataprep to create interactive report."><div class="figure align-default" id="id3">
+  <div class="section" id="overview-of-pathology-data">
+<span id="sphx-glr-examples-load-dataset"></span><h1>Overview of pathology data<a class="headerlink" href="#overview-of-pathology-data" title="Permalink to this headline">¶</a></h1>
+<p>Aim: The aim of the experiment is to prepare the data for static profiling, perform feature selection and carry out some of the pre-processing steps for Iterative Imputer and Bayesian Networks.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="Using dataprep to create interactive report."><div class="figure align-default" id="id1">
 <img alt="Summary report of NHS Pathology Data" src="../../_images/sphx_glr_plot_pathology_data_summary_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_pathology_data_summary.html#sphx-glr-examples-load-dataset-plot-pathology-data-summary-py"><span class="std std-ref">Summary report of NHS Pathology Data</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_pathology_data_summary.html#sphx-glr-examples-load-dataset-plot-pathology-data-summary-py"><span class="std std-ref">Summary report of NHS Pathology Data</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Generating patient static profiles for patients using TidyWidget class."><div class="figure align-default" id="id2">
+<img alt="Experiment 1" src="../../_images/sphx_glr_plot_pathology_exp_1_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_pathology_exp_1.html#sphx-glr-examples-load-dataset-plot-pathology-exp-1-py"><span class="std std-ref">Experiment 1</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Performing feature selection to select FBC panel and plotting the feature distributions."><div class="figure align-default" id="id3">
+<img alt="Experiment 2 and 3 (a)" src="../../_images/sphx_glr_plot_pathology_exp_2_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_pathology_exp_2.html#sphx-glr-examples-load-dataset-plot-pathology-exp-2-py"><span class="std std-ref">Experiment 2 and 3 (a)</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Using networkx library to visualise the selected feature (FBC panel) correlations."><div class="figure align-default" id="id4">
+<img alt="Experiment 3 (b)" src="../../_images/sphx_glr_plot_pathology_exp_3_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="plot_pathology_exp_3.html#sphx-glr-examples-load-dataset-plot-pathology-exp-3-py"><span class="std std-ref">Experiment 3 (b)</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
@@ -201,8 +206,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="plot_biomarkers_dist.html" class="btn btn-neutral float-right" title="Biomarker distributions in dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../tutorial/plot_sample_02.html" class="btn btn-neutral float-left" title="Plotting a gaussian (tutorial)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_pathology_data_summary.html" class="btn btn-neutral float-right" title="Summary report of NHS Pathology Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../../tutorials/setup.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

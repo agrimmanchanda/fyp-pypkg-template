@@ -50,9 +50,9 @@ Example using your package
 
 
     # Libraries
-    from pkgname.utils.display import show
-    from pkgname.core.greetings import Hello
-    from pkgname.core.greetings import Morning
+    from labimputer.utils.display import show
+    from labimputer.core.greetings import Hello
+    from labimputer.core.greetings import Morning
 
     # -------------------------------------
     # Constants
@@ -74,7 +74,7 @@ Example using your package
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.004 seconds)
+   **Total running time of the script:** ( 0 minutes  0.006 seconds)
 
 
 .. _sphx_glr_download__examples_tutorial_plot_greetings_01.py:

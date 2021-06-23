@@ -12,6 +12,27 @@ This section will include different experiments with Bayesian Networks.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Provides all supplementary code for experiments.">
+
+.. only:: html
+
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayes_net_supplementary_thumb.png
+     :alt: Bayesian Network Supplementary Script
+
+     :ref:`sphx_glr__examples_bayesian_networks_plot_bayes_net_supplementary.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/bayesian_networks/plot_bayes_net_supplementary
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Using the pgmpy library to learn the  structure of Bayesian Network (BN) from the data, estimat...">
 
 .. only:: html

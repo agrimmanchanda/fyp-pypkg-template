@@ -35,10 +35,10 @@ from sklearn.preprocessing import KBinsDiscretizer
 from sklearn.metrics import mean_squared_error
 
 # Custom Packages
-from pkgname.utils.load_dataset import remove_data_outliers
-from pkgname.core.bayes_net import BNImputer, learn_model_structure
-from pkgname.utils.bayes_net import get_unique_edges, get_score_statistics
-from pkgname.utils.load_dataset import suppress_stdout
+from labimputer.utils.load_dataset import remove_data_outliers
+from labimputer.core.bayes_net import BNImputer, learn_model_structure
+from labimputer.utils.bayes_net import get_unique_edges, get_score_statistics
+from labimputer.utils.load_dataset import suppress_stdout
 
 #######################################
 # -------------------------------------
