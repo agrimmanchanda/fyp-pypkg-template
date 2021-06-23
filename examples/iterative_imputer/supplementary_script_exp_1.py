@@ -1,11 +1,14 @@
 """
-Iterative Imputer Experiment I
+Iterative Imputer Supplementary Script 1
 ===========================================
 
-Single biomarker removal experiment with
-K-Fold Cross Validation.
+The following script is a supplementary script 
+which was developed during the project. The methodology was 
+initially manually implemented to understand individual steps
+but was later automatically done.
 
 """
+
 #######################################
 # -------------------------------------
 # Libraries import 
@@ -37,11 +40,11 @@ from labimputer.utils.iter_imp import *
 # -------------------------------------
 
 # Set relative data path and set FBC panel list
-path_data = 'datasets/Transformed_First_FBC_dataset.csv'
+path_data = '../resources/datasets/nhs/Transformed_First_FBC_dataset.csv'
 
-FBC_CODES = ["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
+FBC_CODES = sorted(["EOS", "MONO", "BASO", "NEUT", "RBC", "WBC", 
                 "MCHC", "MCV", "LY", "HCT", "RDW", "HGB", 
-                "MCH", "PLT", "MPV", "NRBCA"]
+                "MCH", "PLT", "MPV", "NRBCA"])
 
 # Read data and drop Nan _uid records
 df = pd.read_csv(path_data).dropna(subset=['pid'])
@@ -105,19 +108,19 @@ temp_rmsle_score_df = rmse_score_df.copy(deep=True)
 # -------------------------------------
 
 estimators = {
-    # 'Bayesian Ridge': BayesianRidge(),
-    # 'Decision Tree': DecisionTreeRegressor(),
-    # 'Random Forest': ExtraTreesRegressor(),
-    # 'XGBoost': XGBRegressor(),
-    # 'K-NN': KNeighborsRegressor(weights='distance'),
-    # 'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
-    # early_stopping=True),
-    # 'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
-    # 'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
-    # early_stopping=True),
-    # 'MLP': MLPRegressor(hidden_layer_sizes=32, 
-    # early_stopping=True, max_iter=100),
-    # 'Simple Median': SimpleImputer(strategy='median'),
+    'Bayesian Ridge': BayesianRidge(),
+    'Decision Tree': DecisionTreeRegressor(),
+    'Random Forest': ExtraTreesRegressor(),
+    'XGBoost': XGBRegressor(),
+    'K-NN': KNeighborsRegressor(weights='distance'),
+    'Least Squares (SGD)': SGDRegressor(loss='squared_loss', 
+    early_stopping=True),
+    'Huber (SGD)': SGDRegressor(loss='huber', early_stopping=True),
+    'Support Vector (SGD)': SGDRegressor(loss='epsilon_insensitive', 
+    early_stopping=True),
+    'MLP': MLPRegressor(hidden_layer_sizes=32, 
+    early_stopping=True, max_iter=100),
+    'Simple Median': SimpleImputer(strategy='median'),
 }
 
 #######################################
@@ -212,12 +215,12 @@ rmsle_score_df
 # -------------------------------------
 
 # Plot horizontal bar graph 
-# for biomarker, scores in rmse_score_df.iterrows():
-#     plt.figure(figsize=(20,15))
-#     plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
-#     cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
-#     scores.plot.barh(grid=True, color=cmap)
-#     plt.xticks(fontsize=18)
-#     plt.yticks(fontsize=18)
-#     plt.xlabel('RMSE Score', fontsize=18)
-#     plt.show()
+for biomarker, scores in rmse_score_df.iterrows():
+    plt.figure(figsize=(20,15))
+    plt.title(f'RMSE Scores for Biomarker: {biomarker} with Different Iterative Imputation Methods', fontweight='bold', fontsize=25)
+    cmap = ['green' if (x == min(scores)) else 'blue' for x in scores]
+    scores.plot.barh(grid=True, color=cmap)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
+    plt.xlabel('RMSE Score', fontsize=18)
+    plt.show()

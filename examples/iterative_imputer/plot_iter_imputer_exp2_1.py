@@ -1,10 +1,12 @@
 """
-Experiment 1: Model Learning
+Experiment 2: Model Learning
 ===========================================
 
-The aim of this experiment was to remove a single feature from the data set 
-and use the remaining features to predict its values to emulate a simple 
-regression model. This script has results from model learning.
+The aim of this experiment was to remove multiple features from the data set
+satisfying the Missing At Random (MAR) assumption and using the remainining 
+features to predict its values to emulate an actual imputer.
+
+The data was removed in proportions: 10%, 30% and 50%.
 
 """
 
@@ -47,7 +49,7 @@ from sklearn.metrics import mean_squared_error
 
 # Custom Packages
 from labimputer.utils.load_dataset import remove_data_outliers
-from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores, nae, get_best_models, get_cvts_delta
+from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores, nae, get_best_models, get_cvts_stats, get_cvts_delta
 from labimputer.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
 
 #######################################
@@ -162,6 +164,14 @@ SEED = 8
 # Train-test split of 80:20
 train_set, test_set = train_test_split(complete_profiles, shuffle=False, test_size=0.2, random_state=8)
 
+# Use copy of the original train and test set
+train_copy, test_copy = train_set.copy(), test_set.copy()
+
+# Remove 10, 30 or 50% of values depending upon requirements
+for col in train_copy.columns:
+    train_copy.loc[train_set.sample(frac=0.1).index, col] = np.nan
+    test_copy.loc[test_set.sample(frac=0.1).index, col] = np.nan
+
 #######################################
 # -------------------------------------
 # Five fold cross validation (CVTS)
@@ -213,10 +223,13 @@ for i, est in enumerate(ESTIMATORS):
     # Select estimator
     estimator = _TUNED_ESTIMATORS[est]
     
+    # Select imputer type
     if est != 'median':
         imputer = IterativeImputerRegressor(estimator=estimator,
                                             min_value=0, 
-                                            max_iter=10000)
+                                            max_iter=10,
+                                            verbose=2,
+                                            imputation_order='descending')
     else:
         imputer = estimator
 
@@ -224,8 +237,8 @@ for i, est in enumerate(ESTIMATORS):
     for biomarker in train_set:
 
         # Generate new train-test for each run
-        aux_train = train_set.copy()
-        aux_test = test_set.copy()
+        aux_train = train_copy.copy()
+        aux_test = test_copy.copy()
 
         # Define independent (X_train) and dependent (y_train) variables
         X_train = aux_train[[x for x in aux_train.columns if x != biomarker]]
@@ -279,48 +292,20 @@ for i, est in enumerate(ESTIMATORS):
 # -------------------------------------
 
 # Save
-# iir_results.to_csv('datasets/iir_simple_cv_results.csv')
-# test_data.to_csv('datasets/iir_simple_test_results.csv')
+# iir_results.to_csv('datasets/iir_mult_cv_results_10.csv')
+# test_data.to_csv('datasets/iir_mult_test_results_10.csv')
 
 #######################################
 # -------------------------------------
-# Analysis of results from CVTS
+# Analysis of results from CVTS - 10%
 # -------------------------------------
 
-METHODS = [
-    'LR',
-    'DT',
-    'RF',
-    'SVR',
-    'KNN',
-    'MLP',
-    'XGB',
-    'Median',
-]
-
 # Read CVTS results
-cvts = pd.read_csv('datasets/iir_simple_cv_results.csv', index_col=0)
+cvts_10 = pd.read_csv('datasets/iir_mult_cv_results_10.csv', index_col=0)
 
-# Get mean and variance of RMSE scores
-all_scores = get_score_statistics(cvts, metric='rmse')
+mean_stats, std_stats = get_cvts_stats(cvts_10, FBC_PANEL)
 
-# Split scores to obtain score for each estimator
-split_scores = np.array_split(all_scores, 8)
-
-# Stack scores horizontally for easier plotting
-hsplit_scores = np.hstack((split_scores))
-
-# Create DataFrame for mean and std dev statistics
-statistics = pd.DataFrame(hsplit_scores, index=FBC_PANEL)
-
-# Split mean and std dev statistics
-mean_stats, std_stats = statistics.iloc[:,::2], statistics.iloc[:,1::2]
-
-# Rename columns to match algorithms
-mean_stats.columns, std_stats.columns = METHODS, METHODS
-
-# Find the mean RMSE score for each method
-mean_stats.loc["Mean"] = mean_stats.mean()
+BEST_MODELS_10 = get_best_models(mean_stats)
 
 print("Mean CVTS RMSE statistics (lowest score highlighted in green)")
 
@@ -330,7 +315,7 @@ mean_stats.style.highlight_min(color = 'lightgreen',
 
 #######################################
 # -------------------------------------
-# Plotting CVTS scores
+# Plotting CVTS scores - 10%
 # -------------------------------------
 
 # Define figure size
@@ -360,21 +345,161 @@ plt.tight_layout()
 # Show
 plt.show()
 
-####################################################
-# --------------------------------------------------
-# Compare best CVTS with Simple Median Imputation
-# --------------------------------------------------
+#########################################################
+# -------------------------------------------------------
+# Compare best CVTS with Simple Median Imputation - 10%
+# -------------------------------------------------------
 
-# Select best models based on best CVTS score for each analyte
-BEST_MODELS = get_best_models(mean_stats)
-
-cvts_best_df = get_cvts_delta(mean_stats, BEST_MODELS)
+# Get Delta scores for 50% missing
+cvts_best_10 = get_cvts_delta(mean_stats, BEST_MODELS_10)
 
 # Plot figure
 plt.figure(figsize=(15,5))
 
 # Create barplot
-plot = sns.barplot(x=cvts_best_df.index, y=cvts_best_df['$\Delta$ (%)'], hue=cvts_best_df['Model'], dodge=False)
+plot = sns.barplot(x=cvts_best_10.index, y=cvts_best_10['$\Delta$ (%)'], hue=cvts_best_10['Model'], dodge=False)
+
+# Set xlabel as appropriate
+plot.set_xlabel("Analyte")
+
+# Show
+plt.show()
+
+#######################################
+# -------------------------------------
+# Analysis of results from CVTS - 30%
+# -------------------------------------
+
+# Read CVTS results
+cvts_30 = pd.read_csv('datasets/iir_mult_cv_results_30.csv', index_col=0)
+
+mean_stats, std_stats = get_cvts_stats(cvts_30, FBC_PANEL)
+
+BEST_MODELS_30 = get_best_models(mean_stats)
+
+print("Mean CVTS RMSE statistics (lowest score highlighted in green)")
+
+# Highlighting the minimum values of last 2 columns
+mean_stats.style.highlight_min(color = 'lightgreen', 
+                       axis = 1)
+
+########################################
+# -------------------------------------
+# Plotting CVTS scores - 30%
+# -------------------------------------
+
+# Define figure size
+plt.figure(figsize=(20,40))
+
+# Create new mean_stats df without the final row
+mean_stats_plot = mean_stats.head(mean_stats.shape[0] - 1)
+
+# Loop for each plot
+for idx, (biomarker, scores) in enumerate(mean_stats_plot.iterrows(), start=1):
+    plt.subplot(7,2,idx)
+    plt.title(f'RMSE for {biomarker}',
+    fontweight='bold',
+    fontsize=14)
+    cmap = ['green' if (x == min(scores)) else 'royalblue' for x in scores]
+    scores.plot.barh(grid=True,
+                xerr=list(std_stats.loc[biomarker, :]),
+                align='center',
+                color=cmap)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.xlabel('RMSE Score', fontsize=16)
+
+# Space plots out
+plt.tight_layout()
+
+# Show
+plt.show()
+
+#########################################################
+# -------------------------------------------------------
+# Compare best CVTS with Simple Median Imputation - 30%
+# -------------------------------------------------------
+
+# Get Delta scores for 50% missing
+cvts_best_30 = get_cvts_delta(mean_stats, BEST_MODELS_30)
+
+# Plot figure
+plt.figure(figsize=(15,5))
+
+# Create barplot
+plot = sns.barplot(x=cvts_best_30.index, y=cvts_best_30['$\Delta$ (%)'], hue=cvts_best_30['Model'], dodge=False)
+
+# Set xlabel as appropriate
+plot.set_xlabel("Analyte")
+
+# Show
+plt.show()
+
+
+#######################################
+# -------------------------------------
+# Analysis of results from CVTS - 50%
+# -------------------------------------
+
+# Read CVTS results
+cvts_50 = pd.read_csv('datasets/iir_mult_cv_results_50.csv', index_col=0)
+
+mean_stats, std_stats = get_cvts_stats(cvts_50, FBC_PANEL)
+
+BEST_MODELS_50 = get_best_models(mean_stats)
+
+print("Mean CVTS RMSE statistics (lowest score highlighted in green)")
+
+# Highlighting the minimum values of last 2 columns
+mean_stats.style.highlight_min(color = 'lightgreen', 
+                       axis = 1)
+
+
+########################################
+# -------------------------------------
+# Plotting CVTS scores - 50%
+# -------------------------------------
+
+# Define figure size
+plt.figure(figsize=(20,40))
+
+# Create new mean_stats df without the final row
+mean_stats_plot = mean_stats.head(mean_stats.shape[0] - 1)
+
+# Loop for each plot
+for idx, (biomarker, scores) in enumerate(mean_stats_plot.iterrows(), start=1):
+    plt.subplot(7,2,idx)
+    plt.title(f'RMSE for {biomarker}',
+    fontweight='bold',
+    fontsize=14)
+    cmap = ['green' if (x == min(scores)) else 'royalblue' for x in scores]
+    scores.plot.barh(grid=True,
+                xerr=list(std_stats.loc[biomarker, :]),
+                align='center',
+                color=cmap)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.xlabel('RMSE Score', fontsize=16)
+
+# Space plots out
+plt.tight_layout()
+
+# Show
+plt.show()
+
+#########################################################
+# ------------------------------------------------------
+# Compare best CVTS with Simple Median Imputation - 50%
+# ------------------------------------------------------
+
+# Get Delta scores for 50% missing
+cvts_best_50 = get_cvts_delta(mean_stats, BEST_MODELS_50)
+
+# Plot figure
+plt.figure(figsize=(15,5))
+
+# Create barplot
+plot = sns.barplot(x=cvts_best_50.index, y=cvts_best_50['$\Delta$ (%)'], hue=cvts_best_50['Model'], dodge=False)
 
 # Set xlabel as appropriate
 plot.set_xlabel("Analyte")

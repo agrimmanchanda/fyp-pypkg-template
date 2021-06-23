@@ -1,5 +1,5 @@
 """
-Iterative Imputer Experiment I.II
+Experiment 1 and 2: Hyperparameter tuning
 ===========================================
 
 Hyperparameter tuning using ``sklearn`` 

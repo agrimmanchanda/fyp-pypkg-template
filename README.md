@@ -1,13 +1,14 @@
 
-# fyp-package-template
+# labimputer
 
-[url-documentation]: https://bahp.github.io/fyp-pypkg-template/
-[url-installation]: https://bahp.github.io/fyp-pypkg-template/
-[url-development]: https://bahp.github.io/fyp-pypkg-template/
+[url-documentation]: https://agrimmanchanda.github.io/fyp2020-am9717/
+[url-installation]: https://agrimmanchanda.github.io/fyp2020-am9717/
+[url-development]: https://agrimmanchanda.github.io/fyp2020-am9717/
 
 Community | [Documentation][url-documentation] | Resources | Contributors | Release Notes
 
-One paragraph definition.
+labimputer is a Python package developed as part of a Final Year Project investigating
+data imputation methods suitable for laboratory data.
 
 <!-- ----------------------- -->
 <!--     Installation        -->
@@ -44,9 +45,9 @@ You can launch the test suite from the main directory running `pytest`.
 
 #### Useful links
 
-  - Official source code repo: https://github.com/<github_username>/<repository_name>
-  - Download releases: https://github.com/<github_username>/<repository_name>/releases
-  - Issue tracker: https://github.com/<github_username>/<repository_name>/issues
+  - Official source code repo: https://github.com/<am9717>/<fyp2020-am9717>
+  - Download releases: https://github.com/<am9717>/<fyp2020-am9717>/releases
+  - Issue tracker: https://github.com/<am9717>/<fyp2020-am9717>/issues
 
 
 <!-- ----------------------- -->
@@ -61,12 +62,18 @@ Distributed under the GNU v3.0 License. See `LICENSE` for more information.
 Link to release history and/or `CHANGELOG` 
 
 ## Roadmap
+This project outlined an imputation framework suitable for imputing missing values in laboratory data.
 ## Acknowledgements
+This project was supervised by Dr Bernard Hernandez Perez and Dr Pantelis Georgiou.
 ## Contributors
+Agrim Manchanda (agrimmanchanda) and Dr Bernard Hernandez Perez (bahp)
 ## Support
+Contact contributors.
 ## FAQ
+Feel free to contact contributors or raise PR.
 
 <!-- ----------------------- -->
 <!--         CONTACT         -->
 <!-- ----------------------- -->
 ## Contact
+See names of contributors.
