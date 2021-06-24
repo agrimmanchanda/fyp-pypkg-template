@@ -4,6 +4,9 @@
 import pandas as pd
 import numpy as np 
 import itertools
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_log_error
+from scipy import stats
 
 # Function to get unique variables in model edges
 def get_unique_edges(model_edges):
@@ -61,3 +64,89 @@ def get_score_statistics(df, metric, folds=5, combined=True):
         return list(zip(mean_scores, std_scores))
     else:
         return mean_scores, std_scores
+
+# Function to return the data statistics
+def get_data_statistics(df, panel, num):
+    
+    data = np.split(df.T.to_numpy(), len(df.T.to_numpy())/num)
+
+    rmse_dict = {}
+    
+    rmse_dict2 = {}
+    
+    mw_test = {}
+
+    for idx, values in enumerate(zip(data, panel)):
+
+        y_true, y_pred, y_med = values[0][0], values[0][1], values[0][2]
+
+        rmse_tp, rmse_tm = rmse(y_true, y_pred), rmse(y_true, y_med)
+
+        rmse_dict[values[1]] = rmse_tp
+        rmse_dict2[values[1]] = rmse_tm
+        mw_test[values[1]] = stats.mannwhitneyu(y_true, y_pred)[1]
+        
+    return pd.concat([pd.Series(rmse_dict), pd.Series(rmse_dict2), pd.Series(mw_test)], axis=1)
+
+# RMSE for grisearchCV
+def rmse(y_true, y_pred, **kwargs):
+    """ Returns the RMSE scores
+
+    Args:
+        y_true (array-like): Array of true values.
+        y_pred (array-like): Array of predicted values.
+
+    Returns:
+        rmse (float): Returns the RMSE for given data.
+    """
+
+    return mean_squared_error(y_true, y_pred, squared=False, **kwargs)
+
+# NRMSE for gridsearchCV
+def norm_rmse(y_true, y_pred, **kwargs):
+    """ Returns the normalised RMSE score
+
+    Args:
+        y_true (array-like): Array of true values.
+        y_pred (array-like): Array of predicted values.
+
+    Returns:
+        nrmse (float): Returns the NRMSE for given data.
+    """
+
+    # Calculate RMSE score
+    score = rmse(y_true, y_pred, **kwargs)
+
+    # Calculate spread of data
+    spread = max(y_true) - min(y_pred)
+    if spread != 0:
+        return score/spread
+    else:
+        return score
+
+# RMSLE for gridsearchCV
+def rmsle(y_true, y_pred, **kwargs):
+    """ Returns the RMSLE scores
+
+    Args:
+        y_true (array-like): Array of true values.
+        y_pred (array-like): Array of predicted values.
+
+    Returns:
+        rmsle (float): Returns the RMSLE for given data.
+    """
+
+    return np.sqrt(mean_squared_log_error(y_true, y_pred, **kwargs))
+
+def nae(y_true, y_pred):
+    """ Returns the NAE scores
+
+    Args:
+        y_true (array-like): Array of true values.
+        y_pred (array-like): Array of predicted values.
+
+    Returns:
+        nae (float): Returns the NAE for given data.
+    """
+    
+    return np.abs(y_pred - y_true)/(max(y_true) - min(y_true))
