@@ -8,3 +8,7 @@ This page contains experiment results as follows:
 Experiment 1: Single Feature Removal (model learning and evaluation)
 
 Experiment 2: Multiple Feature Removal (model learning and evaluation)
+
+Experiment 3 (1 and 2): Hyperparameter tuning for Experiment 1 and 2
+
+Experiment 4: Single and Multiple Feature removal with ML methods discretised (model learning and evaluation).

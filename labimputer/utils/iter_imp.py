@@ -4,6 +4,7 @@
 import pandas as pd
 import numpy as np 
 import itertools
+from scipy import stats
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_squared_log_error
 
@@ -293,3 +294,43 @@ def get_cvts_delta(df, model):
 
     # Return
     return cvts_best_df
+
+# Function to return the data statistics
+def get_data_statistics(df, panel, num):
+    
+    data = np.split(df.T.to_numpy(), len(df.T.to_numpy())/num)
+
+    rmse_dict = {}
+    
+    rmse_dict2 = {}
+    
+    mw_test = {}
+
+    for idx, values in enumerate(zip(data, panel)):
+
+        y_true, y_pred, y_med = values[0][0], values[0][1], values[0][2]
+
+        rmse_tp, rmse_tm = rmse(y_true, y_pred), rmse(y_true, y_med)
+
+        rmse_dict[values[1]] = rmse_tp
+        rmse_dict2[values[1]] = rmse_tm
+        mw_test[values[1]] = stats.mannwhitneyu(y_true, y_pred)[1]
+        
+    return pd.concat([pd.Series(rmse_dict), pd.Series(rmse_dict2), pd.Series(mw_test)], axis=1)
+
+# Function to return the data statistics for only true and predicted
+def get_simple_data_stats(df, panel, num):
+    
+    data = np.split(df.T.to_numpy(), len(df.T.to_numpy())/num)
+
+    rmse_dict = {}
+
+    for idx, values in enumerate(zip(data, panel)):
+
+        y_true, y_pred = values[0][0], values[0][1]
+
+        rmse_tp = rmse(y_true, y_pred)
+
+        rmse_dict[values[1]] = rmse_tp
+        
+    return pd.DataFrame.from_dict(rmse_dict, orient='index')
