@@ -15,6 +15,10 @@ Experiment 1: Single Feature Removal (model learning and evaluation)
 
 Experiment 2: Multiple Feature Removal (model learning and evaluation)
 
+Experiment 3 (1 and 2): Hyperparameter tuning for Experiment 1 and 2
+
+Experiment 4: Single and Multiple Feature removal with ML methods discretised (model learning and evaluation).
+
 
 .. raw:: html
 
@@ -120,6 +124,27 @@ Experiment 2: Multiple Feature Removal (model learning and evaluation)
    :hidden:
 
    /_examples/iterative_imputer/plot_iter_imputer_exp3
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove single and multiple features from the data set satisfy...">
+
+.. only:: html
+
+ .. figure:: /_examples/iterative_imputer/images/thumb/sphx_glr_plot_iter_imputer_exp4_1_thumb.png
+     :alt: Experiment 4: Model Learning and Evaluation
+
+     :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp4_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/iterative_imputer/plot_iter_imputer_exp4_1
 
 .. raw:: html
 

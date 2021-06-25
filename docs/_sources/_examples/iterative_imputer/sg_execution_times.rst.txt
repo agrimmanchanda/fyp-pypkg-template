@@ -5,18 +5,20 @@
 
 Computation times
 =================
-**01:04.742** total execution time for **_examples_iterative_imputer** files:
+**00:56.543** total execution time for **_examples_iterative_imputer** files:
 
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1_1.py` (``plot_iter_imputer_exp1_1_1.py``) | 00:26.319 | 0.0 MB |
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp2_1_1.py` (``plot_iter_imputer_exp2_1_1.py``) | 00:23.269 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp2_1_1.py` (``plot_iter_imputer_exp2_1_1.py``) | 00:23.260 | 0.0 MB |
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1_1.py` (``plot_iter_imputer_exp1_1_1.py``) | 00:20.947 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp2_1.py` (``plot_iter_imputer_exp2_1.py``)     | 00:07.866 | 0.0 MB |
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp2_1.py` (``plot_iter_imputer_exp2_1.py``)     | 00:06.392 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1.py` (``plot_iter_imputer_exp1_1.py``)     | 00:06.506 | 0.0 MB |
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp1_1.py` (``plot_iter_imputer_exp1_1.py``)     | 00:04.725 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp3.py` (``plot_iter_imputer_exp3.py``)         | 00:00.790 | 0.0 MB |
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp4_1.py` (``plot_iter_imputer_exp4_1.py``)     | 00:00.778 | 0.0 MB |
++---------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr__examples_iterative_imputer_plot_iter_imputer_exp3.py` (``plot_iter_imputer_exp3.py``)         | 00:00.433 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr__examples_iterative_imputer_supplementary_script_exp_1.py` (``supplementary_script_exp_1.py``) | 00:00.000 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------+-----------+--------+
