@@ -1,10 +1,13 @@
 """
-Experiment 1: Model Learning
+Experiment 2: Model Learning
 ===========================================
 
-The aim of this experiment was to remove a single feature from the data set 
-and use the remaining features to predict its values to emulate a simple 
-regression model. This script has results from model learning.
+The aim of this experiment was to remove multiple features from the data set
+satisfying the Missing At Random (MAR) assumption and using the remainining 
+features to predict its values to emulate an actual imputer using Bayesian
+Networks.
+
+The data was removed in proportions: 10%, 30% and 50%.
 
 """
 
@@ -50,7 +53,7 @@ from sklearn.metrics import mean_squared_error
 from labimputer.utils.load_dataset import remove_data_outliers
 from labimputer.utils.iter_imp import corr_pairs, get_score_statistics, rmse, norm_rmse, rmsle, get_test_scores, nae, get_best_models, get_cvts_delta
 from labimputer.core.iter_imp import IterativeImputerRegressor, SimpleImputerRegressor
-from labimputer.core.bayes_net import BNRegressor
+from labimputer.core.bayes_net import BNRegressor, EMImputer
 
 #######################################
 # -------------------------------------
@@ -124,6 +127,15 @@ SEED = 8
 # Train-test split of 80:20
 train_set, test_set = train_test_split(complete_profiles, shuffle=False, test_size=0.2, random_state=8)
 
+# Use copy of the original train and test set
+train_copy, test_copy = train_set.copy(), test_set.copy()
+
+# Remove 10, 30 or 50% of values depending upon requirements
+for col in train_copy.columns:
+    train_copy.loc[train_set.sample(frac=0.1).index, col] = np.nan
+    test_copy.loc[test_set.sample(frac=0.1).index, col] = np.nan
+
+
 #######################################
 # -------------------------------------
 # Five fold cross validation (CVTS)
@@ -192,7 +204,8 @@ for i, est in enumerate(ESTIMATORS):
         print("\n%s. Evaluating... %s for biomarker... %s" % (i, est, biomarker))
 
         # Create pipeline
-        pipe = Pipeline(steps=[ ('dis', KBinsDiscretizer(n_bins=5, encode='ordinal', strategy='uniform')),
+        pipe = Pipeline(steps=[ ('pre', EMImputer(max_iter=10, epsilon=10)),
+                                ('dis', KBinsDiscretizer(n_bins=5, encode='ordinal', strategy='uniform')),
                                 (est, imputer)],
                         verbose=True)
 
@@ -229,7 +242,7 @@ for i, est in enumerate(ESTIMATORS):
 # -------------------------------------
 
 # Save
-# bn_results.to_csv('datasets/bn_simple_cv_results.csv')
+# bn_results.to_csv('datasets/bn_mult_cv_results.csv')
 
 #######################################
 # -------------------------------------
@@ -245,32 +258,12 @@ dis = KBinsDiscretizer(n_bins=5, encode='ordinal', strategy='uniform')
 # Fit transform the discretised data
 Xt = pd.DataFrame(dis.fit_transform(aux_train), columns=FBC_PANEL)
 
-# Found from training
-EDGES = [
-    ('HGB', 'RDW'),
-    ('HCT', 'HGB'),
-    ('HCT', 'RBC'),
-    ('MCV', 'RBC'),
-    ('MCV', 'MCHC'),
-    ('RDW', 'LY'),
-    ('RDW', 'MCH'),
-    ('PLT', 'WBC'),
-    ('WBC', 'MONO'),
-    ('WBC', 'NEUT'),
-    ('MCH', 'MCV'),
-    ('MCH', 'MCHC'),
-    ('MPV', 'PLT'),
-    ('LY', 'MONO'),
-    ('LY', 'NEUT'),
-    ('LY', 'WBC'),
-    ('LY', 'PLT'),
-    ('LY', 'EOS'),
-    ('RBC', 'MPV'),
-    ('RBC', 'LY'),
-]
+# Remove 10% of values
+for col in Xt.columns:
+    Xt.loc[Xt.sample(frac=0.1).index, col] = np.nan
 
 # Initialise the regressor with pre-defined edges (based on previous testing)
-m1 = BNRegressor(FBC_PANEL, EDGES)
+m1 = BNRegressor(FBC_PANEL)
 
 # Learn the data using the edges
 m1.fit(Xt)

@@ -88,6 +88,24 @@ def get_data_statistics(df, panel, num):
         
     return pd.concat([pd.Series(rmse_dict), pd.Series(rmse_dict2), pd.Series(mw_test)], axis=1)
 
+
+# Function to return the data statistics for only true and predicted
+def get_simple_data_stats(df, panel, num):
+    
+    data = np.split(df.T.to_numpy(), len(df.T.to_numpy())/num)
+
+    rmse_dict = {}
+
+    for idx, values in enumerate(zip(data, panel)):
+
+        y_true, y_pred = values[0][0], values[0][1]
+
+        rmse_tp = rmse(y_true, y_pred)
+
+        rmse_dict[values[1]] = rmse_tp
+        
+    return pd.DataFrame.from_dict(rmse_dict, orient='index')
+
 # RMSE for grisearchCV
 def rmse(y_true, y_pred, **kwargs):
     """ Returns the RMSE scores

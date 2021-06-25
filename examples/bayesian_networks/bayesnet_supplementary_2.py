@@ -1,5 +1,5 @@
 """
-Bayesian Networks Experiment I.I
+Supplementary Experiment I.I.I
 ===========================================
 
 Using the ``pgmpy`` library to learn the 

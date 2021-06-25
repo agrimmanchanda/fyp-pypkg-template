@@ -188,7 +188,7 @@ if run_eval:
             y_test = aux_test[biomarker]
 
             # Information
-            print("\n%s. Evaluating... %s for biomarker... %s" % (i, est, biomarker))
+            print("\n Evaluating... %s for biomarker... %s" % (est, biomarker))
 
             # Create pipeline
             pipe = Pipeline(steps=[ ('dis', KBinsDiscretizer(n_bins=5, encode='ordinal', strategy='uniform')),
