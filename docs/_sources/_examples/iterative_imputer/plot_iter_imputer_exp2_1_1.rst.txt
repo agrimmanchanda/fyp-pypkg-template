@@ -250,21 +250,21 @@ Correlation matrix
     [56271 rows x 14 columns]
 
     Correlation (pearson):
-               EOS       HCT       HGB        LY  ...       PLT       RBC       RDW       WBC
-    EOS   1.000000  0.075691  0.063382  0.289178  ...  0.148320  0.076247 -0.029017  0.063383
-    HCT   0.075691  1.000000  0.983795  0.368346  ...  0.044596  0.932916 -0.445215 -0.034098
-    HGB   0.063382  0.983795  1.000000  0.367455  ...  0.030526  0.921963 -0.479547 -0.030376
-    LY    0.289178  0.368346  0.367455  1.000000  ...  0.227641  0.381424 -0.258299  0.242921
-    MCH  -0.046216  0.018124  0.084460 -0.079429  ... -0.169143 -0.301421 -0.354513 -0.058005
-    MCHC -0.073132 -0.009970  0.160611  0.021764  ... -0.087255  0.002774 -0.237056  0.015221
-    MCV  -0.016068  0.024410  0.016983 -0.097091  ... -0.143448 -0.328603 -0.273143 -0.070355
-    MONO  0.176592 -0.011767 -0.011822  0.228941  ...  0.191892 -0.011525  0.000838  0.565965
-    MPV  -0.008346  0.156687  0.148419  0.133033  ... -0.329940  0.169995 -0.129583  0.021949
-    NEUT -0.077021 -0.147780 -0.142903 -0.067306  ...  0.204307 -0.125506  0.043472  0.946863
-    PLT   0.148320  0.044596  0.030526  0.227641  ...  1.000000  0.089001 -0.050207  0.275886
-    RBC   0.076247  0.932916  0.921963  0.381424  ...  0.089001  1.000000 -0.317913 -0.009884
-    RDW  -0.029017 -0.445215 -0.479547 -0.258299  ... -0.050207 -0.317913  1.000000 -0.031387
-    WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387  1.000000
+               EOS       HCT       HGB        LY       MCH      MCHC  ...       MPV      NEUT       PLT       RBC       RDW       WBC
+    EOS   1.000000  0.075691  0.063382  0.289178 -0.046216 -0.073132  ... -0.008346 -0.077021  0.148320  0.076247 -0.029017  0.063383
+    HCT   0.075691  1.000000  0.983795  0.368346  0.018124 -0.009970  ...  0.156687 -0.147780  0.044596  0.932916 -0.445215 -0.034098
+    HGB   0.063382  0.983795  1.000000  0.367455  0.084460  0.160611  ...  0.148419 -0.142903  0.030526  0.921963 -0.479547 -0.030376
+    LY    0.289178  0.368346  0.367455  1.000000 -0.079429  0.021764  ...  0.133033 -0.067306  0.227641  0.381424 -0.258299  0.242921
+    MCH  -0.046216  0.018124  0.084460 -0.079429  1.000000  0.391104  ... -0.073755 -0.036335 -0.169143 -0.301421 -0.354513 -0.058005
+    MCHC -0.073132 -0.009970  0.160611  0.021764  0.391104  1.000000  ... -0.041123  0.014154 -0.087255  0.002774 -0.237056  0.015221
+    MCV  -0.016068  0.024410  0.016983 -0.097091  0.902952 -0.040685  ... -0.061824 -0.046127 -0.143448 -0.328603 -0.273143 -0.070355
+    MONO  0.176592 -0.011767 -0.011822  0.228941 -0.007282 -0.006352  ...  0.006449  0.437707  0.191892 -0.011525  0.000838  0.565965
+    MPV  -0.008346  0.156687  0.148419  0.133033 -0.073755 -0.041123  ...  1.000000 -0.015518 -0.329940  0.169995 -0.129583  0.021949
+    NEUT -0.077021 -0.147780 -0.142903 -0.067306 -0.036335  0.014154  ... -0.015518  1.000000  0.204307 -0.125506  0.043472  0.946863
+    PLT   0.148320  0.044596  0.030526  0.227641 -0.169143 -0.087255  ... -0.329940  0.204307  1.000000  0.089001 -0.050207  0.275886
+    RBC   0.076247  0.932916  0.921963  0.381424 -0.301421  0.002774  ...  0.169995 -0.125506  0.089001  1.000000 -0.317913 -0.009884
+    RDW  -0.029017 -0.445215 -0.479547 -0.258299 -0.354513 -0.237056  ... -0.129583  0.043472 -0.050207 -0.317913  1.000000 -0.031387
+    WBC   0.063383 -0.034098 -0.030376  0.242921 -0.058005  0.015221  ...  0.021949  0.946863  0.275886 -0.009884 -0.031387  1.000000
 
     [14 rows x 14 columns]
 
@@ -399,7 +399,7 @@ Obtain best RMSE scores from (CVTS)
 Model evaluation on held out test set (HOTS)
 --------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 243-306
+.. GENERATED FROM PYTHON SOURCE LINES 243-308
 
 .. code-block:: default
    :lineno-start: 244
@@ -442,6 +442,8 @@ Model evaluation on held out test set (HOTS)
                 X_test = aux_test[[x for x in aux_test.columns if x != biomarker]]
                 y_test = aux_test[biomarker]
 
+                nan_idx = np.argwhere(np.isnan(y_test.to_numpy())).flatten()
+
                 # Information
                 print("\n Evaluating... %s for biomarker... %s" % (est, biomarker))
 
@@ -454,7 +456,7 @@ Model evaluation on held out test set (HOTS)
                 pipe.fit(X_train, y_train)
 
                 # Generate x, y test 
-                y_pred = pipe.predict(X_test)
+                y_pred = pipe.predict(X_test)[nan_idx]
 
                 # Store results in DataFrame
                 if est != 'median':
@@ -474,16 +476,16 @@ Model evaluation on held out test set (HOTS)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 307-310
+.. GENERATED FROM PYTHON SOURCE LINES 309-312
 
 ----------------------------------------
 RMSE for held out test set (HOTS) - 10%
 ----------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 310-368
+.. GENERATED FROM PYTHON SOURCE LINES 312-370
 
 .. code-block:: default
-   :lineno-start: 311
+   :lineno-start: 313
 
 
     # Generate simple test results
@@ -688,16 +690,16 @@ RMSE for held out test set (HOTS) - 10%
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 369-372
+.. GENERATED FROM PYTHON SOURCE LINES 371-374
 
 ----------------------------------------
 RMSE for HOTS - 30%
 ----------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 372-426
+.. GENERATED FROM PYTHON SOURCE LINES 374-428
 
 .. code-block:: default
-   :lineno-start: 373
+   :lineno-start: 375
 
 
     # Generate simple test results
@@ -898,16 +900,16 @@ RMSE for HOTS - 30%
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 427-430
+.. GENERATED FROM PYTHON SOURCE LINES 429-432
 
 ----------------------------------------
 RMSE for for HOTS - 50%
 ----------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-484
+.. GENERATED FROM PYTHON SOURCE LINES 432-486
 
 .. code-block:: default
-   :lineno-start: 431
+   :lineno-start: 433
 
 
     # Generate simple test results
@@ -1108,16 +1110,16 @@ RMSE for for HOTS - 50%
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 485-488
+.. GENERATED FROM PYTHON SOURCE LINES 487-490
 
 ------------------------------------------------
 Comparison of Delta to Simple Median Imputation
 ------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 488-510
+.. GENERATED FROM PYTHON SOURCE LINES 490-512
 
 .. code-block:: default
-   :lineno-start: 489
+   :lineno-start: 491
 
 
     # Select all Delta and Model part of data
@@ -1152,16 +1154,16 @@ Comparison of Delta to Simple Median Imputation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 511-514
+.. GENERATED FROM PYTHON SOURCE LINES 513-516
 
 ---------------------------------
 NAE distribution for HOTS
 ---------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 514-528
+.. GENERATED FROM PYTHON SOURCE LINES 516-530
 
 .. code-block:: default
-   :lineno-start: 515
+   :lineno-start: 517
 
 
     nae_results.columns = ['NAE', 'Model', 'Analyte']
@@ -1191,7 +1193,7 @@ NAE distribution for HOTS
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  20.127 seconds)
+   **Total running time of the script:** ( 0 minutes  23.260 seconds)
 
 
 .. _sphx_glr_download__examples_iterative_imputer_plot_iter_imputer_exp2_1_1.py:

@@ -278,6 +278,8 @@ if run_eval:
             X_test = aux_test[[x for x in aux_test.columns if x != biomarker]]
             y_test = aux_test[biomarker]
 
+            nan_idx = np.argwhere(np.isnan(y_test.to_numpy())).flatten()
+
             # Information
             print("\n Evaluating... %s for biomarker... %s" % (est, biomarker))
 
@@ -290,7 +292,7 @@ if run_eval:
             pipe.fit(X_train, y_train)
 
             # Generate x, y test 
-            y_pred = pipe.predict(X_test)
+            y_pred = pipe.predict(X_test)[nan_idx]
 
             # Store results in DataFrame
             if est != 'median':

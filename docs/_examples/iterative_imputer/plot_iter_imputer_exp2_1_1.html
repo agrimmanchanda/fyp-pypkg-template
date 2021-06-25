@@ -479,21 +479,21 @@ features to predict its values to emulate an actual imputer.</p>
 [56271 rows x 14 columns]
 
 Correlation (pearson):
-           EOS       HCT       HGB        LY  ...       PLT       RBC       RDW       WBC
-EOS   1.000000  0.075691  0.063382  0.289178  ...  0.148320  0.076247 -0.029017  0.063383
-HCT   0.075691  1.000000  0.983795  0.368346  ...  0.044596  0.932916 -0.445215 -0.034098
-HGB   0.063382  0.983795  1.000000  0.367455  ...  0.030526  0.921963 -0.479547 -0.030376
-LY    0.289178  0.368346  0.367455  1.000000  ...  0.227641  0.381424 -0.258299  0.242921
-MCH  -0.046216  0.018124  0.084460 -0.079429  ... -0.169143 -0.301421 -0.354513 -0.058005
-MCHC -0.073132 -0.009970  0.160611  0.021764  ... -0.087255  0.002774 -0.237056  0.015221
-MCV  -0.016068  0.024410  0.016983 -0.097091  ... -0.143448 -0.328603 -0.273143 -0.070355
-MONO  0.176592 -0.011767 -0.011822  0.228941  ...  0.191892 -0.011525  0.000838  0.565965
-MPV  -0.008346  0.156687  0.148419  0.133033  ... -0.329940  0.169995 -0.129583  0.021949
-NEUT -0.077021 -0.147780 -0.142903 -0.067306  ...  0.204307 -0.125506  0.043472  0.946863
-PLT   0.148320  0.044596  0.030526  0.227641  ...  1.000000  0.089001 -0.050207  0.275886
-RBC   0.076247  0.932916  0.921963  0.381424  ...  0.089001  1.000000 -0.317913 -0.009884
-RDW  -0.029017 -0.445215 -0.479547 -0.258299  ... -0.050207 -0.317913  1.000000 -0.031387
-WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387  1.000000
+           EOS       HCT       HGB        LY       MCH      MCHC  ...       MPV      NEUT       PLT       RBC       RDW       WBC
+EOS   1.000000  0.075691  0.063382  0.289178 -0.046216 -0.073132  ... -0.008346 -0.077021  0.148320  0.076247 -0.029017  0.063383
+HCT   0.075691  1.000000  0.983795  0.368346  0.018124 -0.009970  ...  0.156687 -0.147780  0.044596  0.932916 -0.445215 -0.034098
+HGB   0.063382  0.983795  1.000000  0.367455  0.084460  0.160611  ...  0.148419 -0.142903  0.030526  0.921963 -0.479547 -0.030376
+LY    0.289178  0.368346  0.367455  1.000000 -0.079429  0.021764  ...  0.133033 -0.067306  0.227641  0.381424 -0.258299  0.242921
+MCH  -0.046216  0.018124  0.084460 -0.079429  1.000000  0.391104  ... -0.073755 -0.036335 -0.169143 -0.301421 -0.354513 -0.058005
+MCHC -0.073132 -0.009970  0.160611  0.021764  0.391104  1.000000  ... -0.041123  0.014154 -0.087255  0.002774 -0.237056  0.015221
+MCV  -0.016068  0.024410  0.016983 -0.097091  0.902952 -0.040685  ... -0.061824 -0.046127 -0.143448 -0.328603 -0.273143 -0.070355
+MONO  0.176592 -0.011767 -0.011822  0.228941 -0.007282 -0.006352  ...  0.006449  0.437707  0.191892 -0.011525  0.000838  0.565965
+MPV  -0.008346  0.156687  0.148419  0.133033 -0.073755 -0.041123  ...  1.000000 -0.015518 -0.329940  0.169995 -0.129583  0.021949
+NEUT -0.077021 -0.147780 -0.142903 -0.067306 -0.036335  0.014154  ... -0.015518  1.000000  0.204307 -0.125506  0.043472  0.946863
+PLT   0.148320  0.044596  0.030526  0.227641 -0.169143 -0.087255  ... -0.329940  0.204307  1.000000  0.089001 -0.050207  0.275886
+RBC   0.076247  0.932916  0.921963  0.381424 -0.301421  0.002774  ...  0.169995 -0.125506  0.089001  1.000000 -0.317913 -0.009884
+RDW  -0.029017 -0.445215 -0.479547 -0.258299 -0.354513 -0.237056  ... -0.129583  0.043472 -0.050207 -0.317913  1.000000 -0.031387
+WBC   0.063383 -0.034098 -0.030376  0.242921 -0.058005  0.015221  ...  0.021949  0.946863  0.275886 -0.009884 -0.031387  1.000000
 
 [14 rows x 14 columns]
 </pre></div>
@@ -695,7 +695,9 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 301
 302
 303
-304</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set to false to prevent running during script build</span>
+304
+305
+306</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Set to false to prevent running during script build</span>
  <span class="n">run_eval</span> <span class="o">=</span> <span class="kc">False</span>
 
  <span class="k">if</span> <span class="n">run_eval</span><span class="p">:</span>
@@ -732,6 +734,8 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
              <span class="n">X_test</span> <span class="o">=</span> <span class="n">aux_test</span><span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">aux_test</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">biomarker</span><span class="p">]]</span>
              <span class="n">y_test</span> <span class="o">=</span> <span class="n">aux_test</span><span class="p">[</span><span class="n">biomarker</span><span class="p">]</span>
 
+             <span class="n">nan_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
              <span class="c1"># Information</span>
              <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Evaluating... </span><span class="si">%s</span><span class="s2"> for biomarker... </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">biomarker</span><span class="p">))</span>
 
@@ -744,7 +748,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
              <span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
              <span class="c1"># Generate x, y test</span>
-             <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+             <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[</span><span class="n">nan_idx</span><span class="p">]</span>
 
              <span class="c1"># Store results in DataFrame</span>
              <span class="k">if</span> <span class="n">est</span> <span class="o">!=</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
@@ -761,9 +765,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 </div>
 <div class="section" id="rmse-for-held-out-test-set-hots-10">
 <h2>RMSE for held out test set (HOTS) - 10%<a class="headerlink" href="#rmse-for-held-out-test-set-hots-10" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>311
-312
-313
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>313
 314
 315
 316
@@ -816,7 +818,9 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 363
 364
 365
-366</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Generate simple test results</span>
+366
+367
+368</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Generate simple test results</span>
  <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/iir_mult_test_results_10.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
  <span class="c1"># Split the model and median scores for each analyte</span>
@@ -1013,9 +1017,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 <br /></div>
 <div class="section" id="rmse-for-hots-30">
 <h2>RMSE for HOTS - 30%<a class="headerlink" href="#rmse-for-hots-30" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>373
-374
-375
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>375
 376
 377
 378
@@ -1064,7 +1066,9 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 421
 422
 423
-424</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Generate simple test results</span>
+424
+425
+426</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Generate simple test results</span>
  <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/iir_mult_test_results_30.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
  <span class="c1"># Split the model and median scores for each analyte</span>
@@ -1257,9 +1261,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 <br /></div>
 <div class="section" id="rmse-for-for-hots-50">
 <h2>RMSE for for HOTS - 50%<a class="headerlink" href="#rmse-for-for-hots-50" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>431
-432
-433
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>433
 434
 435
 436
@@ -1308,7 +1310,9 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 479
 480
 481
-482</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Generate simple test results</span>
+482
+483
+484</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Generate simple test results</span>
  <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;datasets/iir_mult_test_results_50.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
  <span class="c1"># Split the model and median scores for each analyte</span>
@@ -1501,9 +1505,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 <br /></div>
 <div class="section" id="comparison-of-delta-to-simple-median-imputation">
 <h2>Comparison of Delta to Simple Median Imputation<a class="headerlink" href="#comparison-of-delta-to-simple-median-imputation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>489
-490
-491
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>491
 492
 493
 494
@@ -1519,7 +1521,9 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 504
 505
 506
-507</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Select all Delta and Model part of data</span>
+507
+508
+509</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1"># Select all Delta and Model part of data</span>
  <span class="n">pt1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;Delta (%)&#39;</span><span class="p">,</span> <span class="s1">&#39;Model&#39;</span><span class="p">]][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
  <span class="n">pt2</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[[</span><span class="s1">&#39;Delta (%)&#39;</span><span class="p">,</span> <span class="s1">&#39;Model&#39;</span><span class="p">]][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
  <span class="n">pt3</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[[</span><span class="s1">&#39;Delta (%)&#39;</span><span class="p">,</span> <span class="s1">&#39;Model&#39;</span><span class="p">]][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1544,9 +1548,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 </div>
 <div class="section" id="nae-distribution-for-hots">
 <h2>NAE distribution for HOTS<a class="headerlink" href="#nae-distribution-for-hots" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>515
-516
-517
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>517
 518
 519
 520
@@ -1557,7 +1559,9 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 525
 526
 527
-528</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">nae_results</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NAE&#39;</span><span class="p">,</span> <span class="s1">&#39;Model&#39;</span><span class="p">,</span> <span class="s1">&#39;Analyte&#39;</span><span class="p">]</span>
+528
+529
+530</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">nae_results</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NAE&#39;</span><span class="p">,</span> <span class="s1">&#39;Model&#39;</span><span class="p">,</span> <span class="s1">&#39;Analyte&#39;</span><span class="p">]</span>
 
  <span class="c1"># Plot the figure</span>
  <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
@@ -1574,7 +1578,7 @@ WBC   0.063383 -0.034098 -0.030376  0.242921  ...  0.275886 -0.009884 -0.031387 
 </pre></div>
 </td></tr></table></div>
 <img alt="plot iter imputer exp2 1 1" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_iter_imputer_exp2_1_1_002.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  20.127 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  23.260 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-iterative-imputer-plot-iter-imputer-exp2-1-1-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/5ef8678eaf023f6cfaf4363eac2df177/plot_iter_imputer_exp2_1_1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_iter_imputer_exp2_1_1.py</span></code></a></p>

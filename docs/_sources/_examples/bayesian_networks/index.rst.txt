@@ -7,29 +7,14 @@
 Bayesian Networks
 ====================
 
-This section will include different experiments with Bayesian Networks. 
+Aim: The aim of this experiment is to investigate Bayesian Network imputation methods using an implemented BNRegressor which is a Scikit-learn wrapper for pgmpy's [Source: pgmpy: Probabilistic Graphical Models using Python Ankur Ankan∗, Abinash Panda] BayesianModel class. using two sub-experiments: (a) single and (b) multiple feature removal (10%, 30% and 50%).
 
+This page contains experiment results as follows:
 
-.. raw:: html
+Experiment 1: Single Feature Removal (model learning and evaluation)
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Provides all supplementary code for experiments.">
+Experiment 2: Multiple Feature Removal (model learning and evaluation)
 
-.. only:: html
-
- .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayes_net_supplementary_thumb.png
-     :alt: Bayesian Network Supplementary Script
-
-     :ref:`sphx_glr__examples_bayesian_networks_plot_bayes_net_supplementary.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /_examples/bayesian_networks/plot_bayes_net_supplementary
 
 .. raw:: html
 
@@ -37,10 +22,10 @@ This section will include different experiments with Bayesian Networks.
 
 .. only:: html
 
- .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayesnet_exp_1_thumb.png
-     :alt: Bayesian Networks Experiment I.I
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_bayesnet_supplementary_1_thumb.png
+     :alt: Supplementary Experiment I.I
 
-     :ref:`sphx_glr__examples_bayesian_networks_plot_bayesnet_exp_1.py`
+     :ref:`sphx_glr__examples_bayesian_networks_bayesnet_supplementary_1.py`
 
 .. raw:: html
 
@@ -50,7 +35,7 @@ This section will include different experiments with Bayesian Networks.
 .. toctree::
    :hidden:
 
-   /_examples/bayesian_networks/plot_bayesnet_exp_1
+   /_examples/bayesian_networks/bayesnet_supplementary_1
 
 .. raw:: html
 
@@ -58,10 +43,10 @@ This section will include different experiments with Bayesian Networks.
 
 .. only:: html
 
- .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayesnet_exp_1_1_thumb.png
-     :alt: Bayesian Networks Experiment I.I
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_bayesnet_supplementary_2_thumb.png
+     :alt: Supplementary Experiment I.I.I
 
-     :ref:`sphx_glr__examples_bayesian_networks_plot_bayesnet_exp_1_1.py`
+     :ref:`sphx_glr__examples_bayesian_networks_bayesnet_supplementary_2.py`
 
 .. raw:: html
 
@@ -71,7 +56,91 @@ This section will include different experiments with Bayesian Networks.
 .. toctree::
    :hidden:
 
-   /_examples/bayesian_networks/plot_bayesnet_exp_1_1
+   /_examples/bayesian_networks/bayesnet_supplementary_2
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove a single feature from the data set  and use the remain...">
+
+.. only:: html
+
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayes_net_exp1_1_thumb.png
+     :alt: Experiment 1: Model Learning
+
+     :ref:`sphx_glr__examples_bayesian_networks_plot_bayes_net_exp1_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/bayesian_networks/plot_bayes_net_exp1_1
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove a single feature from the data set  and use the remain...">
+
+.. only:: html
+
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayes_net_exp1_1_1_thumb.png
+     :alt: Experiment 1: Model Evaluation
+
+     :ref:`sphx_glr__examples_bayesian_networks_plot_bayes_net_exp1_1_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/bayesian_networks/plot_bayes_net_exp1_1_1
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove multiple features from the data set satisfying the Mis...">
+
+.. only:: html
+
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayes_net_exp2_1_thumb.png
+     :alt: Experiment 2: Model Learning
+
+     :ref:`sphx_glr__examples_bayesian_networks_plot_bayes_net_exp2_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/bayesian_networks/plot_bayes_net_exp2_1
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The aim of this experiment was to remove multiple features from the data set satisfying the Mis...">
+
+.. only:: html
+
+ .. figure:: /_examples/bayesian_networks/images/thumb/sphx_glr_plot_bayes_net_exp2_1_1_thumb.png
+     :alt: Experiment 2: Model Evaluation
+
+     :ref:`sphx_glr__examples_bayesian_networks_plot_bayes_net_exp2_1_1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/bayesian_networks/plot_bayes_net_exp2_1_1
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

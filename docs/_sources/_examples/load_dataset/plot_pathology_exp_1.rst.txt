@@ -96,7 +96,7 @@ Generating patient static profiles for patients using ``TidyWidget`` class.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  19.997 seconds)
+   **Total running time of the script:** ( 2 minutes  9.164 seconds)
 
 
 .. _sphx_glr_download__examples_load_dataset_plot_pathology_exp_1.py:

@@ -428,7 +428,7 @@ Plotting graphs using networkx
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.128 seconds)
+   **Total running time of the script:** ( 0 minutes  2.307 seconds)
 
 
 .. _sphx_glr_download__examples_load_dataset_plot_pathology_exp_3.py:
